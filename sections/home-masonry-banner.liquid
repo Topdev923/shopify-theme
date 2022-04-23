@@ -1,0 +1,1102 @@
+{% assign listWidth = section.settings.content_width | split: '/' %}
+{%- assign leftColumn = listWidth[0] -%}
+{%- assign rightColumn = listWidth[1] -%}  
+
+{% assign listWidth = section.settings.lap_content_width | split: '/' %}
+{% assign lap_leftColumn = listWidth[0] %}
+{% assign lap_rightColumn = listWidth[1] %}
+
+{% if section.settings.block_banner_style == 'grid' %}
+{% assign grid_style = 'grid-style' %}
+{% elsif section.settings.block_banner_style == 'list' %}
+{% assign list_style = 'list-style' %}
+{% elsif section.settings.block_banner_style == 'overlay' %}
+{% assign overlay_style = 'overlay-style' %}
+{% endif %}
+
+{% if section.settings.main_banner_style == 'grid' %}
+{% assign main_grid_style = 'grid-style' %}
+{% elsif section.settings.main_banner_style == 'overlay' %}
+{% assign main_overlay_style = 'overlay-style' %}
+{% endif %}
+
+{% if section.settings.overlay_style == 'use_overlay' %}
+{% assign main_overlay_class = 'with-overlay' %}    
+{% elsif section.settings.overlay_style == 'use_gradient_overlay' %}
+{% assign main_overlay_class = 'with-gradient-overlay' %}
+{% endif %}
+{% for block in section.blocks %}  
+{% assign block_style = section.settings.block_style %}
+{% endfor %}
+
+{% if section.settings.enable_overlay %}
+{% assign section_overlay = 'dt-sc-overlay' %}
+{% endif %}
+
+{% case section.settings.background_style %}
+{% when 'default' %}
+{% when 'parallax' %}
+{%- assign background_style = 'data-speed="2"' %}
+{% when 'fixed' %}
+{%- assign background_style = 'data-speed="1"' %}
+{% endcase %} 
+{% if section.settings.show_background_image %}
+{% assign lazyScript = "lazyload" %}
+{% endif %}
+
+<div class="dt-sc-section-wrapper {{lazyScript}}  {{section_overlay}} {% if section.settings.background_style == 'parallax' %} parallax-initiated{% endif %}" style="{% render 'bg-color-image-padding' %}" data-style="parallax" {{background_style}} {% include 'bg_image' %}>  
+ <div class="{% render 'container-settings' %}"> 
+    <div class="row {{ section.settings.custom_class_name }}">      
+      {% render 'section-heading', class: section.id %}      
+      <div class="dt-sc-grid-banner-section dt-sc-masonry-grid-banner {% if section.settings.reverse_column %}dt-sc-reverse-columns{% endif %}">
+        {% if section.settings.primary_image != blank or section.settings.primary_title != blank or  section.settings.primary_sub_title != blank or  section.settings.primary_description != blank or  section.settings.primary_button_link != blank %}
+        <div class="dt-sc-main-grid">
+          <!-- Card -->
+          <div class="dt-sc-grid-banner {{ main_grid_style}} {{main_overlay_style}} {% if section.settings.enable_box_shadow %}dt-sc-box-shadow{% endif %} ">
+            <div class="dt-sc-grid-banner-image {{ main_overlay_class}}">
+              {% if section.settings.primary_image != blank %}
+             {%- assign img_url = section.settings.primary_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+              <img class="lazyload"
+                     src="{{ 'loading.gif' | asset_url }}"
+                   data-src="{{ img_url }}"
+                   data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+                   data-aspectratio="{{ section.settings.primary_image.aspect_ratio }}"
+                   data-sizes="auto"            
+                   alt="{{ section.settings.primary_title }}">            
+              <noscript>
+                {{ section.settings.primary_image | img_url: '480x480', scale: 2 | img_tag: section.settings.primary_image.alt, 'dt-sc-noscript-image' }}
+              </noscript>
+              {% else %}
+              {{ 'image' | placeholder_svg_tag: 'placeholder_svg' }}
+              {% endif%}  
+            </div>
+            {% if section.settings.primary_title != blank or  section.settings.primary_sub_title != blank or  section.settings.primary_description != blank or  section.settings.primary_button_link != blank %}
+            <div class="dt-sc-grid-banner-content 
+                        {% unless section.settings.main_banner_style == 'grid' %} {{ section.settings.primary_position }}{% endunless%}
+                        {% if section.settings.main_banner_style == 'grid' %}{{ section.settings.primary_text_align}}{% endif %}">
+              {% unless section.settings.main_banner_style == 'grid' %}
+              <div class="dt-sc-grid-banner-inner {{ section.settings.primary_text_align}}">
+                {% endunless %}
+                {% if section.settings.primary_title != blank %}
+                <h4 class="dt-sc-main-title">{{section.settings.primary_title}}</h4>
+                {% endif %}
+                {% if section.settings.primary_sub_title != blank %}
+                <h6 class="dt-sc-sub-title">{{section.settings.primary_sub_title}}</h6>
+                {% endif %}
+                {% if section.settings.primary_description != blank %}
+                <p class="dt-sc-description">{{section.settings.primary_description}}</p>
+                {% endif %}
+                {% if section.settings.primary_button_link != blank %}
+                <a href="{{section.settings.primary_button_link}}" class="dt-sc-btn">{{section.settings.primary_button_text}}</a>
+                {% endif %}
+                {% unless section.settings.main_banner_style == 'grid' %}</div>{% endunless %}
+            </div>
+            {% endif%}  
+          </div>
+          <!-- end Card -->
+        </div>
+        {% endif %}
+        {% if section.blocks.size > 0 %}
+        {% case section.blocks.size %}
+        {% when 1 %}
+        {% when 2 %}
+        {%- assign blockSize = 'two-items' -%}
+        {% when 3 %}
+        {%- assign blockSize = 'three-items' -%}              
+        {% when 4 %}
+        {%- assign blockSize = 'four-items' -%}     
+        {% when 5 %}
+        {%- assign blockSize = 'five-items' -%}     
+        {% endcase %} 
+        <div class="dt-sc-additional-grids {{blockSize}} {{block_style}} {% if section.settings.enable_box_shadow %}dt-sc-box-shadow{% endif %}">
+          <!-- Card -->
+          {% for block in section.blocks %}  
+          {% if block.settings.overlay_style == 'use_overlay' %}
+          {% assign overlay_class = 'with-overlay' %}    
+          {% elsif block.settings.overlay_style == 'use_gradient_overlay' %}
+          {% assign overlay_class = 'with-gradient-overlay' %}
+          {% endif %}
+          {% if block.settings.block_title != blank or block.settings.block_sub_title != blank or   block.settings.block_description != blank or block.settings.block_button_link != blank %}
+          <!-- Card -->
+          {% render 'grid-block-content', block: block, grid_style: grid_style, list_style: list_style, overlay_style: overlay_style, overlay_class: overlay_class %}
+          <!-- .end Card -->
+          {% endif %}
+          {% endfor %}  
+          <!-- end Card -->
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style type="text/css">
+
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-heading .dt-sc-main-heading { color: var(--DTColor_Heading); color:{{ section.settings.section_heading_color }}; } 
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-heading .dt-sc-sub-heading { color: var(--DTColor_Heading); color:{{ section.settings.section_sub_heading_color }}; } 
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-heading .dt-sc-heading-description { color: var(--DTColor_Body); color:{{ section.settings.section_description_color }}; } 
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-heading .dt-sc-btn { 
+    background: var(--DT_Button_BG_Color);  background:{{ section.settings.section_button_bg_color }}; 
+      color: var(--DT_Button_Text_Color); color:{{ section.settings.section_button_text_color }}; }
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-heading .dt-sc-btn:hover { 
+    background: var(--DT_Button_BG_Hover_Color); background:{{ section.settings.section_button_hover_bg_color }}; 
+      color: var(--DT_Button_Text_Hover_Color); color:{{ section.settings.section_button_hover_text_color }};
+        }
+  
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section.dt-sc-masonry-grid-banner .dt-sc-additional-grids {  
+    grid-gap: {{ section.settings.column_gap }};
+  } 
+
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section .dt-sc-main-grid .dt-sc-grid-banner .dt-sc-grid-banner-image img { 
+    object-position: {{ section.settings.image_position }}; 
+  }
+
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section .dt-sc-main-grid .dt-sc-grid-banner,
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section .dt-sc-main-grid .dt-sc-grid-banner .dt-sc-grid-banner-content .dt-sc-grid-banner-inner { 
+    background-color: var(--DTTertiaryColor); background-color: {{ section.settings.primary_banner_bg }}; 
+  }
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section .dt-sc-main-grid .dt-sc-grid-banner .dt-sc-main-title { color: var(--DTColor_Heading); color:{{ section.settings.primary_heading_color }}; } 
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section .dt-sc-main-grid .dt-sc-grid-banner .dt-sc-sub-title { color: var(--DTColor_Heading); color:{{ section.settings.primary_sub_heading_color }}; } 
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section .dt-sc-main-grid .dt-sc-grid-banner .dt-sc-description { color: var(--DTColor_Body); color:{{ section.settings.primary_description_color }}; } 
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section .dt-sc-main-grid .dt-sc-grid-banner .dt-sc-btn { 
+    background: var(--DT_Button_BG_Color); color: var(--DT_Button_Text_Color);
+    background:{{ section.settings.primary_button_bg_color }};
+    color:{{ section.settings.primary_button_text_color }}; }
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section .dt-sc-main-grid .dt-sc-grid-banner .dt-sc-btn:hover { 
+    background: var(--DT_Button_BG_Hover_Color); color: var(--DT_Button_Text_Hover_Color);
+    background:{{ section.settings.primary_button_hover_bg_color }};
+    color:{{ section.settings.primary_button_hover_text_color }}; 
+  }
+
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section .dt-sc-main-grid .dt-sc-grid-banner .with-overlay:before { 
+    background: var(--DTTertiaryColor); background:{{ section.settings.overlay_color }}; z-index: 1; }
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section .dt-sc-main-grid .dt-sc-grid-banner .with-gradient-overlay:before {
+    background-image: linear-gradient({{ section.settings.rotation_degree}}deg, {{ settings.tertiary_color | color_modify: 'alpha', 0 }}, 
+      {{ settings.tertiary_color }});
+    background-image: linear-gradient({{ section.settings.rotation_degree}}deg, {{ section.settings.overlay_color | color_modify: 'alpha', 0 }}, 
+      {{ section.settings.overlay_color }}); z-index: 1;
+  }
+
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section .dt-sc-main-grid .dt-sc-grid-banner:hover .with-overlay:before,
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section .dt-sc-main-grid .dt-sc-grid-banner:hover .with-gradient-overlay:before {
+    opacity: {{ section.settings.overlay_opacity }};
+  }
+
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-overlay:before  { 
+    color: var(--DTTertiaryColor); 
+      color: {{ section.settings.background_color }};    
+      background: currentcolor; 
+      opacity: {{ section.settings.overlay_transparency }}; }
+
+
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section .dt-sc-main-grid .dt-sc-grid-banner,
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-box-shadow.dt-sc-grid-banner .dt-sc-grid-banner-inner { 
+    border-radius: var(--DTRadius); border-radius: {{ section.settings.border_radius }}px; 
+      }
+
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-box-shadow.dt-sc-grid-banner {
+    box-shadow: var(--DTboxShadow); 
+      }
+
+
+  {% for block in section.blocks %} 
+
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner.{{block.type}}-{{block.id}} { 
+    border-radius: var(--DTRadius);  border-radius: {{ section.settings.border_radius }}px; 
+      }
+
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-box-shadow .dt-sc-grid-banner.{{block.type}}-{{block.id}} {
+    box-shadow: var(--DTboxShadow); 
+      }
+
+
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner.{{block.type}}-{{block.id}},
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner.{{block.type}}-{{block.id}} .dt-sc-grid-banner-content .dt-sc-grid-banner-inner { 
+    background-color: var(--DTTertiaryColor); background-color: {{ block.settings.block_banner_bg }};
+  }
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner.{{block.type}}-{{block.id}} .dt-sc-main-title { color: var(--DTColor_Heading); color:{{ block.settings.block_heading_color }}; } 
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner.{{block.type}}-{{block.id}} .dt-sc-sub-title { color: var(--DTColor_Heading); color:{{ block.settings.block_sub_heading_color }}; } 
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner.{{block.type}}-{{block.id}} .dt-sc-description { color: var(--DTColor_Body); color:{{ block.settings.block_description_color }}; } 
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner.{{block.type}}-{{block.id}} .dt-sc-btn { 
+    background: var(--DT_Button_BG_Color);
+    background:{{ block.settings.block_button_bg_color }};
+    color: var(--DT_Button_Text_Color); color:{{ block.settings.block_button_text_color }}; }
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner.{{block.type}}-{{block.id}} .dt-sc-btn:hover { 
+    background: var(--DT_Button_BG_Hover_Color); 
+    background:{{ block.settings.block_button_hover_bg_color }};
+    color: var(--DT_Button_Text_Hover_Color); color:{{ block.settings.block_button_hover_text_color }}; }
+
+
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section .dt-sc-grid-banner.{{block.type}}-{{block.id}} .with-overlay:before { 
+    background: var(--DTTertiaryColor); background:{{ block.settings.overlay_color }}; z-index: 1; }
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section .dt-sc-grid-banner.{{block.type}}-{{block.id}} .with-gradient-overlay:before {
+    background-image: linear-gradient({{ section.settings.rotation_degree}}deg, {{ settings.tertiary_color | color_modify: 'alpha', 0 }}, {{ settings.tertiary_color }});
+    background-image: linear-gradient({{ block.settings.rotation_degree}}deg, {{ block.settings.overlay_color | color_modify: 'alpha', 0 }}, {{ block.settings.overlay_color }});
+     z-index: 1;
+  }
+
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section .dt-sc-grid-banner.{{block.type}}-{{block.id}}:hover .with-overlay:before,
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section .dt-sc-grid-banner.{{block.type}}-{{block.id}}:hover .with-gradient-overlay:before {
+    opacity: {{ block.settings.overlay_opacity }};
+    
+  }
+
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section .dt-sc-grid-banner.{{block.type}}-{{block.id}}.overlay-style {
+    min-height: {{ section.settings.overlay_style_height }}px;
+  }
+
+
+  #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner.{{block.type}}-{{block.id}} .dt-sc-grid-banner-image img { 
+    object-position: {{ block.settings.image_position }}; 
+  }
+
+
+  {% endfor %}  
+
+  @media (min-width: 1541px) {
+    #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section.dt-sc-masonry-grid-banner .dt-sc-main-grid {    
+    	width: calc({{leftColumn}}% - (calc({{section.settings.column_gap}})/2));    
+    }
+    #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section.dt-sc-masonry-grid-banner .dt-sc-additional-grids {    
+    	width: calc({{rightColumn}}% - (calc({{section.settings.column_gap}})/2));    
+    }
+
+    #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section.dt-sc-masonry-grid-banner .dt-sc-grid-banner.overlay-style {
+      min-height: {{ section.settings.overlay_style_height }}px;
+    }
+
+  }
+
+  @media (max-width: 1540px) {
+    #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section.dt-sc-masonry-grid-banner .dt-sc-main-grid { 
+     width: calc({{lap_leftColumn}}% - (calc({{section.settings.column_gap}})/2));    
+    }
+    #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section.dt-sc-masonry-grid-banner .dt-sc-additional-grids { 
+      width: calc({{lap_rightColumn}}% - (calc({{section.settings.column_gap}})/2));    
+    }
+
+    #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section.dt-sc-masonry-grid-banner .dt-sc-grid-banner.overlay-style {
+      min-height: {{ section.settings.overlay_style_height_laptop }}px;
+    }
+  }
+  
+  @media (max-width: 1199px) {
+    #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section.dt-sc-masonry-grid-banner {
+      display: grid; width: 100%; grid-template-columns: 1fr; gap: {{section.settings.column_gap}};
+    }
+    #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section.dt-sc-masonry-grid-banner .dt-sc-main-grid,
+    #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section.dt-sc-masonry-grid-banner .dt-sc-additional-grids { 
+      width: 100%; height: auto; }
+    
+    #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section.dt-sc-masonry-grid-banner .dt-sc-grid-banner.overlay-style {
+      min-height: {{ section.settings.overlay_style_height_tab }}px;
+    }
+    
+  }
+
+
+  @media (max-width: 767px) {
+    #shopify-section-{{section.id}}.home-masonry-banner .dt-sc-grid-banner-section.dt-sc-masonry-grid-banner .dt-sc-grid-banner.overlay-style {
+      min-height: {{ section.settings.overlay_style_height_mobile }}px;
+    }
+  }
+
+</style>
+{% schema %}
+{
+"name": "Masonry banner",
+"class": "index-section home-masonry-banner",
+"max_blocks": 5,
+"settings": [  
+{
+"type": "checkbox",
+"id": "full",
+"label": "Show Full width"
+},
+{
+"type": "checkbox",
+"id": "spacing_both_ends",
+"label": "Enable Right & Left Spacing (Works only on Fullwidth)",
+"default": false
+},
+{
+"type": "text",
+"id": "padding",
+"label": "Style value (Padding)",
+"default":"0,0",
+"info":"Top(px),Bottom(px)"
+},
+{
+"type": "text",
+"id": "margin",
+"label": "Style value (Margin)",
+"default":"0,0",
+"info":"Top(px),Bottom(px)"
+},
+{
+"type": "checkbox",
+"id": "show_background_image",
+"label": "Enable Background image"
+},
+{
+"type": "image_picker",
+"id": "background_image",
+"label": "Background image",
+"info": "Size: 1920x1280"
+},
+{
+"type": "select",
+"id": "background_style",
+"label": "Background Style",
+"default": "default",
+"options": [
+{
+"value": "default",
+"label": "Default"
+},
+{
+"value": "parallax",
+"label": "Parallax"
+},
+{
+"value": "fixed",
+"label": "Fixed"
+}
+]
+},
+{
+"type": "checkbox",
+"id": "enable_overlay",
+"label": "Enable Background Color (Used as Background Image Overlay Color too)"
+},
+{
+"type": "color",
+"id": "background_color",
+"label":"Background color"
+},
+{
+"type": "text",
+"id": "overlay_transparency",
+"label": "Overlay Transparency (0.01 to 1)",
+"default": "0.5"
+},
+{
+"type": "text",
+"id": "section_heading",
+"label": "Main Heading",
+"default": "Masonry grid banner"
+},  
+{
+"type": "text",
+"id": "section_sub_heading",
+"label": "Sub Heading",
+"default": "Sub Heading"
+},  
+{
+"type": "text",
+"id": "section_description",
+"label": "Description",
+"default": "Use this text to share the information which you like!."
+},  
+{
+"type": "text",
+"id": "section_button_text",
+"label": "Link text"
+},
+{
+"type": "url",
+"id": "section_button_link",
+"label": "Link URL"
+},
+{
+"type": "select",
+"id": "heading_position",
+"label": "Heading Position",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "right"
+}
+]
+},
+{
+"type": "header",
+"content": "Section Color settings"
+},
+{
+"type": "color",
+"id": "section_heading_color",
+"label": "Heading color"
+},    
+{
+"type": "color",
+"id": "section_sub_heading_color",
+"label": "Sub heading color"
+},   
+{
+"type": "color",
+"id": "section_description_color",
+"label": "Description color"
+},  
+{
+"type": "color",
+"id": "section_button_bg_color",
+"label": "Button bg color"
+},   
+{
+"type": "color",
+"id": "section_button_text_color",
+"label": "Button text color"
+},   
+{
+"type": "color",
+"id": "section_button_hover_bg_color",
+"label": "Button hover bg color"
+},   
+{
+"type": "color",
+"id": "section_button_hover_text_color",
+"label": "Button hover text color"
+}, 
+{
+"type": "header",
+"content": "Display Settings"
+},
+{
+"type": "select",
+"id": "main_banner_style",
+"label": "Main Banner Style",
+"default": "overlay",
+"options": [
+{
+"value": "grid",
+"label": "Grid"
+},
+{
+"value": "overlay",
+"label": "Overlay"
+}
+]
+},
+{
+"type": "select",
+"id": "block_banner_style",
+"label": "Additional Banners Style",
+"default": "overlay",
+"options": [
+{
+"value": "grid",
+"label": "Grid"
+},
+{
+"value": "overlay",
+"label": "Overlay"
+}
+]
+},
+{
+"type": "checkbox",
+"id": "reverse_column",
+"label": "Column reverse",
+"default": false
+},
+{
+"type": "text",
+"id": "column_gap",
+"label": "Column Gap - Leave empty for Default Gap (In px)",
+"default":"30px"
+},
+{
+"type": "checkbox",
+"id": "enable_box_shadow",
+"label": "Enable Box Shadow",
+"default": false
+},
+{
+"type": "text",
+"id": "border_radius",
+"label": "Banner Border Radius(Leave empty for Theme Default Border Radius)",
+"default":"0",
+"info": "Units not needed"
+},
+{
+"type": "header",
+"content": "Content Width",
+"info": "Main Banner/Additional Banner"
+},
+{
+"type": "text",
+"id": "content_width",
+"label": "Content Width - Desktop",
+"default":"65/35"
+},
+{
+"type": "text",
+"id": "lap_content_width",
+"label": "Content Width - Laptop (Small Screen)",
+"default":"40/60",
+"info": "100/100 for Tablet & Mobile Resolutions"
+},
+{
+"type": "header",
+"content": "Main Banner Settings"
+},
+{
+"type": "select",
+"id": "primary_text_align",
+"label": "Main Banner Text alignment",
+"options": [
+{
+"value": "text-center",
+"label": "center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "right"
+}
+]
+},
+{
+"type": "select",
+"id": "primary_position",
+"label": "Main Banner Content position (Not for Grid Style)",
+"options": [
+{
+"value": "top-left",
+"label": "Top Left"
+},
+{
+"value": "top-center",
+"label": "Top Center"
+},
+{
+"value": "top-right",
+"label": "Top Right"
+},
+{
+"value": "center-left",
+"label": "Center left"
+},
+{
+"value": "center",
+"label": "Center"
+},
+{
+"value": "center-right",
+"label": "Center right"
+},
+{
+"value": "bottom-left",
+"label": "Bottom left"
+},
+{
+"value": "bottom-center",
+"label": "Bottom center"
+},
+
+{
+"value": "bottom-right",
+"label": "Bottom right"
+}     
+],
+"default": "center"
+}, 
+{
+"type": "image_picker",
+"id": "primary_image",
+"label": "Image",
+"info": "Size: 1280x820"
+},
+{
+"type": "text",
+"id": "primary_title",
+"label": "Title",
+"default": "Title"
+},  
+{
+"type": "text",
+"id": "primary_sub_title",
+"label": "Sub title",
+"default": "Sub title"
+},  
+{
+"type": "text",
+"id": "primary_description",
+"label": "Description",
+"default": "Short description"
+},  
+{
+"type": "text",
+"id": "primary_button_text",
+"label": "Link text"
+},
+{
+"type": "url",
+"id": "primary_button_link",
+"label": "Link URL"
+},
+
+{
+"type": "header",
+"content": "Main Banner Color settings"
+},   
+{
+"type": "color",
+"id": "primary_banner_bg",
+"label": "Banner BG"
+},
+{
+"type": "color",
+"id": "primary_heading_color",
+"label": "Heading color"
+},    
+{
+"type": "color",
+"id": "primary_sub_heading_color",
+"label": "Sub heading color"
+},   
+{
+"type": "color",
+"id": "primary_description_color",
+"label": "Description color"
+},  
+{
+"type": "color",
+"id": "primary_button_bg_color",
+"label": "Button bg color"
+},   
+{
+"type": "color",
+"id": "primary_button_text_color",
+"label": "Button text color"
+},   
+{
+"type": "color",
+"id": "primary_button_hover_bg_color",
+"label": "Button hover bg color"
+},   
+{
+"type": "color",
+"id": "primary_button_hover_text_color",
+"label": "Button hover text color"
+},
+{
+"type": "header",
+"content": "Main Banner Overlay Settings"
+},
+{
+"type": "select",
+"id": "overlay_style",
+"label": "Overlay Style",
+"options": [
+{
+"value": "use_overlay",
+"label": "Normal Overlay"
+},
+{
+"value": "use_gradient_overlay",
+"label": "Gradient Overlay"
+}
+]
+},
+{
+"type": "color",
+"id": "overlay_color",
+"label": "Overlay color"
+},
+{
+"type": "text",
+"id": "overlay_opacity",
+"label": "Overlay Opacity (0.01 to 1)",
+"default": "0.5"
+},
+{
+"type": "text",
+"id": "rotation_degree",
+"label": "Gradient Position (0 to 360) - Only for Gradient Overlay",
+"default": "180"
+},
+{
+"type": "header",
+"content": "Additional Block Settings",
+"info": " Add & Customize the blocks from the section top"
+},
+{
+"type": "select",
+"id": "block_style",
+"label": "Additional Banners Block Style",
+"default": "style-2",
+"options": [
+{
+"value": "default",
+"label": "Style 1 (Default)"
+},
+{
+"value": "style-2",
+"label": "Style 2 (Minimum 2 or 2+ blocks)"
+},
+{
+"value": "style-3",
+"label": "Style 3 (Minimum 3 or 3+ blocks)"
+},
+{
+"value": "style-4",
+"label": "Style 4 (Minimum 3 or 3+ blocks)"
+},
+{
+"value": "style-5",
+"label": "Style 5 (Minimum 3 or 3+ blocks)"
+},
+{
+"value": "style-6",
+"label": "Style 6 (Minimum 4 or 4+ blocks)"
+},
+{
+"value": "style-7",
+"label": "Style 7 (Minimum 4 or 4+ blocks)"
+},
+{
+"value": "style-8",
+"label": "Style 8 (Minimum 5 blocks)"
+},
+{
+"value": "style-9",
+"label": "Style 9 (Minimum 5 blocks)"
+},
+{
+"value": "style-10",
+"label": "Style 10 (Minimum 5 blocks)"
+}
+]
+},
+{
+"type": "header",
+"content": "Overlay Style Height",
+"info": "Height works for Additional Banners, So, Main Banner height depends on additional banners height"
+}, 
+{	
+"type": "range",	
+"id": "overlay_style_height",	
+"label": "Minimum Height",
+"min": 200,	
+"max": 1000,	
+"step": 10,	
+"default": 600,	
+"unit": "px"	
+},
+{	
+"type": "range",	
+"id": "overlay_style_height_laptop",	
+"label": "Minimum Height - Laptop (Small Screens)",
+"min": 200,	
+"max": 1000,	
+"step": 10,	
+"default": 550,	
+"unit": "px"	
+},
+{	
+"type": "range",	
+"id": "overlay_style_height_tab",	
+"label": "Minimum Height - Tablet",
+"min": 200,	
+"max": 1000,	
+"step": 10,	
+"default": 500,	
+"unit": "px"	
+},
+{	
+"type": "range",	
+"id": "overlay_style_height_mobile",	
+"label": "Minimum Height - Mobile",
+"min": 200,	
+"max": 1000,	
+"step": 10,	
+"default": 450,	
+"unit": "px"	
+},
+{
+"type": "header",
+"content": "Custom class"
+},
+{
+"type": "text",
+"id": "custom_class_name",
+"label": "Add your custom class name here"
+}
+],
+"blocks": [
+{
+"type": "content",
+"name": "Block",    
+"settings": [  
+
+{
+"type": "image_picker",
+"id": "block_image",
+"label": "Image",
+"info": "Size: 1280x820"
+},
+{
+"type": "checkbox",
+"id": "show_image",
+"label": "Show image",
+"default": true
+},
+{
+"type": "text",
+"id": "block_title",
+"label": "Title",
+"default": "Title"
+},  
+{
+"type": "text",
+"id": "block_sub_title",
+"label": "Sub title",
+"default": "Sub title"
+},  
+{
+"type": "text",
+"id": "block_description",
+"label": "Description",
+"default": "Short description"
+},  
+{
+"type": "text",
+"id": "block_button_text",
+"label": "Link text"
+},
+{
+"type": "url",
+"id": "block_button_link",
+"label": "Link URL"
+},
+{
+"type": "select",
+"id": "block_text_align",
+"label": "Text alignment",
+"options": [
+{
+"value": "text-center",
+"label": "center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "right"
+}
+]
+},
+{
+"type": "select",
+"id": "content_position",
+"label": "Content position (Only for Overlay Style)",
+"options": [
+{
+"value": "top-left",
+"label": "Top Left"
+},
+{
+"value": "top-center",
+"label": "Top Center"
+},
+{
+"value": "top-right",
+"label": "Top Right"
+},
+{
+"value": "center-left",
+"label": "Center left"
+},
+{
+"value": "center",
+"label": "Center"
+},
+{
+"value": "center-right",
+"label": "Center right"
+},
+{
+"value": "bottom-left",
+"label": "Bottom left"
+},
+{
+"value": "bottom-center",
+"label": "Bottom center"
+},
+
+{
+"value": "bottom-right",
+"label": "Bottom right"
+}     
+],
+"default": "center"
+},
+{
+"type": "select",
+"id": "image_position",
+"label": "Image Position",
+"options": [
+{
+"value": "top left",
+"label": "Top Left"
+},
+{
+"value": "top center",
+"label": "Top Center"
+},
+{
+"value": "top right",
+"label": "Top Right"
+},
+{
+"value": "center left",
+"label": "Center left"
+},
+{
+"value": "center",
+"label": "Center"
+},
+{
+"value": "center right",
+"label": "Center right"
+},
+{
+"value": "bottom left",
+"label": "Bottom left"
+},
+{
+"value": "bottom center",
+"label": "Bottom center"
+},
+
+{
+"value": "bottom right",
+"label": "Bottom right"
+}     
+],
+"default": "center"
+},
+{
+"type": "header",
+"content": "Reverse Elements (Only for Grid Style)"
+}, 
+{
+"type": "checkbox",
+"id": "reverse_column",
+"label": "Content reverse",
+"default": false
+},
+{
+"type": "header",
+"content": "Block Color settings"
+},   
+{
+"type": "color",
+"id": "block_banner_bg",
+"label": "Banner BG"
+},
+{
+"type": "color",
+"id": "block_heading_color",
+"label": "Heading color"
+},    
+{
+"type": "color",
+"id": "block_sub_heading_color",
+"label": "Sub heading color"
+},   
+{
+"type": "color",
+"id": "block_description_color",
+"label": "Description color"
+},  
+{
+"type": "color",
+"id": "block_button_bg_color",
+"label": "Button bg color"
+},   
+{
+"type": "color",
+"id": "block_button_text_color",
+"label": "Button text color"
+},   
+{
+"type": "color",
+"id": "block_button_hover_bg_color",
+"label": "Button hover bg color"
+},   
+{
+"type": "color",
+"id": "block_button_hover_text_color",
+"label": "Button hover text color"
+},
+{
+"type": "header",
+"content": "Overlay Settings"
+},
+{
+"type": "select",
+"id": "overlay_style",
+"label": "Overlay Style",
+"options": [
+{
+"value": "use_overlay",
+"label": "Normal Overlay"
+},
+{
+"value": "use_gradient_overlay",
+"label": "Gradient Overlay"
+}
+]
+},
+{
+"type": "color",
+"id": "overlay_color",
+"label": "Overlay color"
+},
+{
+"type": "text",
+"id": "overlay_opacity",
+"label": "Overlay Opacity (0.01 to 1)",
+"default": "0.5"
+},
+{
+"type": "text",
+"id": "rotation_degree",
+"label": "Gradient Position (0 to 360) - Only for Gradient Overlay",
+"default": "180"
+}
+]
+}
+],
+"presets": [
+{
+"name": "Masonry banner",
+"category": "Grid banners",
+"blocks": [        
+{
+"type": "content"
+},
+{
+"type": "content"
+}
+]
+}
+]
+}
+{% endschema %}

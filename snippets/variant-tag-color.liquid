@@ -1,0 +1,73 @@
+{% if settings.display_color_variant %}
+{%- assign file_extension = 'png' -%}
+
+
+{% for option in product.options %}
+{% assign downcased_option = option | downcase %}    
+{% if downcased_option contains 'color' or downcased_option contains 'colour' %}
+{%- assign option_index = forloop.index0 -%}
+{%- assign values = '' -%}
+
+<ul class="variant-option-color">
+  {% for variant in product.variants %}
+  {%- assign value = variant.options[option_index] -%}
+  {% unless values contains value %}
+  {%- assign values = values | join: ',' -%}
+  {%- assign values = values | append: ',' | append: value -%}
+  {%- assign values = values | split: ',' -%}
+  <li class="color-values">            
+    <a data-href="{{ variant.url | within: collection }}" class="swatch color" data-swatch-meta="name-{{ downcased_option }}_{{ value | replace: ' ', '_' | downcase }}">
+      <span {% if variant.image != null %} data-image="{{ variant.image.src  | product_img_url: '460x' }}"
+            {% else %}
+            data-image="{{ variant.featured_image | product_img_url: '460x' }}"{% endif %} 
+            style="background-size: cover;{% if variant.image != null %}background-image: url('{{ variant.image.src  | product_img_url: '460x' }}');
+                   {% else %}
+                   background-image: url('{{ value | handle | append: '.' | append: file_extension | file_img_url: '50x' | prepend: 'https:' }}');
+                   {% endif %}
+                   background-color: {{ value | split: ' ' | last | handle }};" data-id="{{variant.id}}"
+            data-variant-title-id="color" data-variant-item="{{ value | replace: ' ', '-' | downcase }}"  data-variant-title="{{ variant.title }}"></span>
+    </a>          
+  </li>
+  {% endunless %}
+  {% endfor %}
+</ul>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if settings.display_item_size %}
+
+{% for option in product.options %}
+{% assign downcased_option = option | downcase %}    
+{% if downcased_option contains 'size'  %}
+{%- assign option_index = forloop.index0 -%}
+{%- assign values = '' -%}
+<ul class="variant-option-size">
+  {% for variant in product.variants %}
+  {%- assign value = variant.options[option_index] -%}
+  {% unless values contains value %}
+  {%- assign values = values | join: ',' -%}
+  {%- assign values = values | append: ',' | append: value -%}
+  {%- assign values = values | split: ',' -%}
+  <li class="size-values">   
+    <input 
+           type="radio" 
+           name="id" 
+           class="variant-option hide"
+           value="{{ variant.id }}" 
+           id="variant-option-{{ variant.id }}" 
+           {% unless variant.available %} disabled{% endunless %}
+           {% if current_variant.id == variant.id %} checked{% endif %}
+           >    
+    <a data-url="{{ variant.url | within: collection }}" class="swatch size" data-swatch-meta="name-{{ downcased_option }}_{{ value | replace: ' ', '_' | downcase }}">
+      <span {% if variant.image != null %} data-image="{{ variant.image.src  | product_img_url: '460x' }}"
+            {% else %}
+            data-image="{{ variant.featured_image | product_img_url: '460x' }}"{% endif %} 
+            data-id="{{variant.id}}" data-variant-title-id="size" data-variant-item="{{ value | replace: ' ', '-' | downcase }}" data-variant-title="{{ variant.title }}">{{ value | escape }}</span>
+    </a>          
+  </li>
+  {% endunless %}
+  {% endfor %}
+</ul>
+{% endif %}
+{% endfor %}
+{% endif %}

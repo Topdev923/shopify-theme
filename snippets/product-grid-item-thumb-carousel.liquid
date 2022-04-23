@@ -1,0 +1,221 @@
+{% if template contains 'product' %}
+{% assign grid_item_width = '' %}
+{% endif %}
+{% unless current_collection == blank %}
+{% assign current_collection = collection %}
+{% endunless %}
+{% assign on_sale = false %}
+{% assign sale_text = 'products.product.sale' | t %}
+{% if product.compare_at_price > product.price %}
+{% assign on_sale = true %}
+{% endif %}
+{% assign sold_out = true %}
+{% assign sold_out_text = 'products.product.sold_out' | t %}
+{% if product.available %}
+{% assign sold_out = false %}
+{% endif %} 
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign featured_image = current_variant.featured_image | default: product.featured_image -%}
+
+{% assign productURL =  product.url | within: collection | append: '?view=quickview'  %}
+{% assign productURL =  "/products/" | append: product.handle | append: '?view=quickview'  %}
+
+<li class="{{ swiperSlideClass }} grid-item product-grid-item {% if sold_out %} sold-out{% endif %}{% if on_sale %} on-sale{% endif %} {{carousel}}" id="product-{{ product.id }}">
+  <div class="products">
+    <div class="product-container">  
+      
+      <div class="thumb-v-carousel slides {{ product.title | handle }}">
+        <ul>
+          {% for image in product.images   %}
+          <li class="grid__item">
+            <img src="{{ image.src | img_url: 'small' }}" alt="{{ image.alt | escape }}">    
+          </li>
+          {% endfor %}  
+        </ul>         
+      </div>
+      
+      <div class="grid-link product-group">            
+        {% unless sold_out %}
+        {% if on_sale and settings.collections_show_sale_circle %}
+        <div class="featured-tag">
+          <span class="badge badge--sale">          
+            <span class="gift-tag badge__text{% if sale_text.size > 7 %} badge__text--small{% endif %}">{{ 'products.product.sale' | t }}</span>
+          </span>
+        </div>
+        {% endif %}
+        {% endunless %}
+        {% if sold_out and settings.collections_show_sold_out_circle %}
+        <span class="badge badge--sold-out">
+          <span class="badge__text{% if sold_out_text.size > 9 %} badge__text--small{% endif %}">{{ 'products.product.sold_out' | t }}</span>
+        </span>
+        {% endif %} 
+        {% if product.images.size > 1 %}
+        <div class="middle-gallery_block {{ product.title | handle }}">            
+          <div class="sliders">
+            <div class="slides-show">
+              <ul>
+                {% for image in product.images %}
+                <li class="grid__item">      
+                  <a>
+                    <img src="{{ image.src | img_url: '800x' }}" alt="{{ image.alt | escape }}">             
+                  </a>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>           
+          </div>
+        </div>      
+        {% endif %}
+      </div>
+
+      <div class="product_right_tag  {% if on_sale %} offer_exist {% endif %}">
+        {% if on_sale %}{% render 'offer-price', product: current_variant %} {% endif %}         
+      </div>
+      
+      <div class="ImageWrapper">        
+        <div class="product-button dt-sc_{{settings.product_button_style}} {{ settings.icon_aignment}}"> 
+
+
+          {% if settings.product_button_style == 'icon' %}
+
+          <div>
+            {% if settings.enable_add_cart %}
+            {% if product.available %}   
+            {% assign productVariantSize = product.variants | size %}          
+            {% if productVariantSize > 1 %}
+            <a  title="{{ 'products.product.product_link' | t }}" href="{{ product.url }}">                      
+              {% render 'icon-link' %}
+            </a>
+            {% else %}
+
+            {% capture product_form_config %}
+            {
+            "money_format": {{ shop.money_format | json }},
+            "enable_history": true,
+            "currency_switcher_enabled": {{ settings.display_currency | json }},
+            "sold_out": {{ "products.product.sold_out" | t | json }},
+            "button": {{ 'products.product.add_to_cart' | t | json }},
+            "unavailable": {{ 'products.product.unavailable' | t | json }}
+            }
+            {% endcapture %}
+
+            {% form 'product', product, data-product-form:product_form_config %}                                  
+            <input type="hidden" name="id" value="{{ product.variants[0].id }}" />  
+            <button type="submit" name="add" id="AddToCart-{{product.id}}" class="dT_AddToCart btn">
+              {% render 'icon-cart' %}
+            </button>
+            {% endform %}
+            {% endif %}	
+            {% endif %}
+            {% endif %} 
+          </div>
+          {% endif %}          
+
+          {% if settings.enable_compare %}  
+          <div v-if="isInCompareList('{{ product.handle }}')">  
+            <a href="/pages/compare" class="site-header__icon site-header__compare dT-icon-add-compare-loaded dT_compareListLink" :data-item-count="compareItemCount()" data-product_handle="{{ product.handle }}">
+              {% render 'icon-compare' %}  
+            </a>
+          </div>
+          <div v-else>
+            <a href="/pages/compare" class="site-header__icon site-header__compare dT_compareListAddBtn" data-product_handle="{{ product.handle }}">
+              {% render 'icon-compare' %}  
+            </a>
+          </div>  
+          {% endif %} 
+
+          {% if settings.enable_wishlist %}
+          {%- render 'button-wishlist', product: product -%}
+          {% endif %}
+
+          {% if settings.enable_quick_view %}
+          <div>
+            <a data-url="{{productURL}}" 
+               class="product-thumb-full-quick-view popup-product quick-view-btn" 
+               href="{{ product.url | within: collection }}"
+               data-product-id="{{ product.id }}" 
+               data-slider-type="slider_gallery" 
+               data-effect="mfp-move-from-top">{% render 'icon-search' %}</a>
+          </div>
+          {% endif %}  
+        </div>
+      </div>
+      
+    </div>
+    <div class="product-detail {{ settings.item_aignment}}">
+      {% include 'new-label' %}
+      {% if settings.display_vendor and product.vendor != blank %}<p class="product-vendor"><span>{{ product.vendor }}</span></p>{% endif %}
+      <h4  class="grid-link__title"><a href="{{ product.url | within: collection }}">{{ product.title }}</a></h4>
+      {% if settings.product_review %}<span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span> {% endif %}             
+      <div class="grid-link__meta">
+        {% render 'product-price', variant: product %}  
+      </div>    
+      {% if settings.product_button_style == 'icon' %}
+      {% include 'variant-tag-color' %}   
+      {% endif %}
+
+      {% if settings.truncated_description %}
+      <div class="product_desc grid_list">{{ product.description | strip_html | truncatewords: settings.excerpt_count }}</div>
+      {% endif %}
+
+
+      {% if settings.product_button_style == 'button' %}
+      <div class="dt-sc-btn-group">
+        {% if product.available %}   
+        {% assign productVariantSize = product.variants | size %}   
+
+        {% capture product_form_config %}
+        {
+        "money_format": {{ shop.money_format | json }},
+        "enable_history": true,
+        "currency_switcher_enabled": {{ settings.display_currency | json }},
+        "sold_out": {{ "products.product.sold_out" | t | json }},
+        "button": {{ 'products.product.add_to_cart' | t | json }}, 
+        "unavailable": {{ 'products.product.unavailable' | t | json }}
+        }
+        {% endcapture %}
+
+        {% form 'product', product, data-product-form:product_form_config %}  
+        {% include 'variant-tag-color' %}   
+
+        <input type="hidden" name="id" class="variant-push" value="{{ product.variants[0].id }}" /> 
+
+        <div class="dt-sc-btn-group">
+          {% if settings.enable_add_cart %}       
+          <button type="submit" name="add" id="AddToCart-{{product.id}}" class="dT_AddToCart dt-sc-btn">
+            {% render 'icon-cart' %} {{ 'products.product.add_to_cart' | t }}
+          </button> 
+          {% endif %}
+
+        </div>
+
+        {% endform %}         
+        {% endif %}  
+      </div>      
+      {% endif %} 
+      {% include 'deal-snippet' %}     
+    </div>
+  </div>  
+  <script>  
+    $(document).ready(function() {
+      $('.middle-gallery_block.{{ product.title | handle }} .sliders .slides-show ul').not('.slick-initialized').slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: false,
+        fade: true,
+        asNavFor: '.slides.{{ product.title | handle }} ul'
+        });
+
+      $('.slides.{{ product.title | handle }} ul').not('.slick-initialized').slick({
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        vertical: true,
+        asNavFor: '.middle-gallery_block.{{ product.title | handle }} .sliders .slides-show ul',
+        centerMode: true,
+        focusOnSelect: true     
+        });
+    });
+
+  </script>
+
+</li>

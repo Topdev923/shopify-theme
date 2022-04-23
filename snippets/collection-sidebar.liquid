@@ -1,0 +1,115 @@
+<div class="text-center sidebar_btn"><a class="dt-sc-btn toggleIcon"> <i class="fa fa-caret-right" aria-hidden="true"></i> </a></div>
+{% assign dT_CollectionFilterClass = 'dT_CollectionFilter'%}
+<div class="sidebar sidebar-height-{{section.id}} {{ settings.sidebar_style }}_style" id="sidebar-sticky">
+  <a href="#" class="js-close-modal dt-sc-btn close-icon"></a>
+  <a href="#" class="clear-all dT_ClearAll" style="text-align: right;margin-bottom: 15px;">Clear All</a>
+  {% for block in section.blocks %}
+  {% case block.type %}
+  {% when 'menu' %}
+  {% assign sidebar_menu = block.settings.linklist %}
+  {% if linklists[sidebar_menu].links.size > 0 %}
+  <div class="filter-panel-{{block.type}}">
+    {%- if block.settings.filter_title != '' -%}
+    <h6 class="sidebar_title">{{ block.settings.filter_title }}</h6>
+    {%- endif -%}
+    <div class="filter-panel" id="accordian">
+      <ul>
+        {% for link in linklists[sidebar_menu].links %}
+        {% assign link_handle = link.title | handle %}
+        {% if linklists[link_handle] and linklists[link_handle].links.size > 0 %}
+        <li class="{% if link.active %}active{% endif %}">
+          <a href="{{ link.url }}">{{ link.title }}</a>
+          <ul>
+            {% for child in linklists[link_handle].links %}
+            <li {% if child.active %}class="active"{% endif %}><a href="{{ child.url }}">{{ child.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </li>
+        {% else %}
+        <li class="{% if link.active %}active{% endif %}"><a href="{{ link.url }}">{{ link.title }}</a></li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+  {% when 'image' %}  
+  {% if block.settings.image != blank %}
+  <div class="widget product-sidebar-type-{{block.type}}">
+    {% if block.settings.title != blank %} <h6 class="sidebar_title"> {{block.settings.title}}</h6> {% endif %}
+    <a href="{{block.settings.link}}">    
+      {%- assign img_url = block.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+      <img class="lazyload"
+           src="{{ 'loading.gif' | asset_url }}"
+           data-src="{{ img_url }}"
+           data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+           data-aspectratio="{{ block.settings.image.aspect_ratio }}"
+           data-sizes="auto"            
+           alt="{{ block.settings.block_image.alt | escape }}">            
+      <noscript>
+        {{ block.settings.image | img_url: '480x480', scale: 2 | img_tag: block.settings.image.alt, 'dt-sc-noscript-image' }}
+      </noscript>
+    </a>  
+
+    {% if block.settings.link != blank  and  block.settings.link_text != blank %}
+    <a href="{{block.settings.link}}" class="dt-sc-btn">      
+      {{block.settings.link_text}}            
+    </a>    
+    {% endif %}    
+  </div>  
+  {% endif %}
+  {% when 'carousel' %}  
+  <div class="dT_VProdWrapper widget product-sidebar-type-{{block.type}}">
+    {% if collections[block.settings.collection].products.size > 0 %} 
+    {% if block.settings.title != blank %}
+    <h6 class="sidebar_title">{{ block.settings.title }}</h6>  
+    {% endif %}
+    {% endif %}
+    <div data-section-id="{{ block.id }}" data-section-type="collection-sidebar-carousel-section" data-item-per-view="1"   data-autoplay="true"  data-small-screen-items="1"   data-item-space="2" data-auto-height="true"   class="product-sidebar-deals">
+      <div class="dt-sc-swiper-slider swiper-container navigation-bottom-center outside_element">
+        <div id="swiper-{{block.id}}-slider" class="dT_VProdWrapperOther">  
+          <ul class="swiper-wrapper">                 
+            {% for product in collections[block.settings.collection].products limit: block.settings.limit %}
+            {% include 'product-grid-item', product: product, swiperSlideClass: 'swiper-slide', imageSize: 'large' %} 
+            {% else %}
+            {% for i in (1..5) %}
+            {% include 'empty-row' , product: product, swiperSlideClass: 'swiper-slide' %}
+            {% endfor %}
+            {% endfor %}
+          </ul>               
+          <div class="swiper-{{ block.id}}-arrows swiper-arrows">
+            <div id="swiper-{{ block.id}}-next" class="swiper-button-next dt-sc-btn"></div>
+            <div id="swiper-{{ block.id}}-prev" class="swiper-button-prev dt-sc-btn"></div>
+          </div>  
+        </div>            
+      </div>
+    </div>  
+  </div>
+
+  {% when 'collection' %}
+  <div class="widget product-sidebar-type-{{block.type}}">
+    {% if collections[block.settings.collection].products.size > 0 %} 
+    {% if block.settings.title != blank %}
+    <h6 class="sidebar_title">{{ block.settings.title }}</h6>  
+    {% endif %}
+    {% endif %}
+    <div class="dT_VProdWrapperOther">  
+      <ul class="product-list-style">                 
+        {% for product in collections[block.settings.collection].products limit: block.settings.limit %}
+        {% include 'product-grid-item', product: product, imageSize: 'compact' %} 
+        {% else %}
+        {% for i in (1..5) %}
+        {% include 'empty-row' , product: product %}
+        {% endfor %}
+        {% endfor %}
+      </ul>                   
+    </div>
+  </div>
+  {% when 'collection_filter' %}
+  {% include 'collection-filter' %}
+  {% endcase %}
+    
+  {% endfor %}
+</div>
+
+

@@ -1,0 +1,42 @@
+{% layout none %}
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign product_image_zoom_size = '1024x1024' -%}
+{%- assign product_image_scale = '2' -%}
+{%- assign enable_image_zoom = section.settings.enable_image_zoom -%}
+{%- assign compare_at_price = current_variant.compare_at_price -%}
+{%- assign price = current_variant.price -%}
+
+
+{%- liquid
+  if variant.title
+    assign compare_at_price = variant.compare_at_price
+    assign price = variant.price
+    assign available = variant.available
+  else
+    assign compare_at_price = 1999
+    assign price = 1999
+    assign available = true
+  endif
+
+  assign money_price = price | money
+
+  assign price = current_variant.price
+  assign money_price = price | money
+-%}
+
+
+
+{% assign product_image = '' %}
+{%- liquid
+    for media in product.media
+        case media.media_type
+            when 'image'
+                   assign product_image = media.src | product_img_url: 'master'
+            endcase
+    endfor        
+-%}
+
+{% assign a_variants     = product.variants[0] %}
+
+{{ product.id }}~~{{  product.title}}~~{{product.handle}}~~{{product_image}}~~{{product.vendor}}~~{{ product.type}}~~{{money_price}}~~{{product.price_min}}~~{{product.price_max}}~~{{product.available}}~~{{product.price_varies}}~~{{a_variants.id}}~~{{a_variants.title}}~~{{a_variants.sku}}

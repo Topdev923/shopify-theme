@@ -1,0 +1,39 @@
+{% if section.settings.logo %}
+{%- assign img_url = section.settings.logo | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+<div  class="logo{% unless section.settings.menu_align == 'logo_left' %} text-center{% endunless %}">
+  <a href="{{ routes.root_url }}">
+    {% capture logo_alt %}{{ section.settings.logo.alt | default: shop.name }}{% endcapture %}
+    <img src="{{ section.settings.logo | img_url: '300x300' }}"  alt="{{ logo_alt | escape }}"  style="max-width: {{ section.settings.logo_max_width }}px">
+  </a> 
+</div>
+{% else %}
+<a href="{{ routes.root_url }}">{{ shop.name }}</a>
+{% endif %} 
+{% schema %}
+  {
+    "name": "Giftcard Logo",
+    "settings": [
+{
+"type": "image_picker",
+"id": "logo",
+"label": "Logo image" 
+}, 
+{
+"type": "range",
+"id": "logo_max_width",
+"label":"Custom logo width", 
+"min": 100,
+"max": 400,
+"step": 5,
+"unit": "px",
+"default": 100
+}
+]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

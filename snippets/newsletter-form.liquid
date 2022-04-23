@@ -1,0 +1,12 @@
+
+{% form 'customer' %}
+{% if form.posted_successfully? %}
+<p class="note form-success">{{ 'general.newsletter_form.mailing_list_success_message' | t }}</p>
+{% else %}
+  <input type="email" placeholder="Enter your email id" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'general.newsletter_form.newsletter_email' | t }}" name="contact[email]" class="mail" aria-label="{{ 'general.newsletter_form.newsletter_email' | t }}" required="required">
+  <input type="hidden" name="contact[tags]" value="newsletter">
+  <input type="submit" class="btn"  value="{{ 'general.newsletter_form.submit' | t }}"  id="subscribe" >
+
+{% endif %}
+{{ form.errors | default_errors }}
+{% endform %}  

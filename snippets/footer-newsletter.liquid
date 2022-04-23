@@ -1,0 +1,36 @@
+<div class="{{ footer_column_alignment}}">
+  {% if block.settings.title != blank  and section.settings.show_footer_title %}        
+  <h6 class="footer__title ">{{ block.settings.title }}</h6>
+  {% endif %}
+
+  {% form 'customer', id: 'newsletter-footer' %}
+  {% if form.posted_successfully? %}
+  <div class="note note--success">{{ 'general.newsletter_form.mailing_list_success_message' | t }}</div>
+  {% endif %}
+  {% if form.context == 'footer' %}
+  {% if form.errors %}
+  {{ form.errors | default_errors }}
+  {% endif %}
+  {% endif %}
+  <input type="hidden" name="contact[tags]" value="prospect,newsletter">
+  <input type="hidden" name="contact[context]" value="footer">
+  <div class="footer__newsletter">
+    <input type="email" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'general.newsletter_form.newsletter_email' | t }}" name="contact[email]" id="Email-{{ block.id }}"  class="footer__newsletter-input" autocorrect="off"  autocapitalize="off" required="required">
+    <button type="submit" class="btn footer__newsletter-btn" name="commit"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
+      <g transform="translate(0,-952.36218)">
+        <path d="M4.3,971.9c-2.4,0-4.3,2-4.3,4.3v52.2c0,2.4,2,4.3,4.3,4.3h91.3c2.4,0,4.3-2,4.3-4.3v-52.2c0-2.4-2-4.3-4.3-4.3H4.3z
+                 M8.1,976.3h83.9l-39.7,33.1c-1,0.9-3.4,0.9-4.4,0L8.1,976.3z M4.3,978.9l29.3,24.4L4.3,1026V978.9L4.3,978.9z M95.7,978.9v47.1
+                 l-29.3-22.7L95.7,978.9z M37,1006.1l8,6.6c2.9,2.4,7.1,2.4,10,0l8-6.6l28.8,22.4H8.3L37,1006.1z"></path>
+      </g>
+      </svg></button>
+  </div>
+
+  {% if block.settings.richtext != blank %}
+  {{ block.settings.richtext }}
+  {% endif %}
+  {% endform %}
+
+  {% if section.settings.social_placement == 'with_newsletter'  and section.settings.show_social %}   
+  {% include 'social-links' %}
+  {% endif %}
+</div>

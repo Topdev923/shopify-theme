@@ -1,0 +1,247 @@
+{% if section.settings.display_recent_purchase %}
+<ul class="customer-who-purchased text-{{ section.settings.placement}}">
+  {% for block in section.blocks %}    
+  {%- assign product = all_products[block.settings.product] -%}
+  <li class="product-data">
+    <a href="{{ product.url | within: collection }}">      
+      {%- assign img_url = product.featured_image.src | product_img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+      <img class="lazyload"
+           src="{{ 'loading.gif' | asset_url }}"
+           data-src="{{ img_url }}"
+           data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+           data-aspectratio="{{ product.featured_image.src.aspect_ratio }}"
+           data-sizes="auto"            
+           alt="{{ product.featured_image.src.alt | escape }}">            
+      <noscript>
+        {{ product.featured_image.src | product_img_url: '480x480', scale: 2 | img_tag: product.featured_image.src.alt, 'dt-sc-noscript-image' }}
+      </noscript>
+      <span class="title">{{ product.title | truncatewords: 5}}</span>
+    </a>
+    <p><span class="purchased">{{ section.settings.text}}</span>{{ 'layout.customer.from' | t}}<span class="location">{{block.settings.from}}</span><span class="timing">{{block.settings.time}}</span></p>  
+    <a href="javascript:void(0)" title="Close" class="dT_close">
+      {% render 'icon-close' %}
+    </a>
+  </li>           
+  {% endfor %}
+</ul>
+{% endif %}
+
+<script type="text/javascript">
+  if ($.cookie('dT_suggested-cookie') == 'closed') {
+    $('.customer-who-purchased').remove();
+  }
+
+  $('.dT_close').bind('click',function(){
+    $('.customer-who-purchased').remove();
+    $.cookie('dT_suggested-cookie', 'closed', {expires:1, path:'/'});
+  });      
+
+  var elements = $('.customer-who-purchased li');
+  var init_element = 0;
+  var i = 0;
+  //elements.css({top: 0,left: 0,}).fadeOut(1);
+  elements.removeClass('active');
+  function fadeInRandomElement() { 
+    if ( i % 2 == 0) {
+      var currentItem = elements.eq(init_element);
+      //currentItem.css({top: 0,left: 0,}).fadeIn(1000).delay(2000).fadeOut(1000);
+      currentItem.addClass('active');
+      setTimeout(function(){ 
+        currentItem.removeClass('active')
+      }, 4000);
+
+      init_element++;
+      if(elements.length == init_element) {
+        init_element = 0;
+      }
+
+    }
+
+    i++;
+
+  }
+
+  setInterval(function(){ 
+    fadeInRandomElement();
+  }, 4000);
+
+
+</script>
+
+<style type="text/css">
+
+  .customer-who-purchased{  
+    pointer-events: none;
+    margin: 0;
+    max-height: 200px;
+    min-height: 120px;
+    max-width: 500px;
+    min-width: 400px;
+    position: fixed;
+    bottom: 35px;
+    width: auto;
+    z-index: 3;
+    -webkit-transition: var(--DTBaseTransition);
+      transition: var(--DTBaseTransition);
+        }
+
+  .customer-who-purchased.text-left { left: 35px; }
+  .customer-who-purchased.text-right { right: 35px; }
+
+  .customer-who-purchased .product-data {
+    display: block;
+    height:auto;
+    margin: 25px 20px;
+    opacity: 0;
+    padding: 0 20px 0 80px;
+    position: absolute;
+    bottom: -35px;
+    left: 0;
+    visibility: hidden;
+    width: auto;
+    border-radius: var(--DTRadius); 
+      -webkit-transition: .5s cubic-bezier(.25,.8,.25,1) 0.05s;
+      transition: .5s cubic-bezier(.25,.8,.25,1) 0.05s;
+      }
+  .customer-who-purchased .product-data:before {
+    background-color: #fff;
+    content: "";
+    display: block;
+    height: auto;
+    margin: -25px -20px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    width: auto;
+    z-index: -1;
+    border-radius: var(--DTRadius); 
+      -webkit-box-shadow: 0 1px 3px 1px var(--DTboxShadowcolor);
+        box-shadow: 0 1px 3px 1px var(--DTboxShadowcolor);    
+          }
+
+  .customer-who-purchased .product-data.active { pointer-events: all; opacity: 1; bottom: 0; visibility: visible; }
+  .customer-who-purchased .product-data p { font-size: 0.9em; margin-top: 5px; }
+  .customer-who-purchased .product-data p span {
+    display: inline;
+    padding: 3px; 
+  }
+
+  .customer-who-purchased .product-data span.title, 
+  .customer-who-purchased .product-data p span.location { font-weight: 600; }  
+
+  .customer-who-purchased .product-data p span.purchased { padding-left: 0; }
+
+  .customer-who-purchased .product-data p span.timing { font-size: 0.875em; font-style: italic; font-weight: 300; }
+
+
+  .customer-who-purchased .product-data > a img {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 60px;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+
+  .customer-who-purchased .product-data .dT_close {
+    height: 20px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    text-align: center;
+    width: 20px;
+    pointer-events: all;
+    border-radius: var(--DTRadius); 
+      -webkit-transform: translate(25%, -50%);
+      transform: translate(25%, -50%);
+      }
+
+  .customer-who-purchased .product-data .dT_close svg { 
+    height: 1em;
+    margin: auto; 
+    position: absolute; 
+    left: 50%; 
+    top: 50%; 
+    width: 1em;
+    -webkit-transform: translate(-50%,-50%); 
+    transform: translate(-50%,-50%); 
+    -webkit-transition: inherit; 
+    transition: inherit; 
+  }
+
+  @media (max-width:576px) {
+    .customer-who-purchased{
+      max-width: 90%;
+      min-width: 90%;
+      left: 0 !important;
+      right: 0!important;
+      margin: auto;
+    }
+  }
+
+</style>
+
+{% schema %}
+{
+"name": "Recently purchased",
+"class": "customer-purchased",
+"settings": [
+{
+"type" : "checkbox",
+"id" : "display_recent_purchase",
+"label" : "Display customer who recently purchased",
+"default" : true
+},        
+{
+"type": "radio",
+"id": "placement",
+"label": "Widget position",
+"options": [
+{
+"value": "left",
+"label": "Left"
+},
+{
+"value": "right",
+"label": "Right"
+}
+],
+"default": "right"        
+},        
+{
+"type" : "textarea",
+"id" : "text",
+"label" : "Text", 
+"default" : "Someone recently bought a"
+}
+],
+"blocks" : [
+{
+"type" : "image",
+"name" : "Product",
+"settings":[
+{
+"type" : "product",
+"id" : "product",
+"label" :"Select Product"
+},
+{
+"type" : "text",
+"id" : "from",
+"default" : "Texas, US",
+"label" : "Location"
+},
+{
+"type" : "text",
+"id" : "time",
+"default" : "10 minutes ago",
+"label" : "Time"
+}				
+]
+}
+]
+}
+{% endschema %}
+

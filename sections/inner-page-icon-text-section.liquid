@@ -1,0 +1,498 @@
+{% if section.settings.enable %}
+
+{% if section.settings.enable_overlay %}
+{% assign section_overlay = 'dt-sc-overlay' %}
+{% endif %}
+
+{% case section.settings.background_style %}
+{% when 'default' %}
+{% when 'parallax' %}
+{%- assign background_style = 'data-speed="2"' %}
+{% when 'fixed' %}
+{%- assign background_style = 'data-speed="1"' %}
+{% endcase %}
+{% if section.settings.show_background_image %}
+{% assign lazyScript = "lazyload" %}
+{% endif %}
+<div class="dt-sc-section-wrapper {{lazyScript}} {{section_overlay}} {% if section.settings.background_style == 'parallax' %} parallax-initiated{% endif %}" style="{% render 'bg-color-image-padding' %}" data-style="parallax" {{background_style}} {% include 'bg_image' %}>  
+  <div class="{% render 'container-settings' %}"> 
+    <div class="row">
+      {% render 'section-heading', class: section.id %}      
+      <div class="dt-sc-icon-section dt-sc-column {{section.settings.column}}">                          
+        {% for block in section.blocks %} 
+        <div class="dt-sc-icon">
+          {% if block.settings.image != blank  %} 
+          <div class="dt-sc-icon-image">         
+          {%- assign img_url = block.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+              <img class="lazyload"
+                   src="{{ 'loading.gif' | asset_url }}"
+                   data-src="{{ block.settings.image | img_url: 'master' }}"
+                   data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+                   data-aspectratio="{{ block.settings.image.aspect_ratio }}"
+                   data-sizes="auto"            
+                   alt="{{ block.settings.image.alt | escape }}">            
+            <noscript>
+              {{ block.settings.image | img_url: '480x480', scale: 2 | img_tag: block.settings.image.alt, 'dt-sc-noscript-image' }}
+            </noscript>
+          </div>
+          {% endif %}              
+          <div class="dt-sc-icon-content">
+            {% if block.settings.title != blank  %} 
+            <h4 class="dt-sc-main-title">{{block.settings.title}}</h4>
+            {% endif %}
+            {% if block.settings.text != blank  %} 
+            <p class="dt-sc-description">{{block.settings.text}}</p>
+            {% endif %}
+          </div>                
+        </div>                
+        {% endfor %}              
+      </div>          
+    </div>
+  </div>
+</div>
+<style type="text/css">
+  
+  #shopify-section-{{section.id}}.inner-page-icon-text-section .dt-sc-overlay:before {      
+    color: var(--DTPrimaryColor); 
+    color: {{ section.settings.background_color }};    
+    background: currentcolor; 
+    opacity: {{ section.settings.overlay_transparency }};
+  } 
+  #shopify-section-{{section.id}}.inner-page-icon-text-section .dt-sc-heading .dt-sc-main-heading { color: var(--DTColor_Heading); color:{{ section.settings.section_heading_color }}; } 
+  #shopify-section-{{section.id}}.inner-page-icon-text-section .dt-sc-heading .dt-sc-sub-heading { color: var(--DTColor_Heading); color:{{ section.settings.section_sub_heading_color }}; } 
+  #shopify-section-{{section.id}}.inner-page-icon-text-section .dt-sc-heading .dt-sc-heading-description { color: var(--DTColor_Body); color:{{ section.settings.section_description_color }}; } 
+  #shopify-section-{{section.id}}.inner-page-icon-text-section .dt-sc-heading .dt-sc-btn { 
+    background: var(--DT_Button_BG_Color); 
+      background:{{ section.settings.section_button_bg_color }}; color: var(--DT_Button_Text_Color); color:{{ section.settings.section_button_text_color }}; }
+  #shopify-section-{{section.id}}.inner-page-icon-text-section .dt-sc-heading .dt-sc-btn:hover { 
+    background: var(--DT_Button_BG_Hover_Color); background:{{ section.settings.section_button_hover_bg_color }}; 
+      color: var(--DT_Button_Text_Hover_Color); color:{{ section.settings.section_button_hover_text_color }}; }
+
+  #shopify-section-{{section.id}}.inner-page-icon-text-section .dt-sc-icon-section .dt-sc-icon {
+    display: flex;
+    flex-wrap: wrap;
+    height: 100%;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #shopify-section-{{section.id}}.inner-page-icon-text-section .dt-sc-icon-section .dt-sc-icon .dt-sc-icon-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 170px;
+    height: 170px;    
+    transition: var(--DTBaseTransition);
+      position: relative;
+      margin: 0 0 30px;
+      }
+
+  #shopify-section-{{section.id}}.inner-page-icon-text-section .dt-sc-icon-section .dt-sc-icon .dt-sc-icon-image:before {
+    opacity: 0;
+    transform: scale(1.2);
+    -webkit-transform: scale(1.2);
+    -ms-transform: scale(1.2);
+    -webkit-animation: blobbing-reverse 25s ease-in-out infinite both alternate;
+    animation: blobbing-reverse 25s ease-in-out infinite both alternate;
+  }
+
+  #shopify-section-{{section.id}}.inner-page-icon-text-section .dt-sc-icon-section .dt-sc-icon .dt-sc-icon-image:before,
+  #shopify-section-{{section.id}}.inner-page-icon-text-section .dt-sc-icon-section .dt-sc-icon .dt-sc-icon-image:after {
+    content: "";
+    height: 100%;
+    left: 0;
+    position: absolute;
+    width: 100%;
+    z-index: -1;
+    transition: var(--DTBaseTransition);
+  }
+
+  #shopify-section-{{section.id}}.inner-page-icon-text-section .dt-sc-icon-section .dt-sc-icon .dt-sc-icon-image:after {
+    opacity: 1;
+    -webkit-animation: blobbing 25s ease-in-out infinite both alternate;
+    animation: blobbing 25s ease-in-out infinite both alternate;
+  }
+
+  #shopify-section-{{section.id}}.inner-page-icon-text-section .dt-sc-icon-section .dt-sc-icon:hover .dt-sc-icon-image:before {
+    opacity: 1;
+    transform: scale(1);
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+  }
+
+  #shopify-section-{{section.id}}.inner-page-icon-text-section .dt-sc-icon-section .dt-sc-icon:hover .dt-sc-icon-image:after {
+    transform: scale(0);
+    -webkit-transform: scale(0);
+    -ms-transform: scale(0);
+    opacity: 0;
+  }
+
+  @-webkit-keyframes blobbing {
+    0%,
+    100% {
+      border-radius: 67% 33% 43% 57% / 27% 28% 72% 73%; }
+
+    7% {
+      border-radius: 30% 70% 57% 43% / 53% 38% 62% 47%; }
+
+    14% {
+      border-radius: 74% 26% 43% 57% / 51% 25% 75% 49%; }
+
+    21% {
+      border-radius: 49% 51% 72% 28% / 32% 36% 64% 68%; }
+
+    28% {
+      border-radius: 71% 29% 27% 73% / 52% 59% 41% 48%; }
+
+    35% {
+      border-radius: 33% 67% 29% 71% / 43% 46% 54% 57%; }
+
+    42% {
+      border-radius: 66% 34% 35% 65% / 68% 69% 31% 32%; }
+
+    49% {
+      border-radius: 44% 56% 67% 33% / 33% 46% 54% 67%; }
+
+    56% {
+      border-radius: 70% 30% 64% 36% / 43% 59% 41% 57%; }
+
+    63% {
+      border-radius: 25% 75% 62% 38% / 39% 60% 40% 61%; }
+
+    70% {
+      border-radius: 47% 53% 68% 32% / 70% 68% 32% 30%; }
+
+    77% {
+      border-radius: 71% 29% 42% 58% / 35% 67% 33% 65%; }
+
+    84% {
+      border-radius: 50% 50% 54% 46% / 69% 69% 31% 31%; }
+
+    91% {
+      border-radius: 73% 27% 62% 38% / 26% 36% 64% 74%; }
+  }
+
+  @-webkit-keyframes blobbing-reverse {
+    0%,
+    100% {
+      border-radius: 73% 27% 62% 38% / 26% 36% 64% 74%; }
+
+    7% {
+      border-radius: 50% 50% 54% 46% / 69% 69% 31% 31%; }
+
+    14% {
+      border-radius: 71% 29% 42% 58% / 35% 67% 33% 65%; }
+
+    21% {
+      border-radius: 47% 53% 68% 32% / 70% 68% 32% 30%; }
+
+    28% {
+      border-radius: 25% 75% 62% 38% / 39% 60% 40% 61%; }
+
+    35% {
+      border-radius: 70% 30% 64% 36% / 43% 59% 41% 57%; }
+
+    42% {
+      border-radius: 44% 56% 67% 33% / 33% 46% 54% 67%; }
+
+    49% {
+      border-radius: 66% 34% 35% 65% / 68% 69% 31% 32%; }
+
+    56% {
+      border-radius: 43% 67% 29% 71% / 43% 46% 54% 57%; }
+
+    63% {
+      border-radius: 25% 75% 62% 38% / 39% 60% 40% 61%; }
+
+    70% {
+      border-radius: 71% 29% 27% 73% / 52% 59% 41% 48%; }
+
+    77% {
+      border-radius: 49% 51% 72% 28% / 32% 36% 64% 68%; }
+
+    84% {
+      border-radius: 74% 26% 43% 57% / 51% 25% 75% 49%; }
+
+    91% {
+      border-radius: 30% 70% 57% 43% / 53% 38% 62% 47%; }
+  }
+
+  #shopify-section-{{section.id}}.inner-page-icon-text-section .dt-sc-icon-section .dt-sc-icon .dt-sc-icon-image img {
+    transition: var(--DTBaseTransition);
+      transform: scale(0.7);
+      -webkit-transform: scale(0.7);
+      -ms-transform: scale(0.7);
+      }
+
+  #shopify-section-{{section.id}}.inner-page-icon-text-section .dt-sc-icon-section .dt-sc-icon:hover .dt-sc-icon-image img {
+    transform: scale(0.9);
+    -webkit-transform: scale(0.9);
+    -ms-transform: scale(0.9);
+  }
+
+  #shopify-section-{{section.id}}.inner-page-icon-text-section .dt-sc-icon-section .dt-sc-icon .dt-sc-icon-content { display: flex; flex-wrap: wrap; align-items: center; text-align: center; justify-content: center; width: 100%; }
+
+  #shopify-section-{{section.id}}.inner-page-icon-text-section .dt-sc-icon-section .dt-sc-icon .dt-sc-icon-content .dt-sc-main-title { padding: 0; margin: 0 0 10px; font-size: 20px; width: 100%; }
+  
+  #shopify-section-{{section.id}}.inner-page-icon-text-section .dt-sc-icon-section .dt-sc-icon .dt-sc-icon-content .dt-sc-main-title {
+    color: var(--DTColor_Heading); color:{{ section.settings.block_heading_color }};}  
+  #shopify-section-{{section.id}}.inner-page-icon-text-section .dt-sc-icon-section .dt-sc-icon .dt-sc-icon-content .dt-sc-description  {
+    color: var(--DTColor_Body); color:{{ section.settings.block_description_color }};}
+  #shopify-section-{{section.id}}.inner-page-icon-text-section .dt-sc-icon-section .dt-sc-icon .dt-sc-icon-image:after {
+    background-color: {{ settings.overlay_color | color_modify: 'alpha', 0.5 }}; background-color:{{ section.settings.block_image_bg_color }}; }
+  #shopify-section-{{section.id}}.inner-page-icon-text-section .dt-sc-icon-section .dt-sc-icon:hover .dt-sc-icon-image:before { 
+    background-color: var(--DTTertiaryColor); background-color: {{ section.settings.block_image_bg_hover_color }}; }
+
+</style>
+{% endif %}
+
+{% schema %}
+{
+"name": "Icon with text",
+"class": "inner-page-icon-text-section",
+"settings": [
+{
+"type": "checkbox",
+"id": "enable",
+"label": "Show this section",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "full",
+"label": "Show Full width"
+},
+{
+"type": "checkbox",
+"id": "spacing_both_ends",
+"label": "Enable Right & Left Spacing (Works only on Fullwidth)",
+"default": false
+},
+{
+"type": "text",
+"id": "padding",
+"label": "Style value (Padding)",
+"default":"0,0",
+"info":"Top(px),Bottom(px)"
+},
+{
+"type": "text",
+"id": "margin",
+"label": "Style value (Margin)",
+"default":"0,0",
+"info":"Top(px),Bottom(px)"
+},
+{
+"type": "image_picker",
+"id": "background_image",
+"label": "Background image",
+"info": "Size: 1920x1280"
+},
+{
+"type": "checkbox",
+"id": "show_background_image",
+"label": "Enable Background image"
+},
+{
+"type": "select",
+"id": "background_style",
+"label": "Background Style",
+"default": "default",
+"options": [
+{
+"value": "default",
+"label": "Default"
+},
+{
+"value": "parallax",
+"label": "Parallax"
+},
+{
+"value": "fixed",
+"label": "Fixed"
+}
+]
+},
+{
+"type": "checkbox",
+"id": "enable_overlay",
+"label": "Enable Background Color (Used as Background Image Overlay Color too)"
+},
+{
+"type": "color",
+"id": "background_color",
+"label":"Background color"
+},
+{
+"type": "text",
+"id": "overlay_transparency",
+"label": "Overlay Transparency (0.01 to 1)",
+"default": "0.5"
+},
+{
+"type": "text",
+"id": "section_heading",
+"label": "Main Heading",
+"default": "Icon with text"
+},  
+{
+"type": "text",
+"id": "section_sub_heading",
+"label": "Sub Heading",
+"default": "Sub Heading"
+},  
+{
+"type": "text",
+"id": "section_description",
+"label": "Description",
+"default": "Use this text to share the information which you like!."
+},  
+{
+"type": "text",
+"id": "section_button_text",
+"label": "Link text"
+},
+{
+"type": "url",
+"id": "section_button_link",
+"label": "Link URL"
+},
+{
+"type": "header",
+"content": "Section Color settings"
+},
+{
+"type": "color",
+"id": "section_heading_color",
+"label": "Heading color"
+},    
+{
+"type": "color",
+"id": "section_sub_heading_color",
+"label": "Sub heading color"
+},   
+{
+"type": "color",
+"id": "section_description_color",
+"label": "Description color"
+},  
+{
+"type": "color",
+"id": "section_button_bg_color",
+"label": "Button bg color"
+},   
+{
+"type": "color",
+"id": "section_button_text_color",
+"label": "Button text color"
+},   
+{
+"type": "color",
+"id": "section_button_hover_bg_color",
+"label": "Button hover bg color"
+},   
+{
+"type": "color",
+"id": "section_button_hover_text_color",
+"label": "Button hover text color"
+},
+{
+"type": "select",
+"id": "heading_position",
+"label": "Heading Position",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "Right"
+}
+]
+},
+{
+"type": "header",
+"content": "Block settings"
+},
+{
+"type": "select",
+"id": "column",
+"label": "Item per row",
+"default": "four-column",
+"options": [
+{
+"value": "one-column",
+"label": "1"
+},
+{
+"value": "two-column",
+"label": "2"
+},
+{
+"value": "three-column",
+"label": "3"
+},
+{
+"value": "four-column",
+"label": "4"
+}
+]
+},
+{
+"type": "header",
+"content": "Block Color settings"
+},
+{
+"type": "color",
+"id": "block_heading_color",
+"label": "Heading Color"
+},
+{
+"type": "color",
+"id": "block_description_color",
+"label": "Description Color"
+},
+{
+"type": "color",
+"id": "block_image_bg_color",
+"label": "Image Background Color"
+},
+{
+"type": "color",
+"id": "block_image_bg_hover_color",
+"label": "Image BG hover color"
+}
+],
+"blocks": [
+{
+"type": "content",
+"name": "Content",        
+"settings": [
+{
+"type": "image_picker",
+"id": "image",
+"label": "Image"          
+},
+{
+"type": "text",
+"id": "title",
+"label": "Heading",
+"default": "Heading"
+},
+{
+"type": "textarea",
+"id": "text",
+"label": "Description",
+"default": "Sed vestibulum nulla elementum auctor tincidunt aliquam sit amet cursus mauris"
+}
+]
+}
+]
+}
+{% endschema %}

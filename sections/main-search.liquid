@@ -1,0 +1,100 @@
+
+{% assign grid_results = false %}
+{% assign respond_js_secret_key = shop.domain | md5 %}
+{% unless search.terms == respond_js_secret_key %}
+
+{% case settings.search_grid %}
+{% when '1' %}
+{% when '2' %}
+{%- assign column = 'two-column' -%}
+ {% assign imageSize = '767x767' %}   
+{% when '3' %}
+{%- assign column = 'three-column' -%}
+{% assign imageSize = '767x767' %}   
+{% when '4' %}
+{%- assign column = 'four-column' -%}              
+{% assign imageSize = '767x767' %}   
+{% when '5' %}
+{%- assign column = 'five-column' -%}              
+{% assign imageSize = '767x767' %}   
+{% when '6' %}
+{%- assign column = 'six-column' -%}                         
+{% assign imageSize = '767x767' %}   
+{% endcase %} 
+
+{% if settings.search_results_per_page != blank %}
+{% assign search_per_page = settings.search_results_per_page %}
+{% else %}
+{% assign search_per_page = 12 %}
+{% endif %}
+
+{% paginate search.results by search_per_page %}
+<div class="container" data-section-id="search-page" data-section-type="search-page">
+  <div class="row">
+    <div class="search-products collection-template" data-search-page>
+      {% if search.performed %}
+      {% if search.results_count == 0 %}
+      <h2 class="text--left h2" style="width:100%;">{{ 'general.search.no_results_html' | t: terms: search.terms }}</h2>
+      {% include 'search-bar' %}
+      {% else %}
+      <h2 class="h2 text--left" style="width:100%;">{{ 'general.search.results_for_html' | t: terms: search.terms }}</h2>
+      {% include 'search-bar' %}
+      {% endif %}
+      {% else %}
+      <h2 class="h2 left" style="width:100%;">{{ 'general.search.title' | t }}</h2>
+      {% include 'search-bar' %}
+      {% endif %}
+      <div class="dT_VProdWrapper">
+        <ul class="dt-sc-column {{column}}">
+          {% for item in search.results %}
+
+          {% if item.object_type == 'product' %} 
+          {% include 'product-grid-item', product: item, imageSize: imageSize %}   
+          {% else %}      
+          <li class="grid item-row grid__item {{ search_item_width }}">
+            <div class="products">
+              {% assign has_image = true %}
+              {% assign image_alt = item.title | escape %}
+              <div class="product-container">
+                {% assign featured_image = item.image | default: item.featured_image %}
+                {% if featured_image != blank %}
+                <a href="{{ item.url }}" title="{{ item.title | escape }}">
+                  {{ featured_image | img_url: 'large' | img_tag: featured_image.alt }}
+                </a>
+                {% endif %}
+              </div>
+              <div class="product-detail">      
+                <a href="{{ item.url}}" class="grid-link__title">{{ item.title }}</a>
+              </div>
+            </div>
+          </li>
+          {% endif %}  
+          {% endfor %}  
+        </ul>
+      </div>
+      {% if paginate.pages > 1 %}
+      <div class="text-center">
+        {% include 'pagination', paginate_from:'search' %}
+      </div>
+      {% endif %}  
+
+
+    </div>
+  </div>
+</div>
+{% endpaginate %}
+
+{% else %}
+{% include 'respond' %}
+{% layout none %}
+{% endunless %}
+
+
+
+{% schema %}
+{
+  "name": "t:sections.main-search.name",
+  "tag": "section",
+  "class": "main-search-page"
+}
+{% endschema %}

@@ -1,0 +1,161 @@
+{% if settings.blog_page_sidebar == "left_sidebar" %}
+{% assign sidebar_column = 'left-sidebar' %}
+{% endif %}
+{% if settings.blog_page_sidebar == "right_sidebar" %}
+{% assign sidebar_column = 'right-sidebar' %}
+{% endif %}
+{% if section.blocks.size > 0 %}
+<aside class="sidebar-height-{{section.id}} {{ settings.sidebar_style }}_style">
+  <a href="#" class="js-close-modal dt-sc-btn close-icon"></a>
+  {% for block in section.blocks %}
+  {% case block.type %}
+  {% when 'articles' %}
+  <div class="widget product-sidebar-type-{{block.type}}">
+    {% if block.settings.title != blank %} 
+    <h6 class="sidebar_title">{{ block.settings.title }}</h6>  
+    {% endif %}
+    <div class="blog-sidebar-panel">
+      <ul class="recent_article">
+        {% for article in blogs[blog.handle].articles limit: block.settings.limit %}
+        <li class="article-item">        
+          {% if article.image %}
+          <div class="article-image">                        
+            {%- assign img_url = article.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+            <img class="article__grid-image lazyload"
+                 src="{{ 'loading.gif' | asset_url }}"
+                 data-src="{{ img_url }}"
+                 data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+                 data-aspectratio="{{ article.image.aspect_ratio }}"
+                 data-sizes="auto"            
+                 alt="{{ article.image.alt | escape }}">            
+            <noscript>
+              {{ article.image | img_url: '480x480', scale: 2 | img_tag: article.image.alt, 'dt-sc-noscript-image' }}
+            </noscript> 
+          </div>
+          {% endif %}               
+          <div class="article-description">
+            <h6><a href="{{ article.url }}">{{ article.title }}</a></h6>
+            <p>{{ article.content | strip_html | truncatewords: 5 }}</p>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% when 'tags' %}
+  <div class="widget product-sidebar-type-{{block.type}}">
+    {% if block.settings.title != blank %} 
+    <h6 class="sidebar_title">{{ block.settings.title }}</h6>  
+    {% endif %}
+    <div class="blog-sidebar-panel">
+      <ul class="categories">
+        {% for tag in blog.all_tags limit: block.settings.limit %}
+        {% if current_tags contains tag %}
+        <li class="active">{{ tag }}</li>
+        {% else %}
+        <li>{{ tag | link_to_tag: tag }}</li>
+        {% endif %}
+        {% endfor %}
+      </ul>  
+    </div>
+  </div>
+
+  {% when 'carousel' %}  
+  <div class="dT_VProdWrapper widget product-sidebar-type-{{block.type}}">
+    {% if collections[block.settings.collection].products.size > 0 %} 
+    {% if block.settings.title != blank %}
+    <h6 class="sidebar_title">{{ block.settings.title }}</h6>  
+    {% endif %}
+    {% endif %}
+    <div data-section-id="{{ block.id }}" data-section-type="blog-sidebar-carousel-section" data-item-per-view="1"   data-autoplay="true"  data-small-screen-items="1"   data-item-space="2" data-auto-height="true"  class="product-sidebar-deals">
+      <div class="dt-sc-swiper-slider swiper-container navigation-bottom-center outside_element">
+        <div id="swiper-{{block.id}}-slider">  
+          <ul class="swiper-wrapper">                 
+            {% for product in collections[block.settings.collection].products limit: block.settings.limit %}
+            {% render 'product-grid-item', product: product, swiperSlideClass: 'swiper-slide' %} 
+            {% else %}
+            {% for i in (1..5) %}
+            {% render 'empty-row' , product: product, swiperSlideClass: 'swiper-slide' %}
+            {% endfor %}
+            {% endfor %}
+          </ul>               
+          <div class="swiper-{{ block.id}}-arrows swiper-arrows">
+            <div id="swiper-{{ block.id}}-next" class="swiper-button-next dt-sc-btn"></div>
+            <div id="swiper-{{ block.id}}-prev" class="swiper-button-prev dt-sc-btn"></div>
+          </div>  
+        </div>            
+      </div>
+    </div>  
+  </div>
+
+  {% when 'collection' %}
+
+  <div class="widget product-sidebar-type-{{block.type}}">
+    {% if collections[block.settings.collection].products.size > 0 %} 
+    {% if block.settings.title != blank %}
+    <h6 class="sidebar_title">{{ block.settings.title }}</h6>  
+    {% endif %}
+    {% endif %}
+    <ul class="product-list-style">                 
+      {% for product in collections[block.settings.collection].products limit: block.settings.limit %}
+      {% render 'product-grid-item', product: product %} 
+      {% else %}
+      {% for i in (1..5) %}
+      {% render 'empty-row' , product: product %}
+      {% endfor %}
+      {% endfor %}
+    </ul>                   
+  </div>
+  {% when 'image' %}  
+  <div class="widget product-sidebar-type-{{block.type}}">
+    {% if block.settings.image != blank %}
+    <a href="{{block.settings.link}}"><img src="{{block.settings.image | img_url: 'large' }}" alt="{{block.settings.title}}" /> </a>  
+    {% if block.settings.link_text != blank %}
+    <a href="{{block.settings.link}}" class="dt-sc-btn">{{block.settings.link_text}}</a>
+    {% endif %}
+    {% endif %}
+  </div>  
+  {% endcase %}
+  {% endfor %}
+</aside>
+{% endif %}
+{% for block in section.blocks %}
+{% case block.type %}
+{% when 'carousel' %}  
+<script type="text/javascript">  
+  function blogSidebarCarousel(){
+    var dataSectionType = $('[data-section-type="blog-sidebar-carousel-section"]');
+     var id = dataSectionType.attr('data-section-id');
+    var ItemsPerView = +dataSectionType.attr('data-item-per-view');    
+    var ItemsSpace = +dataSectionType.attr('data-item-space');
+    var autoHeight = +dataSectionType.attr('data-auto-height') || false;    
+    var Autoplay = +dataSectionType.attr('data-autoplay') * 1000;
+    var mobileSlides = +dataSectionType.attr('data-small-screen-items') || 1;
+    var initAutoplay = Autoplay ? {    delay: Autoplay  } : false;    
+    var swiper = new Swiper('#swiper-' + id + '-slider', {  
+      pagination: {
+        el: '#swiper-' + id + '-pagination',
+        clickable: true
+      },
+      navigation: {
+        nextEl: '#swiper-' + id + '-next',
+        prevEl: '#swiper-' + id + '-prev'
+      },
+      loop: false,
+      slidesPerView: ItemsPerView,         
+      spaceBetween: ItemsSpace,
+      autoHeight: autoHeight,    
+      simulateTouch: true,
+      autoplay: initAutoplay    
+    });
+  }
+  $(document).ready(function(){    
+    blogSidebarCarousel();
+  })
+  $(document)
+  .on('shopify:section:load', blogSidebarCarousel)
+  .on('shopify:section:unload', blogSidebarCarousel)
+</script>
+{% endcase %}
+{% endfor %}
+

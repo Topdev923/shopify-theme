@@ -1,0 +1,54 @@
+{% if collections[featured].image %}
+  {% assign collection_image = collections[featured].image %}
+{% else %}
+  {% assign collection_image = collections[featured].products.first.featured_image %}
+{% endif %}
+ 
+{% capture collection_title %}{{ collections[featured].title | escape }}{% endcapture %}
+{% capture collection_link %}{{ collections[featured].url | escape }}{% endcapture %}
+{% capture collection_desc %}{{ collections[featured].description |  strip_html | truncate:100 }}{% endcapture %}
+{% capture collection_count %}{{ collections[featured].all_products_count | escape }}{% endcapture %}
+ 
+<div class="dt-sc-collection-banner {% if section.settings.enable_box_shadow %}dt-sc-box-shadow{% endif %} {% if section.settings.enable_slider %}swiper-slide{% endif %} {{ grid_style}} {{list_style}} {{overlay_style}} {{block.type}}-{{block.id}} {% if block.settings.reverse_column %}dt-sc-reverse-columns{% endif %}">      
+  {% if featured != blank %}
+  {% if collections[featured].image or collections[featured].products.first.featured_image %}
+  <div class="dt-sc-collection-banner-image {{ overlay_class}}">
+    <a href="{{ collection_link}}">     
+      {%- assign img_url = collection_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+      <img class="lazyload"
+           src="{{ 'loading.gif' | asset_url }}"
+           data-src="{{ img_url }}"
+           data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+           data-aspectratio="{{ collection_image.aspect_ratio }}"
+           data-sizes="auto"            
+           alt="{{ collection_title }}">            
+      <noscript>
+        {{ collection_image | img_url: '480x480', scale: 2 | img_tag: collection_image.alt, 'dt-sc-noscript-image' }}
+      </noscript>
+    </a>            
+  </div>
+  {% endif%}  
+  {% endif%} 
+  {% if collection_title != blank or collection_count != blank or collection_desc != blank or block_button_text != blank %}
+  <div class="dt-sc-collection-banner-content 
+	{% unless section.settings.block_banner_style == 'grid' %} {{ block.settings.content_position }}{% endunless%}
+    {% if section.settings.block_banner_style == 'grid' %}{{ block.settings.block_text_align}}{% endif %}">
+    {% unless section.settings.block_banner_style == 'grid' %}
+     <div class="dt-sc-collection-banner-inner {{ block.settings.block_text_align}}">
+    {% endunless %}
+    {% if collection_title != blank %}
+    <h4 class="dt-sc-main-title">{{collection_title}}</h4>
+    {% endif %}
+       {% if collection_count != blank %}
+       <h6 class="dt-sc-sub-title">{{ collection_count }} <span>{{ 'cart.general.items' | t }}</span></h6>    
+       {% endif %}
+    {% if collection_desc != blank %}
+    <p class="dt-sc-description">{{ collection_desc }}</p>
+    {% endif %}
+    {% if collection_link != blank %}
+    <a href="{{ collection_link}}" class="dt-sc-btn">{{block.settings.block_button_text}}</a>
+	{% endif %}
+    {% unless section.settings.block_banner_style == 'grid' %}</div>{% endunless %}
+  </div>
+  {% endif %}
+</div>

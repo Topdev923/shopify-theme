@@ -1,0 +1,15 @@
+{% if settings.enable_timer %}
+{% assign timer = settings.timer | split: ' ' | join: ' ' | split: ' ' %}
+{% for time in timer %}
+{% capture productID %}{{ product.id }}{% endcapture %}
+{% if time contains productID %}
+{% if settings.timer_heading != blank %}
+<label class="deal-lable">{{ settings.timer_heading}}</label>
+{% endif %}
+{% assign initTime = time | replace: productID,'' | replace: '_',' ' %}
+<div class="deal-clock lof-clock-{{ productID }}-detail dT_dealTimer" data-time="{{initTime}}" data-itemID="{{productID}}"></div>
+{% break %}
+{% endif %}
+{% endfor %}
+{% endif %}
+

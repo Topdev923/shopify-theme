@@ -1,0 +1,10 @@
+<h1 class="site-header__logo order-header  post-large--hide large--hide medium-down--hide">  
+  {% if settings.logo_use_image %}
+  <a href="{{shop.url}}" itemprop="url">
+    <img class="normal-logo" src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name }}">
+  </a>
+  {% else %}
+  <a href="{{shop.url}}" itemprop="url"  class="logo_name" itemprop="{{ shop.name }}">{{ shop.name }}</a>
+  {% endif %}  
+</h1>
+  

@@ -1,0 +1,16 @@
+{% if section.settings.section_heading != blank or section.settings.section_sub_heading != blank or   section.settings.section_description != blank or section.settings.section_button_link != blank %}
+<div class="dt-sc-heading {% if settings.title_image_enable != blank %} {{settings.title_image_position | escape}} {% endif %} {{ section.settings.heading_position | escape}}">
+  {% if section.settings.section_heading != blank %}
+  <h2 class="dt-sc-main-heading">{{section.settings.section_heading}}</h2>
+  {% endif %}
+  {% if section.settings.section_sub_heading != blank %}
+  <h6 class="dt-sc-sub-heading">{{section.settings.section_sub_heading}}</h6>
+  {% endif %}
+  {% if section.settings.section_description != blank %}
+  <p class="dt-sc-heading-description">{{section.settings.section_description}}</p>
+  {% endif %}
+  {% if section.settings.section_button_link != blank  and section.settings.section_button_text != blank %}
+  <a href="{{section.settings.section_button_link}}" class="dt-sc-btn">{{section.settings.section_button_text}}</a>
+  {% endif %}
+</div>
+{% endif %}

@@ -1,0 +1,162 @@
+{% if section.settings.enable_enquiry %}
+<div class="enquiry-modal">
+  <div class="enquiry-content">
+    <span class="close-button dt-sc-btn close-icon"></span>
+    <span class="enquiry-content-inner">    
+      <h4>{{ 'enquiry.form.sub_heading' | t }}</h4>
+      {% form 'contact' %}
+      <!--<label for="ContactFormName">{{ 'enquiry.form.name' | t }}</label> -->
+      <input
+             type="text"
+             id="ContactFormName"
+             name="contact[Name]"
+             placeholder="Name"
+             />
+      <!--       <label for="ContactFormEmail">{{ 'enquiry.form.email' | t }}</label> -->
+      <input
+             type="text"
+             id="ContactFormEmail"
+             name="contact[Email]"
+             placeholder="Email"
+             />
+      <!--       <label for="ContactFormPhone">{{ 'enquiry.form.phone' | t }}</label> -->
+      <input
+             type="text"
+             id="ContactFormPhone"
+             name="contact[Phone]"
+             placeholder="Phone"
+             />
+      <!--       <label for="ContactFormPhone">{{ 'enquiry.form.message' | t }}</label> -->
+      <textarea rows="7"
+                type="textarea"
+                id="ContactFormMsg"
+                name="contact[Msg]"
+                placeholder="Subject"></textarea>
+      <!--       <label>{{ 'enquiry.form.message_heading' | t }}</label> -->
+      <div class="enquiry-choose">
+        <input
+               type="radio"
+               id="ContactViaEmail"
+               name="contact[By]"
+               value="Email"
+               />
+        <label for="ContactViaEmail">{{ 'enquiry.form.by_email' | t }}</label>
+        <input
+               type="radio"
+               id="contactFormViaPhone"
+               name="contact[By]"
+               value="Phone"
+               />
+        <label for="contactFormViaPhone">{{ 'enquiry.form.by_phone' | t }}</label>
+        <input
+               type="radio"
+               id="contactFormViaBoth"
+               name="contact[By]"
+               value="Both"
+               />
+        <label for="contactFormViaBoth">{{ 'enquiry.form.by_both' | t }}</label>
+      </div>
+      <button type="submit" class="btn">{{ 'contact.form.send' | t }}</button>
+      {% endform %}
+
+    </span>
+  </div>
+</div>
+{% endif %}
+<script>
+  const EnquiryModal = document.querySelector(".enquiry-modal");
+  const EnquiryTrigger = document.querySelector("#trigger-enquiry");
+  const Enquiryclose = document.querySelector(".enquiry-modal .close-button");
+
+  function toggleModal() {
+    EnquiryModal.classList.toggle("show-enquiry");
+  }
+  function windowOnClick(event) {
+    if (event.target === EnquiryModal) {
+      toggleModal();
+    }
+  }
+
+  EnquiryTrigger.addEventListener("click", toggleModal);
+  Enquiryclose.addEventListener("click", toggleModal);
+  window.addEventListener("click", windowOnClick);
+</script>
+
+<style>
+  .enquiry-modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    display: none;
+    transform: scale(1.1);
+    transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
+  }
+  .enquiry-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding:30px;
+    width: 500px;
+    max-height: 90%;
+    max-width: 90%;
+    overflow: auto;
+    border-radius: var(--DTRadius);
+      }
+
+  .enquiry-content h4 { margin: 0 0 20px; }
+
+  .enquiry-content .contact-form { display: grid;
+    gap: 30px;
+    grid-template-columns: 1fr; }
+
+  .enquiry-content .enquiry-choose {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+    .enquiry-content .enquiry-choose input { margin-right: 5px; }
+  .enquiry-content .enquiry-choose input:not(:first-child) { margin-left: 15px; }
+
+
+  .enquiry-content .btn {
+    margin: 0;
+  }
+
+  .enquiry-content table {
+    table-layout: auto;
+    margin: 0;
+  }
+  .enquiry-content .close-button {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
+  .show-enquiry {
+    z-index: 12;
+    opacity: 1;
+    display: block;
+    transform: scale(1.0);
+    transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
+  }
+  .trigger-enquiry {
+    margin: -10px 0px 5px 140px;
+    display: flex;
+    line-height: 1.5;
+  }
+  .trigger-enquiry svg{ 
+    margin-right:5px;
+  }
+
+  @media only screen and (max-width: 749px) {
+    .enquiry-content, .size-chart-content table { width: 100% ; }
+    .size-chart-content th, .size-chart-content td { padding: 10px;}
+  }
+</style>

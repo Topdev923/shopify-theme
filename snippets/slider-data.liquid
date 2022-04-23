@@ -1,0 +1,79 @@
+{%- assign img_url = block.settings.image | img_url: '2000x' -%}
+{% if  block.settings.link != blank %} <a href="{{ block.settings.link }}"> {% endif %}
+{% if  block.settings.image != blank %}
+<img class="slide-img"
+     src="{{block.settings.image | img_url: 'master'}}"
+     alt="{{ block.settings.image.alt | escape }}">            
+
+{% else %}
+<img src="//via.placeholder.com/1920x940"   class="slide-img desktop-only" alt="{{ block.settings.image.alt }}">
+{% endif %}
+
+
+{% if  block.settings.mobile_image != blank %}
+<img class="slide-img mobile-only" src="{{block.settings.mobile_image | img_url: '768x940'}}" alt="{{ block.settings.image.alt | escape }}">     
+{% else %}
+<img src="//via.placeholder.com/798x940"   class="slide-img mobile-only" alt="{{ block.settings.image.alt }}">
+{% endif %}
+
+
+{% if  block.settings.link != blank %} </a> {% endif %}
+
+<div class="slider-content slider-content-bg {{ block.settings.text_alignment}}  {{ block.settings.content_position }}">
+  <div class="slide_{{forloop.index}}"> 
+
+    {% if block.settings.show_image %}
+    {% if block.settings.block_image != blank %}
+    {%- assign block_img_url = block.settings.block_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+    <img class="lazyload"
+         src="{{ 'loading.gif' | asset_url }}"
+         data-src="{{ block.settings.block_image | img_url: 'master' }}"
+         data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+         data-aspectratio="{{ block.settings.block_image.aspect_ratio }}"
+         data-sizes="auto"            
+         alt="{{ block.settings.block_title }}">            
+    <noscript>
+      {{ block.settings.block_image | img_url: '480x480', scale: 2 | img_tag: block.settings.block_image.alt, 'dt-sc-noscript-image' }}
+    </noscript>
+    {% else %}
+    {{ 'image' | placeholder_svg_tag: 'placeholder_svg' }}
+    {% endif%}    
+    {% endif%} 
+
+    {% if block.settings.title_2 != blank %}
+    <p class="slide-sub-heading-2"
+       style="color: {{ settings.body_text_color}}; {% if block.settings.subheading_color != blank %}
+              color:{{ block.settings.subheading_color }};
+              {% endif %}">
+      {{ block.settings.title_2  }}                   
+    </p>
+    {% endif %}
+
+    {% if block.settings.title != blank %}
+    <h2 class="slide-heading"
+        style="color: {{ settings.body_text_color}}; {% if block.settings.heading_color != blank %}
+               color:{{ block.settings.heading_color }};
+               {% endif %}">
+      {{ block.settings.title  }}                   
+    </h2>
+    {% endif %}
+
+    {% if block.settings.desc != blank %}
+    <div class="slide-text"
+         style="color: {{ settings.body_text_color}}; {% if block.settings.desc_color != blank %}
+                color:{{ block.settings.desc_color }};
+                {% endif %}">
+      {{ block.settings.desc  }}                   
+    </div>
+    {% endif %}
+
+    <div class="multiple-buttons">
+      {% if block.settings.button != blank %}
+      <a href="{{ block.settings.link }}" class="slide-button dt-sc-btn">{{  block.settings.button }}</a>
+      {% endif %}
+      {% if block.settings.button_2 != blank %}
+      <a href="{{ block.settings.link_2 }}" class="slide-button dt-sc-btn secondary">{{  block.settings.button_2 }}</a>
+      {% endif %}
+    </div>
+  </div>
+</div>

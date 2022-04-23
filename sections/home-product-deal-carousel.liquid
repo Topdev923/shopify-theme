@@ -1,0 +1,1323 @@
+{% if section.blocks.size > 0 %}   
+{% assign ColumnWidth = section.settings.content_width | split: '/' %}
+{% assign leftColumn = ColumnWidth[0] %}
+{% assign rightColumn = ColumnWidth[1] %}
+
+{% assign listWidth = section.settings.lap_content_width | split: '/' %}
+{% assign lap_leftColumn = listWidth[0] %}
+{% assign lap_rightColumn = listWidth[1] %}
+{% endif %}
+
+{% case section.settings.grid %}
+{% when '1' %}
+{% when '2' %}
+{%- assign column = 'two-column' -%}
+{% when '3' %}
+{%- assign column = 'three-column' -%}              
+{% when '4' %}
+{%- assign column = 'four-column' -%}
+{% when '5' %}
+{%- assign column = 'five-column' -%}
+{% when '6' %}
+{%- assign column = 'six-column' -%}
+{% else %}
+{%- assign column = 'three-column' -%}
+{% endcase %}
+
+
+{% if section.settings.enable_overlay %}
+{% assign section_overlay = 'dt-sc-overlay' %}
+{% endif %}
+
+{% case section.settings.background_style %}
+{% when 'default' %}
+{% when 'parallax' %}
+{%- assign background_style = 'data-speed="2"' %}
+{% when 'fixed' %}
+{%- assign background_style = 'data-speed="1"' %}
+{% endcase %}
+{%- assign collection = collections[section.settings.collection] -%}
+{% if section.settings.show_background_image %}
+{% assign lazyScript = "lazyload" %}
+{% endif %}
+<div class="dt-sc-section-wrapper {{lazyScript}} {{section_overlay}} {% if section.settings.background_style == 'parallax' %} parallax-initiated{% endif %}" style="{% render 'bg-color-image-padding' %}" data-style="parallax" {{background_style}} {% include 'bg_image' %}>  
+  <div class="{% render 'container-settings' %}"> 
+    <div class="row {{ section.settings.custom_class_name }}">
+      {% render 'section-heading', class: section.id %} 
+      {% if section.blocks.size > 0 %} <div class="grouped-content{% if section.settings.reverse_column %} dt-sc-reverse-columns{% endif %}">{% endif %}
+      {% if section.blocks.size > 0 %}            
+      <div class="additional-block">
+        {% for block in section.blocks %}      
+        {% if block.settings.block_banner_style == 'grid' %}
+        {% assign grid_style = 'grid-style' %}
+        {% elsif block.settings.block_banner_style == 'overlay' %}
+        {% assign overlay_style = 'overlay-style' %}
+        {% endif %}
+        <div class="dt-sc-grid-banner-section">
+          <div class="dt-sc-grid-banner {{overlay_style}} {{block.type}}-{{block.id}}">      
+            {% if block.settings.show_image %}
+            <div class="dt-sc-grid-banner-image {{block.settings.banner_image_overlay_style}}">
+              {% if block.settings.block_image != blank %}
+              {%- assign img_url = block.settings.block_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+              <img class="dt-sc-brand-image lazyload"
+                   src="{{ 'loading.gif' | asset_url }}"
+                   data-src="{{ img_url }}"
+                   data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+                   data-aspectratio="{{ block.settings.block_image.aspect_ratio }}"
+                   data-sizes="auto"            
+                   data-alt="{{ block.settings.block_image.alt }}">
+              <noscript>
+                {{ block.settings.block_image | img_url: '480x480', scale: 2 | img_tag: block.settings.block_image.alt, 'dt-sc-noscript-image' }}
+              </noscript>
+              {% else %}
+              {{ 'image' | placeholder_svg_tag: 'placeholder_svg' }}
+              {% endif%}                 
+            </div>
+            {% endif%} 
+            {% if block.settings.block_banner_style == 'grid' %}
+            {% if block.settings.block_title != blank or block.settings.block_sub_title != blank or   block.settings.block_description != blank or block.settings.block_button_link != blank %}
+            <div class="dt-sc-grid-banner-content {{block.settings.block_text_align}}">            
+              {% if block.settings.block_title != blank %}
+              <h4 class="dt-sc-main-title">{{block.settings.block_title}}</h4>
+              {% endif %}
+              {% if block.settings.block_sub_title != blank %}
+              <h6 class="dt-sc-sub-title">{{block.settings.block_sub_title}}</h6>
+              {% endif %}
+              {% if block.settings.block_description != blank %}
+              <p class="dt-sc-description">{{block.settings.block_description}}</p>
+              {% endif %}
+              {% if block.settings.block_button_link != blank %}
+              <a href="{{block.settings.block_button_link}}" class="dt-sc-btn">{{block.settings.block_button_text}}</a>
+              {% endif %}            
+            </div>
+            {% endif%} 
+            {% endif %}     
+            {% if block.settings.block_banner_style == 'overlay' %}
+            {% if block.settings.block_title != blank or block.settings.block_sub_title != blank or   block.settings.block_description != blank or block.settings.block_button_link != blank %}
+            <div class="dt-sc-grid-banner-content {{block.settings.content_position}}">            
+              <div class="dt-sc-grid-banner-inner {{block.settings.block_text_align}}">
+                {% if block.settings.block_title != blank %}
+                <h4 class="dt-sc-main-title">{{block.settings.block_title}}</h4>
+                {% endif %}
+                {% if block.settings.block_sub_title != blank %}
+                <h6 class="dt-sc-sub-title">{{block.settings.block_sub_title}}</h6>
+                {% endif %}
+                {% if block.settings.block_description != blank %}
+                <p class="dt-sc-description">{{block.settings.block_description}}</p>
+                {% endif %}
+                {% if block.settings.block_button_link != blank %}
+                <a href="{{block.settings.block_button_link}}" class="dt-sc-btn">{{block.settings.block_button_text}}</a>
+                {% endif %} 
+              </div>
+            </div>
+            {% endif %}     
+            {% endif %} 
+          </div>
+        </div>      
+        {% endfor %}                
+      </div>
+      {% endif %}
+
+      {% if section.settings.enable_main_content != blank%}
+      <div class="main-block">        
+        {% unless section.settings.enable_slider %} 
+        <div data-section-id="blockCarousel" data-section-type="home-blockCarousel-section">
+          <div class="dt-sc-prod-wrapper dT_vDynamicPWrap-{{ section.id }} dT_vProdWrap">
+            <ul class="grid product-collection dt-sc-column {{column}} product-list-style">         
+              {% for product in collection.products limit: section.settings.post_limit  %}                  
+              {% include 'product-grid-item-thumb-carousel', product: product %}
+              {% else %}
+              {% for i in (1..4) %}
+              {% include 'empty-row' %} 
+              {% endfor %}
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+        {% endunless %}
+
+        {% if section.settings.enable_slider %}
+        <div data-section-id="{{ section.id }}" data-section-type="home-product-carousel-section" data-item-per-view="{{section.settings.items_per_view}}" data-autoplay="{{section.settings.slider_autoplay}}"  data-small-screen-items="1" data-blocks-limit="{{section.blocks.size}}" data-item-space="{{section.settings.column_gap}}"  data-item-row="{{ section.settings.rows }}" > 
+          <div class="dt-sc-swiper-slider swiper-container {% if section.settings.dots %} {{ section.settings.carousel_pagination_bottom_alignment }} {{ section.settings.carousel_pagination_alignment }} {% endif %} {% if section.settings.arrows %}  {{ section.settings.nav_arrow_position }} {{ section.settings.center_nav_arrow_alignment }} {% endif %}">
+            <div id="swiper-{{section.id}}-slider" class="dt-sc-prod-wrapper dT_vDynamicPWrap-{{ section.id }} dT_vProdWrap">  
+              <ul class="swiper-wrapper product-list-style">         
+                {% for product in collection.products  %}                  
+                {% include 'product-grid-item-thumb-carousel', product: product, swiperSlideClass: 'swiper-slide' %} 
+                {% else %}
+                {% for i in (1..4) %}
+                {% include 'empty-row' %} 
+                {% endfor %}
+                {% endfor %}
+              </ul>
+            </div>  
+            {% if section.settings.arrows %}                    
+            <div class="swiper-{{ section.id}}-arrows swiper-arrows">
+              <div id="swiper-{{ section.id}}-next" class="swiper-button-next dt-sc-btn"></div>
+              <div id="swiper-{{ section.id}}-prev" class="swiper-button-prev dt-sc-btn"></div>
+            </div>  
+            {% endif  %} 
+            {% if section.settings.dots %}
+            <div id="swiper-{{ section.id}}-pagination" class="swiper-pagination"></div>
+            {% endif %}
+          </div>
+        </div>  
+        {% endif %}  
+      </div>
+      {% endif %}    
+      {% if section.blocks.size > 0 %}</div>{% endif %}             
+    </div>
+  </div>
+</div> 
+
+<style>
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .additional-grid-title { margin-top: 0; }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content { display: flex; flex-wrap: wrap; justify-content: space-between; }
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block + .main-block .dt-sc-swiper-slider.swiper-container.center-navigation.outside_container {
+    margin: auto;
+  }   
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .main-block .dt-sc-swiper-slider.swiper-container { padding-bottom: 30px; }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .product-list-style .deal-clock,
+
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .product-list-style .products .product-container .dt-sc-btn-group > * { font-size: 0; }
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .product-list-style .products .product-container .dt-sc-btn-group > * svg { margin-right: 0; }
+
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .main-block { 
+    background: {{ section.settings.main_block_background_color }}; 
+    border-radius: var(--DTRadius); border-radius: {{ section.settings.main_block_border_radius }}px; 
+      padding: {{ section.settings.main_content_padding }}px;
+      {% if section.settings.enable_main_block_box_shadow %} box-shadow: var(--DTboxShadow); {% endif %}
+        }
+
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .dt-sc-prod-wrapper .products .product-container .grid-link { 
+    width: calc(100% - 110px); float: right; position: relative; margin: 80px 0;
+  }
+
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block { 
+/*     background: var(--DTBodyBGColor);  */
+    background: {{ section.settings.additional_block_background_color }}; 
+    
+    padding: {{ section.settings.additional_content_padding }}px; 
+  
+  {% if section.settings.additional_block_box_shadow %} box-shadow: var(--DTboxShadow); {% endif %} 
+    
+    border-radius: {{ section.settings.additional_block_border_radius }}px;
+    
+    
+  }
+  
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .main-block { 
+/*     background: var(--DTBodyBGColor);  */
+    background: {{ section.settings.main_block_background_color }}; }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .product-grid-item .products { padding: 20px; grid-template-columns: 1.5fr 2fr; }
+  
+  #shopify-section-{{section.id}}.home-product-deal-carousel .row > .main-block .dt-sc-prod-wrapper .products .product-container .grid-link {
+    margin: 48px 0;
+  }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content { 
+    background: {{ section.settings.grouped_content_bg }}; 
+    border-radius: var(--DTRadius); border-radius: {{ section.settings.group_border_radius }}px; 
+      {% if section.settings.enable_group_box_shadow %} box-shadow: var(--DTboxShadow); {% endif %} 
+        padding: {{ section.settings.grouped_content_padding }}px;
+        }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .dt-sc-heading .dt-sc-main-heading { color: var(--DTColor_Heading);color:{{ section.settings.section_heading_color }}; } 
+  #shopify-section-{{section.id}}.home-product-deal-carousel .dt-sc-heading .dt-sc-sub-heading { color: var(--DTColor_Heading);color:{{ section.settings.section_sub_heading_color }}; } 
+  #shopify-section-{{section.id}}.home-product-deal-carousel .dt-sc-heading .dt-sc-heading-description { color: var(--DTColor_Body);color:{{ section.settings.section_description_color }}; } 
+  #shopify-section-{{section.id}}.home-product-deal-carousel .dt-sc-heading .dt-sc-btn { 
+    background: var(--DT_Button_BG_Color);  background:{{ section.settings.section_button_bg_color }}; 
+      color: var(--DT_Button_Text_Color); color:{{ section.settings.section_button_text_color }}; }
+  #shopify-section-{{section.id}}.home-product-deal-carousel .dt-sc-heading .dt-sc-btn:hover {
+    background: var(--DT_Button_BG_Hover_Color); background:{{ section.settings.section_button_hover_bg_color }}; 
+      color: var(--DT_Button_Text_Hover_Color); color:{{ section.settings.section_button_hover_text_color }}; }
+
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .product-grid-item .products { 
+    border-radius: var(--DTRadius); border-radius: {{ section.settings.border_radius }}px; 
+      {% if section.settings.enable_box_shadow %} box-shadow: var(--DTboxShadow); {% endif %} 
+
+
+        }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .product-collection.dt-sc-column { gap: var(--DTGutter_Width); gap: {{ section.settings.column_gap }}px;
+    margin-bottom: 0; }
+  
+  #shopify-section-{{section.id}}.home-product-deal-carousel .product-collection.dt-sc-column.product-list-style { grid-template-columns: 1fr; }
+  #shopify-section-{{section.id}}.home-product-deal-carousel .product-collection.dt-sc-column.product-list-style
+  .products .product-container .product-button { display: none; }
+  #shopify-section-{{section.id}}.home-product-deal-carousel .product-collection.dt-sc-column.product-list-style .product-detail .deal-clock {
+   position: static; 
+  }
+  
+  #shopify-section-{{section.id}}.home-product-deal-carousel .product-collection.dt-sc-column.product-list-style .product-detail .deal-clock .list-inline {
+  justify-content: flex-start; 
+  }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .dt-sc-overlay:before  { 
+    color: var(--DTTertiaryColor); 
+      color: {{ section.settings.background_color }};    
+      background: currentcolor; 
+      opacity: {{ section.settings.overlay_transparency }};
+      }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .dt-sc-swiper-slider.swiper-container .swiper-arrows .dt-sc-btn { 
+    background: var(--DT_Button_BG_Color);  
+      background: {{ section.settings.navigation_button_color }};  
+      }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .dt-sc-swiper-slider.swiper-container .swiper-arrows .dt-sc-btn[class*="swiper-button-"]:after {   
+    color: var(--DT_Button_Text_Color);
+      color: {{ section.settings.navigation_button_icon_color }};
+      }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .dt-sc-swiper-slider.swiper-container .swiper-arrows .dt-sc-btn:hover { 
+    background: var(--DT_Button_BG_Hover_Color); 
+      background: {{ section.settings.navigation_button_hover_color }}; 
+      }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .dt-sc-swiper-slider.swiper-container .swiper-arrows .dt-sc-btn:hover[class*="swiper-button-"]:after { 
+    color: var(--DT_Button_Text_Hover_Color);
+      color: {{ section.settings.navigation_button_hover_icon_color }};
+      }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .dt-sc-swiper-slider.swiper-container .swiper-pagination-bullet { 
+    background: var(--DTSecondaryColor);  
+      background: {{ section.settings.navigation_dot_color }};  
+      }  
+  #shopify-section-{{section.id}}.home-product-deal-carousel .dt-sc-swiper-slider.swiper-container .swiper-pagination-bullet.swiper-pagination-bullet-active { 
+    background: var(--DTPrimaryColor);  
+      background: {{ section.settings.navigation_dot_active_color }};  
+      }
+
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block { 
+    width:calc({{leftColumn}}% - {{ section.settings.grouped_column_gap }}px) 
+  }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .main-block { 
+    {% if section.blocks.size > 0 %} width:{{rightColumn}}% {% endif %} 
+  }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .thumb-v-carousel { float:left;width: 90px; z-index: 1; position: absolute;
+    height: 100%; padding: 40px 0px;
+  }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .thumb-v-carousel .slick-slider,
+  #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .thumb-v-carousel .slick-list { height: 100% !important;
+    padding: 0 !important;
+  }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .thumb-v-carousel .slick-list .slick-slide{ padding: 8px 2px; border: none; cursor: pointer; }  
+  #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .thumb-v-carousel .slick-list .slick-slide img { 
+    box-shadow: 0 0 0 2px transparent; margin: auto; transition:var(--DTBaseTransition); }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .thumb-v-carousel .slick-list .slick-slide.slick-current img { 
+    box-shadow: 0 0 0 2px var(--DTPrimaryColor);  
+      }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .thumb-v-carousel .slick-arrow {
+    position: absolute; right: 0; left: 0; margin: 0 auto; font-size: 0; width: 40px; height: 40px; z-index: 1;
+  }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .thumb-v-carousel .slick-arrow:after { 
+    content: "" !important; display: block; background: none; width: 12px; height: 12px; transform: rotate(45deg); position: absolute; 
+  }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .thumb-v-carousel .slick-prev:after { 
+    top: 16px; border-top: 1px solid; border-left: 1px solid; }
+  #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .thumb-v-carousel .slick-next:after { 
+    bottom: 16px; border-bottom: 1px solid; border-right: 1px solid; }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .thumb-v-carousel .slick-prev { top: -40px; }
+  #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .thumb-v-carousel .slick-next { bottom: -36px; }
+
+
+  @media (min-width: 1541px) {
+
+    #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block { 
+      width:calc({{leftColumn}}% - {{ section.settings.grouped_column_gap }}px) 
+    }
+
+    #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .main-block { 
+      {% if section.blocks.size > 0 %} width:{{rightColumn}}% {% endif %} 
+    }
+
+  }
+
+  @media (max-width: 1540px) {
+
+    #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block { 
+      width:calc({{lap_leftColumn}}% - {{ section.settings.grouped_column_gap }}px) 
+    }
+
+    #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .main-block { 
+      {% if section.blocks.size > 0 %} width:{{lap_rightColumn}}% {% endif %} 
+    }
+
+    #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .main-block .product-collection.dt-sc-column { grid-template-columns: repeat(2,1fr); }
+    #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .main-block .product-collection.dt-sc-column.product-list-style { 
+      grid-template-columns: 1fr; }
+
+    #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .thumb-v-carousel { width: 70px; }
+    #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .thumb-v-carousel .slick-list .slick-slide.slick-current img {
+      box-shadow: 0 0 0 2px var(--DTPrimaryColor); transform: scale(.95); }
+    
+    #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .dt-sc-prod-wrapper .products .product-container .grid-link { width: calc(100% - 90px); }
+    
+    #shopify-section-{{section.id}}.home-product-deal-carousel .row > .main-block .dt-sc-prod-wrapper .products .product-container .grid-link {
+    margin: 35px 0; }
+  }
+
+  @media (max-width: 1199px) {
+
+    #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content { padding: calc(.75* {{ section.settings.grouped_content_padding }}px); }
+    #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block { padding: calc(.75* {{ section.settings.additional_content_padding }}px); }
+    #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .main-block,
+    #shopify-section-{{section.id}}.home-product-deal-carousel .main-block { padding: calc(.75* {{ section.settings.main_content_padding }}px); }
+    
+    #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .thumb-v-carousel { width: 70px; padding: 75px 0; }
+    #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .thumb-v-carousel .slick-list .slick-slide { padding: 10px 0; }
+    #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .thumb-v-carousel .slick-list .slick-slide.slick-current img {
+      box-shadow: 0 0 0 2px var(--DTPrimaryColor); transform: scale(1); }
+    
+    #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .main-block .product-grid-item .products { display: grid; grid-template-columns: 1fr; }
+    #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .thumb-v-carousel { width: 90px; }
+    #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .dt-sc-prod-wrapper .products .product-container .grid-link { margin: 0; }
+    #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .thumb-v-carousel .slick-next { bottom: -40px; }
+    
+    #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .dt-sc-prod-wrapper .products .product-container .grid-link { width: calc(100% - 110px); }
+	
+    #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .main-block .product-list-style .products .product-detail { 
+      padding-left: 5px; padding-right: 5px;
+    }
+    
+    #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .main-block,
+    #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block { width: 100%; }
+    
+    #shopify-section-{{section.id}}.home-product-deal-carousel .row > .main-block .dt-sc-prod-wrapper .products .product-container .grid-link { margin: 105px 0; }
+    
+  }
+
+  @media (max-width: 767px) {
+
+    #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .thumb-v-carousel,
+    #shopify-section-{{section.id}}.home-product-deal-carousel .row > .main-block .thumb-v-carousel { display: none; }
+    #shopify-section-{{section.id}}.home-product-deal-carousel .main-block .dt-sc-prod-wrapper .products .product-container .grid-link { width: 100%; }
+
+    #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block,
+    #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .main-block { 
+      {% if section.blocks.size > 0 %} width: 100%; {% endif %} 
+    }
+
+    #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .main-block {
+      margin-top: {{ section.settings.grouped_column_gap }}px;
+    }
+
+    #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content.dt-sc-reverse-columns .main-block {
+      margin-bottom: {{ section.settings.grouped_column_gap }}px; margin-top: 0; order: -1;
+    }
+    
+    #shopify-section-{{section.id}}.home-product-deal-carousel .row > .main-block .dt-sc-prod-wrapper .products .product-container .grid-link { margin: 0; }
+
+  }
+
+  @media (max-width: 576px) {  
+
+    #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content { padding: calc(.5* {{ section.settings.grouped_content_padding }}px);
+    }
+    #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block { padding: calc(.5* {{ section.settings.additional_content_padding }}px); }
+    #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .main-block,
+    #shopify-section-{{section.id}}.home-product-deal-carousel .main-block { padding: calc(.5* {{ section.settings.main_content_padding }}px); }
+
+    #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .main-block .product-collection.dt-sc-column { grid-template-columns: 1fr; }
+    
+    #shopify-section-{{section.id}}.home-product-deal-carousel .row > .main-block .product-grid-item .products { display: grid; grid-template-columns: 1fr; }
+    
+    #shopify-section-{{section.id}}.home-product-deal-carousel .row > .main-block .product-list-style .products .product-detail {
+     padding-left: 0; padding-right: 0; 
+    }
+
+  }
+
+  .home-product-deal-carousel .grouped-content .additional-block .product-list-style .products .product-container .product-button > *:not(.quick-view-btn),
+  .home-product-deal-carousel .grouped-content .additional-block .product-list-style .products .product-container .deal-clock { display: none; }
+
+
+  /* Banner */
+  .home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section .dt-sc-grid-banner.overlay-style { display: grid; }
+  
+  /*   Banner */
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section .dt-sc-grid-banner { 
+    background-color: var(--DTTertiaryColor); background-color:{{ block.settings.grid_banner_bg }}; } 
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section .dt-sc-grid-banner-content .dt-sc-main-title { 
+    color: var(--DTColor_Heading); color:{{ block.settings.grid_banner_heading_color }}; }
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section .dt-sc-grid-banner-content .dt-sc-sub-title { 
+    color: var(--DTColor_Heading); color:{{ block.settings.grid_banner_sub_heading_color }}; }
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section .dt-sc-grid-banner-content .dt-sc-description { 
+    color: var(--DTColor_Body); color:{{ block.settings.grid_banner_description_color }}; }
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section .dt-sc-grid-banner-content .dt-sc-btn { 
+    color:var(--DT_Button_Text_Color); background-color: var(--DT_Button_BG_Color); 
+      color:{{ block.settings.grid_banner_button_text_color }}; background-color:{{ block.settings.grid_banner_button_bg_color }};}
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section .dt-sc-grid-banner-content .dt-sc-btn:hover {  
+    color:var(--DT_Button_Text_Hover_Color); background-color: var(--DT_Button_BG_Hover_Color); 
+      color:{{ block.settings.grid_banner_button_hover_text_color }}; background-color:{{ block.settings.grid_banner_button_hover_bg_color }}; 
+      }  
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section .dt-sc-grid-banner-content .dt-sc-grid-banner-inner { 
+    background-color: var(--DTTertiaryColor); background-color: {{ block.settings.grid_banner_content_bg }};
+      }
+
+ #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section .dt-sc-grid-banner { 
+    background: var(--DTTertiaryColor); background: {{ block.settings.grid_banner_content_bg }};
+      border-radius: var(--DTRadius); border-radius: {{ block.settings.grid_banner_border_radius }}px;    
+          } 
+  
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section .dt-sc-grid-banner.{{block.type}}-{{block.id}} { 
+        {% if block.settings.grid_banner_box_shadow %} box-shadow: var(--DTboxShadow); {% endif %}         
+          } 
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section .dt-sc-grid-banner.overlay-style {
+    min-height: {{ block.settings.overlay_style_height }}px;
+  }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section .dt-sc-grid-banner.overlay-style 
+  .dt-sc-grid-banner-content .dt-sc-grid-banner-inner { 
+    background-color: var(--DTTertiaryColor); background-color:{{ block.settings.grid_banner_bg }};
+      border-radius: var(--DTRadius); border-radius: {{ block.settings.grid_banner_border_radius }}px;      
+        }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section .dt-sc-grid-banner .with-overlay:before { 
+    background: var(--DTTertiaryColor); background:{{ block.settings.banner_image_overlay_color }}; 
+      }
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section .dt-sc-grid-banner .with-gradient-overlay:before {
+
+    background-image: linear-gradient({{ section.settings.banner_image_rotation_degree}}deg, {{ settings.tertiary_color | color_modify: 'alpha', 0 }}, 
+      {{ settings.tertiary_color }});
+
+    background-image: linear-gradient({{ block.settings.banner_image_rotation_degree}}deg, {{ block.settings.banner_image_overlay_color | color_modify: 'alpha', 0 }}, 
+      {{ block.settings.banner_image_overlay_color }});
+  }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section .dt-sc-grid-banner:hover .with-overlay:before,
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section .dt-sc-grid-banner:hover .with-gradient-overlay:before {
+    opacity: {{ block.settings.banner_image_overlay_opacity }};
+  }
+
+  /*   Deals */  
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section.deals-section .dt-sc-grid-banner {
+    background-color: var(--DTTertiaryColor); background-color:{{ block.settings.grid_banner_bg }};
+      }
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section.deals-section .dt-sc-main-title { 
+    color:var(--DTColor_Heading); color:{{ block.settings.deals_heading_color }}; }
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section.deals-section .dt-sc-sub-title { 
+    color:var(--DTColor_Heading); color:{{ block.settings.deals_sub_heading_color }}; }
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section.deals-section .dt-sc-description { 
+    color:var(--DTColor_Body); color:{{ block.settings.deals_description_color }}; }
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section.deals-section .dt-sc-btn { 
+    color:var(--DT_Button_Text_Color); background-color: var(--DT_Button_BG_Color);
+      color:{{ block.settings.deals_button_text_color }}; background-color:{{ block.settings.deals_button_bg_color }}; 
+      }
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section.deals-section .dt-sc-btn:hover {  
+    color:var(--DT_Button_Text_Hover_Color); background-color:var(--DT_Button_BG_Hover_Color);
+      color:{{ block.settings.deals_button_hover_text_color }}; background-color:{{ block.settings.deals_button_hover_bg_color }}; 
+      }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section.deals-section 
+  .dt-sc-grid-banner-content .deal-clock ul li { 
+    color:var(--DT_Button_Text_Color); background: var(--DT_Button_BG_Color);
+      background: {{block.settings.deals_section_bg_color}}; color: {{block.settings.deals_section_timer_color}}; }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .dt-sc-grid-banner-section.deals-section .dt-sc-grid-banner-content .deals-counter {
+    background: var(--DTTertiaryColor); background: {{block.settings.deals_section_color}}; }
+
+  /*   Products */  
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .products { border-radius: var(--DTRadius); 
+    border-radius: {{ block.settings.border_radius }}px; {% if block.settings.enable_box_shadow %} box-shadow: var(--DTboxShadow); {% else %} box-shadow: none; {% endif %} 
+      }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .product-list-style .products .product-detail { padding: 15px; }
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .product-list-style .products .product-detail .spr-badge { font-size: 12px; }
+
+  #shopify-section-{{section.id}}.home-product-deal-carousel .grouped-content .additional-block .product-list-style:not(.swiper-wrapper) { 
+    gap: var(--DTGutter_Width); gap: {{block.settings.collection_column_gap}}px;
+      }
+
+
+</style>
+
+
+{% schema %}
+{
+"name": "Product Deal Carousel",
+"class": "index-section home-product-deal-carousel",
+"max_blocks": 1,
+"settings": [
+{
+"type": "checkbox",
+"id": "full",
+"label": "Show Full width"
+},
+{
+"type": "checkbox",
+"id": "spacing_both_ends",
+"label": "Enable Right & Left Spacing (Works only on Fullwidth)",
+"default": false
+},
+{
+"type": "text",
+"id": "padding",
+"label": "Style value (Padding)",
+"default":"0,0",
+"info":"Top(px),Bottom(px)"
+},
+{
+"type": "text",
+"id": "margin",
+"label": "Style value (Margin)",
+"default":"0,0",
+"info":"Top(px),Bottom(px)"
+},
+{
+"type": "checkbox",
+"id": "show_background_image",
+"label": "Enable Background image"
+},
+{
+"type": "image_picker",
+"id": "background_image",
+"label": "Background image",
+"info": "Size: 1920x1280"
+},
+{
+"type": "select",
+"id": "background_style",
+"label": "Background Style",
+"default": "default",
+"options": [
+{
+"value": "default",
+"label": "Default"
+},
+{
+"value": "parallax",
+"label": "Parallax"
+},
+{
+"value": "fixed",
+"label": "Fixed"
+}
+]
+},
+{
+"type": "checkbox",
+"id": "enable_overlay",
+"label": "Enable Background Color (Used as Background Image Overlay Color too)"
+},
+{
+"type": "color",
+"id": "background_color",
+"label":"Background color"
+},
+{
+"type": "text",
+"id": "overlay_transparency",
+"label": "Overlay Transparency (0.01 to 1)",
+"default": "0.5"
+},
+{
+"type": "text",
+"id": "section_heading",
+"label": "Main Heading",
+"default": "Product Carousel"
+},  
+{
+"type": "text",
+"id": "section_sub_heading",
+"label": "Sub Heading",
+"default": "Sub Heading"
+},  
+{
+"type": "text",
+"id": "section_description",
+"label": "Description",
+"default": "Use this text to share the information which you like!."
+},  
+{
+"type": "text",
+"id": "section_button_text",
+"label": "Link text"
+},
+{
+"type": "url",
+"id": "section_button_link",
+"label": "Link URL"
+},
+{
+"type": "header",
+"content": "Section Color settings"
+},
+{
+"type": "color",
+"id": "section_heading_color",
+"label": "Heading color"
+},    
+{
+"type": "color",
+"id": "section_sub_heading_color",
+"label": "Sub heading color"
+},   
+{
+"type": "color",
+"id": "section_description_color",
+"label": "Description color"
+},  
+{
+"type": "color",
+"id": "section_button_bg_color",
+"label": "Button bg color"
+},   
+{
+"type": "color",
+"id": "section_button_text_color",
+"label": "Button text color"
+},   
+{
+"type": "color",
+"id": "section_button_hover_bg_color",
+"label": "Button hover bg color"
+},   
+{
+"type": "color",
+"id": "section_button_hover_text_color",
+"label": "Button hover text color"
+},  
+{
+"type": "select",
+"id": "heading_position",
+"label": "Heading Position",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "right"
+}
+]
+},
+{
+"type": "header",
+"content": "Grouped Content Settings"
+},
+{
+"type": "color",
+"id": "grouped_content_bg",
+"label": "Grouped Content BG Color"
+}, 
+{
+"type": "text",
+"id": "grouped_column_gap",
+"label": "Grouped Content Column Gap",
+"default":"30",
+"info": "Units not needed"
+},
+{
+"type": "text",
+"id": "grouped_content_padding",
+"label": "Grouped Content Overall Padding",
+"default":"0",
+"info": "Units not needed"
+},
+{
+"type": "text",
+"id": "group_border_radius",
+"label": "Group Border Radius(Leave empty for Theme Default Border Radius)",
+"default":"0",
+"info": "Units not needed"
+},
+{
+"type": "checkbox",
+"id": "enable_group_box_shadow",
+"label": "Enable Group Box Shadow",
+"default": false
+},
+{
+"type": "checkbox",
+"id": "reverse_column",
+"label": "Content reverse",
+"default": false
+},
+{
+"type": "header",
+"content": "Grouped Content Width",
+"info": "Will work only if you add any block from the top"
+},
+{
+"type": "text",
+"id": "content_width",
+"label": "Desktop",
+"default":"30/70"
+},
+{
+"type": "text",
+"id": "lap_content_width",
+"label": "Laptop (Small Screen)",
+"default":"35/65",
+"info": "For Tablet & Mobile resolutions 100/100 comes by default"
+},
+{
+"type": "header",
+"content": "Additional Content Settings (Add a block from top)"
+},
+{
+"type": "color",
+"id": "additional_block_background_color",
+"label": "Additional Content BG color"
+},
+{
+"type": "checkbox",
+"id": "additional_block_box_shadow",
+"label": "Additional Content Box Shadow",
+"default": false
+},
+{
+"type": "text",
+"id": "additional_content_padding",
+"label": "Additional Content Overall Padding (unit's not needed)",
+"default":"0"
+},
+{
+"type": "text",
+"id": "additional_block_border_radius",
+"label": "Additional Content Radius (Leave empty for Theme Default Radius)",
+"default":"0",
+"info": "Units not needed"
+}, 
+{
+"type": "header",
+"content": "Main Content Settings"
+},
+{
+"type": "checkbox",
+"id": "enable_main_content",
+"label": "Enable Main Content",
+"default": true
+},
+{
+"type": "color",
+"id": "main_block_background_color",
+"label": "Main Content BG color"
+},
+{
+"type": "checkbox",
+"id": "enable_main_block_box_shadow",
+"label": "Main Content Box Shadow",
+"default": false
+},
+{
+"type": "text",
+"id": "main_block_border_radius",
+"label": "Main Content Radius (Leave empty for Theme Default Radius)",
+"default":"0",
+"info": "Units not needed"
+},
+{
+"type": "text",
+"id": "main_content_padding",
+"label": "Main Content Overall Padding (unit's not needed)",
+"default":"0",
+"info": "========================"
+},
+{
+"id": "collection",
+"type": "collection",
+"label": "Collection"
+},
+{
+"type": "text",
+"id": "column_gap",
+"label": "Collection Column Gap (unit's not needed)",
+"default":"30"
+},
+{
+"type": "text",
+"id": "border_radius",
+"label": "Collection Border Radius(Leave empty for Theme Default Border Radius)",
+"default":"0",
+"info": "Units not needed"
+}, 
+{
+"type": "select",
+"id": "grid",
+"label": "Item per row",
+"default": "2",
+"info": "This Option will not work in List View.",
+"options": [
+{
+"value": "1",
+"label": "1"
+},
+{
+"value": "2",
+"label": "2"
+},
+{
+"value": "3",
+"label": "3"
+},
+{
+"value": "4",
+"label": "4"
+},
+{
+"value": "5",
+"label": "5"
+},
+{
+"value": "6",
+"label": "6"
+}
+]
+},
+{
+"type": "range",
+"id": "post_limit",
+"label": "Number of products to display (Won't work if carousel is enabled)",
+"min": 1,
+"max": 12,
+"step": 1,
+"default": 1,
+"info": "========================"
+},
+{
+"type": "checkbox",
+"id": "enable_slider",
+"label": "Enable Carousel",
+"default": true
+},
+{
+"type": "range",
+"id": "items_per_view",
+"label": "Slide per row",
+"min": 1,
+"max": 5,
+"step": 1,
+"default": 1,
+"info": "Maximum of 2 Slides, if List View is enabled"
+},
+{
+"type": "range",
+"id": "rows",
+"label": "Number of Rows",
+"min": 1,
+"max": 3,
+"step": 1,
+"default": 3
+},
+{
+"type": "range",
+"id": "slider_autoplay",
+"min": 0,
+"max": 7,
+"step": 1,
+"label": "Autoplay timing",
+"default": 0,
+"unit": "sec",
+"info": "Use 0 to stop auto rotate"
+},
+{
+"type": "checkbox",
+"id": "enable_auto_height",
+"label": "Enable Auto Height",
+"default": false
+},
+{
+"type": "checkbox",
+"id": "dots",
+"label": "Enable Carousel Pagination",
+"default": false
+},
+{
+"type": "select",
+"id": "carousel_pagination_alignment",
+"label": "Carousel Pagination Alignment (Only Bottom)",
+"options": [
+{
+"value": "left_pagination",
+"label": "Left Aligned"
+},
+{
+"value": "center_pagination",
+"label": "Center Aligned"
+},
+{
+"value": "right_pagination",
+"label": "Right Aligned"
+}
+],
+"default": "center_pagination"
+},
+{
+"type": "select",
+"id": "carousel_pagination_bottom_alignment",
+"label": "Carousel Pagination Bottom Alignment (Inside/Outside the Element)",
+"options": [
+{
+"value": "inside_element",
+"label": "Inside the Element"
+},
+{
+"value": "outside_element",
+"label": "Outside the Element"
+}
+],
+"default": "outside_element"
+},
+{
+"type": "checkbox",
+"id": "arrows",
+"label": "Enable Navigation Arrows",
+"default": false
+},
+{
+"type": "select",
+"id": "nav_arrow_position",
+"label": "Navigation Arrows position",
+"options": [
+{
+"value": "navigation-top-left",
+"label": "Top Left"
+},
+{
+"value": "navigation-top-center",
+"label": "Top Center"
+},
+{
+"value": "navigation-top-right",
+"label": "Top Right"
+},
+{
+"value": "center-navigation",
+"label": "Center"
+},
+{
+"value": "navigation-bottom-left",
+"label": "Bottom left"
+},
+{
+"value": "navigation-bottom-center",
+"label": "Bottom center"
+},
+{
+"value": "navigation-bottom-right",
+"label": "Bottom right"
+}     
+],
+"default": "navigation-top-right"
+},
+{
+"type": "select",
+"id": "center_nav_arrow_alignment",
+"label": "Center navigation alignment (Select 'Center', in the above dropdown)",
+"options": [
+{
+"value": "outside_container",
+"label": "Outside Container (not for Full width Section)"
+},
+{
+"value": "along_with_container",
+"label": "Along with Container"
+},
+{
+"value": "inside_container",
+"label": "Inside Container"
+}
+],
+"default": "inside_container"
+},
+{
+"type": "color",
+"id": "navigation_button_color",
+"label": "Navigation Button BG Color"
+}, 
+{
+"type": "color",
+"id": "navigation_button_icon_color",
+"label": "Navigation Button Icon Color"
+}, 
+{
+"type": "color",
+"id": "navigation_button_hover_color",
+"label": "Navigation Button Hover BG Color"
+}, 
+{
+"type": "color",
+"id": "navigation_button_hover_icon_color",
+"label": "Navigation Button Hover Icon Color"
+}, 
+{
+"type": "color",
+"id": "navigation_dot_color",
+"label": "Navigation Dot Color"
+}, 
+{
+"type": "color",
+"id": "navigation_dot_active_color",
+"label": "Navigation Dot Active Color"
+},
+{
+"type": "header",
+"content": "Custom class"
+},
+{
+"type": "text",
+"id": "custom_class_name",
+"label": "Add your custom class name here"
+}
+],
+"blocks": [
+{
+"type": "banner",
+"limit": 1,
+"name": "Banner",        
+"settings": [
+{
+"type": "image_picker",
+"id": "block_image",
+"label": "Image",
+"info": "Size: 1280x820"
+},
+{
+"type": "checkbox",
+"id": "show_image",
+"label": "Show image",
+"default": true
+},
+{
+"type": "text",
+"id": "block_title",
+"label": "Title",
+"default": "Title"
+},  
+{
+"type": "text",
+"id": "block_sub_title",
+"label": "Sub title",
+"default": "Sub title"
+},  
+{
+"type": "text",
+"id": "block_description",
+"label": "Description",
+"default": "Short description"
+},  
+{
+"type": "text",
+"id": "block_button_text",
+"label": "Link text"
+},
+{
+"type": "url",
+"id": "block_button_link",
+"label": "Link URL"
+},
+{
+"type": "select",
+"id": "block_banner_style",
+"label": "Banner Style",
+"default": "grid",
+"options": [
+{
+"value": "grid",
+"label": "Grid"
+},
+{
+"value": "overlay",
+"label": "Overlay"
+}
+]
+},
+{
+"type": "select",
+"id": "block_text_align",
+"label": "Text alignment",
+"options": [
+{
+"value": "text-center",
+"label": "center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "right"
+}
+]
+},
+{
+"type": "checkbox",
+"id": "grid_banner_box_shadow",
+"label": "Enable Box Shadow",
+"default": false
+},
+{
+"type": "text",
+"id": "grid_banner_border_radius",
+"label": "Grid Banner Border Radius(Leave empty for Theme Default Border Radius)",
+"default":"0",
+"info": "Units not needed"
+},
+{
+"type": "header",
+"content": "Overlay Style Settings"
+},
+{
+"type": "text",
+"id": "overlay_style_height",
+"label": "Minimum Height",
+"default":"400"
+},
+{
+"type": "select",
+"id": "content_position",
+"label": "Content position",
+"options": [
+{
+"value": "top-left",
+"label": "Top Left"
+},
+{
+"value": "top-center",
+"label": "Top Center"
+},
+{
+"value": "top-right",
+"label": "Top Right"
+},
+{
+"value": "center-left",
+"label": "Center left"
+},
+{
+"value": "center",
+"label": "Center"
+},
+{
+"value": "center-right",
+"label": "Center right"
+},
+{
+"value": "bottom-left",
+"label": "Bottom left"
+},
+{
+"value": "bottom-center",
+"label": "Bottom center"
+},
+{
+"value": "bottom-right",
+"label": "Bottom right"
+}     
+],
+"default": "center"
+},
+{
+"type": "header",
+"content": "Grid Banner Color Settings"
+},
+{
+"type": "color",
+"id": "grid_banner_heading_color",
+"label": "Heading color"
+},    
+{
+"type": "color",
+"id": "grid_banner_sub_heading_color",
+"label": "Sub heading color"
+},   
+{
+"type": "color",
+"id": "grid_banner_description_color",
+"label": "Description color"
+},  
+{
+"type": "color",
+"id": "grid_banner_button_bg_color",
+"label": "Button bg color"
+},   
+{
+"type": "color",
+"id": "grid_banner_button_text_color",
+"label": "Button text color"
+},   
+{
+"type": "color",
+"id": "grid_banner_button_hover_bg_color",
+"label": "Button hover bg color"
+},   
+{
+"type": "color",
+"id": "grid_banner_button_hover_text_color",
+"label": "Button hover text color"
+},
+{
+"type": "color",
+"id": "grid_banner_content_bg",
+"label": "Background Color"
+},
+{
+"type": "select",
+"id": "banner_image_overlay_style",
+"label": "Image Overlay Style",
+"options": [
+{
+"value": "with-overlay",
+"label": "Normal Overlay"
+},
+{
+"value": "with-gradient-overlay",
+"label": "Gradient Overlay"
+}
+]
+},
+{
+"type": "color",
+"id": "banner_image_overlay_color",
+"label": "Image Overlay color"
+},
+{
+"type": "text",
+"id": "banner_image_overlay_opacity",
+"label": "Image Overlay Opacity (0.01 to 1)",
+"default": "0.5"
+},
+{
+"type": "text",
+"id": "banner_image_rotation_degree",
+"label": "Image Overlay Gradient Position (0 to 360) - Only for Gradient Overlay",
+"default": "180"
+}
+]
+}
+],
+"presets": [
+{
+"name": "Product Deal Carousel",
+"category": "Collection"
+}
+]
+}
+{% endschema %}

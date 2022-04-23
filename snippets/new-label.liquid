@@ -1,0 +1,10 @@
+{% if settings.collections_show_new_circle %}
+{% for tag in product.tags %}
+{% assign tag = tag |handleize  %}
+{% if tag contains 'New' %}
+<span class="badge badge--new">
+ <span class="badge__text">{{ 'products.product.new' | t }}</span> 
+</span>
+{% endif %}
+{% endfor %}
+{% endif %}

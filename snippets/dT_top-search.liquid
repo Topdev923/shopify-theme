@@ -1,0 +1,72 @@
+{% if section.settings.search_type == 'search-icon' %}
+<div id="dT_top-sticky">
+  <a href="#" class="dT_TopStickySearchCloseBtn close">{% include 'icon-close' %}</a>
+  <div class="container">
+    <div class="row">
+      <div class="{% if section.settings.enable_predictive_search %} dT_ProductProactiveSearch {% endif %}">
+       
+        <form method="GET" action="/search" autocomplete="off">
+          <div class="search-box">
+            <input type="text" name="q" class="form-control" autocomplete="off" placeholder="Search Our Store" aria-label="Search Our Store"
+                   v-model="search" @keyup="inputChanged" @keydown.down="onArrow" @keydown.up="onArrow">
+            <input type="hidden" name="product" value="product" />
+            <div class="input-group-append">
+              <button class="dt-sc-btn" type="submit">
+                {% include 'icon-search' %}
+              </button>
+            </div>
+          </div>
+        </form>
+        
+        <div class="dT_PredictiveSearchResult_Section">
+          <template v-if="dT_ProductProactiveSugesstions">
+            <ul class="dt-sc-ProductSugesstions">
+              <li v-for="(item, i) in filteredSearchResults" :key="i" class="autocomplete-results" v-show="isOpen" :class="{ 'is-active': i === arrowCounter }">
+                <template v-if="item.image">
+                  <a :href="item.url">
+                    <img class="img-fluid mr-4 mb-2" width="150" :src="item.image" alt="">
+                  </a>
+                </template>
+                <div class="media-body">
+                  <a :href="item.url">${ item.product_title }</a>
+                  {% comment %}
+                  <template v-if="!item.product_has_only_default_variant">
+                    <p>${ item.variant_title }</p>
+                  </template>
+                  {% endcomment %}
+                  <div class="price">
+                    <span class="dt-price-symbol">{{ cart.currency.symbol  }}</span> ${item.price}
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </template>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<style>
+  
+  #dT_top-sticky { top: 0; left: 0; right: 0; display: none; z-index: 5; position: relative; background-color: var(--DTTertiaryColor); }
+  #dT_top-sticky .search-box{ position: relative; display:flex; align-items: center; width: 100%; padding: 15px 0; }
+  #dT_top-sticky .search-box .dt-sc-btn{ margin:0 0 0 15px; display: block; }
+  #dT_top-sticky .close{ position: absolute; right: 15px; top: 50%; transform: translateY(-50%); z-index: 99; }
+  #dT_top-sticky .dT_ProductProactiveSearch { display: flex; align-items: center; justify-content: center; width: 100%; }
+  #dT_top-sticky .dT_ProductProactiveSearch form{ width: 100%; border: none; padding: 15px; background: transparent; }
+  #dT_top-sticky .dt-sc-ProductSugesstions{ display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px; }
+  #dT_top-sticky .dt-sc-ProductSugesstions:empty{ display: none; }
+  #dT_top-sticky .dt-sc-ProductSugesstions li { width: 100%; border: 1px solid var(--DTColor_Border); padding: 10px; margin: 0; }
+  
+  @media (max-width: 767px) {
+    #dT_top-sticky .dt-sc-ProductSugesstions { grid-template-columns: 1fr; } 
+  }
+  
+  @media (max-width: 576px) {
+    #dT_top-sticky .dT_ProductProactiveSearch form { padding-left: 0; }
+  }
+  
+</style>

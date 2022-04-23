@@ -1,0 +1,470 @@
+{% if section.settings.enable_overlay %}
+{% assign section_overlay = 'dt-sc-overlay' %}
+{% endif %}
+
+{% case section.settings.background_style %}
+{% when 'default' %}
+{% when 'parallax' %}
+{%- assign background_style = 'data-speed="2"' %}
+{% when 'fixed' %}
+{%- assign background_style = 'data-speed="1"' %}
+{% endcase %}
+{% if section.settings.show_background_image %}
+{% assign lazyScript = "lazyload" %}
+{% endif %}
+<div class="dt-sc-section-wrapper {{lazyScript}} {{section_overlay}} {% if section.settings.background_style == 'parallax' %} parallax-initiated{% endif %}" style="{% render 'bg-color-image-padding' %}" data-style="parallax" {{background_style}} {% include 'bg_image' %}>  
+  <div class="{% render 'container-settings' %}"> 
+    <div class="row {{ section.settings.custom_class_name }}">
+      {% render 'section-heading', class: section.id %} 
+        <div class="dt-sc-deal-banner-section">
+             
+            {% if section.settings.block_image != blank or section.settings.block_title != blank or section.settings.block_sub_title != blank or   section.settings.deal_end_date != blank or  section.settings.block_description != blank or section.settings.block_button_link != blank %}
+            <div class="dt-sc-deal-banner-content {{section.settings.block_text_align}}">
+              
+              {% if section.settings.show_image %}
+              {% if section.settings.block_image != blank %}              
+              {%- assign img_url = section.settings.block_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+              <img class="lazyload"
+                   src="{{ 'loading.gif' | asset_url }}"
+                   data-src="{{ section.settings.block_image | img_url: 'master' }}"
+                   data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+                   data-aspectratio="{{ section.settings.block_image.aspect_ratio }}"
+                   data-sizes="auto"            
+                   alt="{{ section.settings.block_title | escape }}">
+               <noscript>
+                 {{ block.settings.block_image | img_url: '480x480', scale: 2 | img_tag: block.settings.block_image.alt, 'dt-sc-noscript-image' }}
+              </noscript>
+              {% else %}
+              {{ 'image' | placeholder_svg_tag: 'placeholder_svg' }}
+              {% endif%}              
+              {% endif%}
+
+              {% if section.settings.block_title != blank %}
+              <h4 class="dt-sc-main-title">{{section.settings.block_title}}</h4>
+              {% endif %}
+              {% if section.settings.block_sub_title != blank %}
+                <h6 class="dt-sc-sub-title">{{section.settings.block_sub_title}}</h6>
+                {% endif %}
+              {% if section.settings.block_description != blank %}
+              <p class="dt-sc-description">{{section.settings.block_description}}</p>
+              {% endif %}
+              <div class="deals-counter">
+                {% if section.settings.deal_end_date != blank %}
+                <div class="deal-clock lof-clock-timer-detail4"></div>
+                {% assign dealTime = section.settings.deal_end_date | replace: '_',' ' %}  
+                <div class="deal-content"> 
+                  <script>           
+                    jQuery(document).ready(function($){
+                      $(".lof-clock-timer-detail4").lofCountDown({      
+                        TargetDate:"{{ dealTime }}",
+                        DisplayFormat:"<ul class='list-inline'><li class='day'>%%D%%<span>{{ 'products.deal.days' | t }}</span></li><li class='hours'>%%H%%<span>{{ 'products.deal.hours' | t }}</span></li><li class='mins'>%%M%%<span>{{ 'products.deal.minutes' | t }}</span></li><li class='seconds'>%%S%%<span>{{ 'products.deal.seconds' | t }}</span></li></ul>",                  
+                      });
+                    });              
+                  </script>
+                </div>              
+                {% endif %}
+              </div>
+              {% if section.settings.block_button_link != blank %}
+              <a href="{{section.settings.block_button_link}}" class="dt-sc-btn">{{section.settings.block_button_text}}</a>
+              {% endif %} 
+            </div> 
+            {% endif%} 
+        </div>           
+    </div>
+  </div>
+  <noscript>
+    <div class="dt-sc-no-image" style="background-image: url('{{ section.settings.background_image | img_url: '2040x' }}'); background-position: center;"></div>
+  </noscript>
+</div>
+<style type="text/css">
+  
+  #shopify-section-{{section.id}}.home-deal-banner .dt-sc-heading .dt-sc-main-heading { color: var(--DTColor_Heading); color:{{ section.settings.section_heading_color }}; } 
+  #shopify-section-{{section.id}}.home-deal-banner .dt-sc-heading .dt-sc-sub-heading { color: var(--DTColor_Heading); color:{{ section.settings.section_sub_heading_color }}; } 
+  #shopify-section-{{section.id}}.home-deal-banner .dt-sc-heading .dt-sc-heading-description { color: var(--DTColor_Body); color:{{ section.settings.section_description_color }}; } 
+  #shopify-section-{{section.id}}.home-deal-banner .dt-sc-heading .dt-sc-btn { 
+    background: var(--DT_Button_BG_Color); background:{{ section.settings.section_button_bg_color }}; 
+      color: var(--DT_Button_Text_Color); color:{{ section.settings.section_button_text_color }}; }
+  #shopify-section-{{section.id}}.home-deal-banner .dt-sc-heading .dt-sc-btn:hover { 
+    background: var(--DT_Button_BG_Hover_Color); background:{{ section.settings.section_button_hover_bg_color }}; 
+      color: var(--DT_Button_Text_Hover_Color); color:{{ section.settings.section_button_hover_text_color }}; }
+  #shopify-section-{{section.id}}.home-deal-banner .dt-sc-overlay:before  { 
+    color: var(--DTTertiaryColor); 
+      color: {{ section.settings.background_color }};    
+      background: currentcolor; 
+      opacity: {{ section.settings.overlay_transparency }}; }
+  
+  
+  #shopify-section-{{section.id}}.home-deal-banner .dt-sc-deal-banner-content .dt-sc-main-title { color: var(--DTColor_Heading); color:{{ section.settings.title_color }}; }
+  #shopify-section-{{section.id}}.home-deal-banner .dt-sc-deal-banner-content .dt-sc-description { color: var(--DTColor_Body); color:{{ section.settings.description_color }}; }
+  #shopify-section-{{section.id}}.home-deal-banner .dt-sc-deal-banner-content .dt-sc-sub-title { color: var(--DTColor_Heading); color:{{ section.settings.sub_title_color }}; }
+  #shopify-section-{{section.id}}.home-deal-banner .dt-sc-deal-banner-content .deal-clock ul li { 
+    background: var(--DT_Button_BG_Hover_Color); background:{{ section.settings.deals_section_bg_color }};
+    color: var(--DT_Button_Text_Hover_Color); color:{{ section.settings.deals_section_timer_color }}; }  
+  #shopify-section-{{section.id}}.home-deal-banner .dt-sc-deal-banner-content .deal-clock ul li span{ 
+    color: var(--DTPrimaryColor); color:{{ section.settings.deals_section_timer_duration_color }}; }
+  #shopify-section-{{section.id}}.home-deal-banner .dt-sc-deal-banner-content .dt-sc-btn { 
+    background: var(--DT_Button_BG_Color); background:{{ section.settings.button_bg_color }}; 
+    color: var(--DT_Button_Text_Color); color:{{ section.settings.button_text_color }}; }
+  #shopify-section-{{section.id}}.home-deal-banner .dt-sc-deal-banner-content .dt-sc-btn:hover { 
+    background: var(--DT_Button_BG_Hover_Color); background:{{ section.settings.button_hover_bg_color }}; 
+    color: var(--DT_Button_Text_Hover_Color); color:{{ section.settings.button_hover_text_color }}; }
+  
+  
+  .dt-sc-deal-banner-section { width: 75%; margin: auto; padding: 0 calc(.5 * {{settings.gutter_width}}px); }  
+  .dt-sc-deal-banner-section .dt-sc-deal-banner-content { display: flex; flex-wrap: wrap; flex-direction: column; align-items: center; }
+  .dt-sc-deal-banner-section .dt-sc-deal-banner-content > svg.placeholder_svg,
+  .dt-sc-deal-banner-section .dt-sc-deal-banner-content > img { min-width: 100px; height: auto; }
+  
+  .dt-sc-deal-banner-section .dt-sc-deal-banner-content > *:not(:last-child) { margin-bottom: 20px; }
+  
+  .dt-sc-deal-banner-section .dt-sc-deal-banner-content .dt-sc-sub-title { margin-top: 0; margin-bottom: 35px; }
+  
+  .dt-sc-deal-banner-section .dt-sc-deal-banner-content.text-start { align-items: flex-start; }
+  .dt-sc-deal-banner-section .dt-sc-deal-banner-content.text-end { align-items: flex-end; }
+  
+  .dt-sc-deal-banner-section .dt-sc-deal-banner-content .deal-clock ul { width: 100%; display: grid; gap: var(--DTGutter_Width); background: none; flex-wrap: wrap; 
+    align-items: center; justify-content: center; grid-template-columns: repeat(4, 1fr); }
+  .dt-sc-deal-banner-section .dt-sc-deal-banner-content .deal-clock ul li { width: 150px; height: 150px; display: flex; flex-wrap: align-items: center; font-size: 40px;
+    justify-content: center; flex-direction: column; border-radius: var(--DTRadius); border-radius: {{ section.settings.deals_border_radius }};       line-height: normal; }
+  .dt-sc-deal-banner-section .dt-sc-deal-banner-content .deal-clock ul li:not(:last-child) { border: none; }
+  .dt-sc-deal-banner-section .dt-sc-deal-banner-content .deal-clock ul li span { width: 100%; font-size: 20px; }
+  
+  .dt-sc-deal-banner-section .dt-sc-deal-banner-content .deal-clock { position: static; }
+  .dt-sc-deal-banner-section .dt-sc-deal-banner-content .deal-clock * { margin: 0; }  
+  
+  .dt-sc-deal-banner-section .dt-sc-deal-banner-content .dt-sc-btn { display: inline-block; margin-top: 0; }
+  
+  .dt-sc-deal-banner-section .dt-sc-deal-banner-content .dt-sc-main-title { margin-top: 0; }
+  
+  @media (max-width: 1199px) {
+    
+    .dt-sc-deal-banner-section { width: 100%; }
+    .dt-sc-deal-banner-section .dt-sc-deal-banner-content .deal-clock ul li { width: 125px; height: 125px; }
+    
+  }
+  
+  @media (max-width: 767px) {
+
+    .dt-sc-deal-banner-section { width: 100%; }
+    .dt-sc-deal-banner-section .dt-sc-deal-banner-content .deal-clock ul li { width: 100px; height: 100px; }
+
+    .dt-sc-deal-banner-section .dt-sc-deal-banner-content .deal-clock ul li { font-size: 30px; }
+    .dt-sc-deal-banner-section .dt-sc-deal-banner-content .deal-clock ul li span { font-size: 16px; }
+
+  }
+  
+  @media (max-width: 576px) {
+    
+    .dt-sc-deal-banner-section .dt-sc-deal-banner-content .deal-clock ul { grid-template-columns: repeat(2, 1fr); }
+    
+  }
+  
+</style>
+{% schema %}
+{
+"name": "Home deal banner",
+"class": "index-section  home-deal-banner",
+"settings": [
+{
+"type": "checkbox",
+"id": "full",
+"label": "Show Full width"
+},
+{
+"type": "checkbox",
+"id": "spacing_both_ends",
+"label": "Enable Right & Left Spacing (Works only on Fullwidth)",
+"default": false
+},
+{
+"type": "text",
+"id": "padding",
+"label": "Style value (Padding)",
+"default":"0,0",
+"info":"Top(px),Bottom(px)"
+},
+{
+"type": "text",
+"id": "margin",
+"label": "Style value (Margin)",
+"default":"0,0",
+"info":"Top(px),Bottom(px)"
+},
+{
+"type": "checkbox",
+"id": "show_background_image",
+"label": "Enable Background image"
+},
+{
+"type": "image_picker",
+"id": "background_image",
+"label": "Background image",
+"info": "Size: 1920x1280"
+},
+{
+"type": "select",
+"id": "background_style",
+"label": "Background Style",
+"default": "default",
+"options": [
+{
+"value": "default",
+"label": "Default"
+},
+{
+"value": "parallax",
+"label": "Parallax"
+},
+{
+"value": "fixed",
+"label": "Fixed"
+}
+]
+},
+{
+"type": "checkbox",
+"id": "enable_overlay",
+"label": "Enable Background Color (Used as Background Image Overlay Color too)"
+},
+{
+"type": "color",
+"id": "background_color",
+"label":"Background color"
+},
+{
+"type": "text",
+"id": "overlay_transparency",
+"label": "Overlay Transparency (0.01 to 1)",
+"default": "0.5"
+},
+{
+"type": "text",
+"id": "section_heading",
+"label": "Main Heading"
+},  
+{
+"type": "text",
+"id": "section_sub_heading",
+"label": "Sub Heading"
+},  
+{
+"type": "text",
+"id": "section_description",
+"label": "Description"
+},  
+{
+"type": "text",
+"id": "section_button_text",
+"label": "Link text"
+},
+{
+"type": "url",
+"id": "section_button_link",
+"label": "Link URL"
+},
+{
+"type": "select",
+"id": "heading_position",
+"label": "Heading Position",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "right"
+}
+]
+},
+{
+"type": "header",
+"content": "Section Heading Color settings"
+},
+{
+"type": "color",
+"id": "section_heading_color",
+"label": "Heading color"
+},    
+{
+"type": "color",
+"id": "section_sub_heading_color",
+"label": "Sub heading color"
+},   
+{
+"type": "color",
+"id": "section_description_color",
+"label": "Description color"
+},  
+{
+"type": "color",
+"id": "section_button_bg_color",
+"label": "Button bg color"
+},   
+{
+"type": "color",
+"id": "section_button_text_color",
+"label": "Button text color"
+},   
+{
+"type": "color",
+"id": "section_button_hover_bg_color",
+"label": "Button hover bg color"
+},   
+{
+"type": "color",
+"id": "section_button_hover_text_color",
+"label": "Button hover text color"
+},  
+{
+"type": "header",
+"content": "Deals Content settings"
+},
+{
+"type": "image_picker",
+"id": "block_image",
+"label": "Image",
+"info": "Size: 1280x820"
+},
+{
+"type": "checkbox",
+"id": "show_image",
+"label": "Show image",
+"default": true
+},
+{
+"type": "text",
+"id": "block_title",
+"label": "Title",
+"default": "Title"
+},  
+{
+"type": "text",
+"id": "block_sub_title",
+"label": "Sub title",
+"default": "Sub title"
+},  
+{
+"type": "text",
+"id": "block_description",
+"label": "Description",
+"default": "Short description"
+},
+{
+"type": "text",
+"id": "deal_end_date",
+"label": "Deal end date",
+"info": "format should be MM/DD/YYYY_HH:MM:SS "
+},  
+{
+"type": "text",
+"id": "deals_border_radius",
+"label": "Deals Timer Radius (in px) - Set 50% for Rounded Timer",
+"default":"0",
+"info": "Leave Empty for Default Border Radius"
+},
+{
+"type": "text",
+"id": "block_button_text",
+"label": "Link text"
+},
+{
+"type": "url",
+"id": "block_button_link",
+"label": "Link URL"
+},
+{
+"type": "select",
+"id": "block_text_align",
+"label": "Text alignment",
+"options": [
+{
+"value": "text-center",
+"label": "center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "right"
+}
+]
+},
+{
+"type": "header",
+"content": "Deals Content Color settings"
+},
+{
+"type": "color",
+"id": "title_color",
+"label": "Title color"
+},    
+{
+"type": "color",
+"id": "sub_title_color",
+"label": "Sub title color"
+},   
+{
+"type": "color",
+"id": "description_color",
+"label": "Description color"
+},  
+{
+"type": "color",
+"id": "button_bg_color",
+"label": "Button bg color"
+},   
+{
+"type": "color",
+"id": "button_text_color",
+"label": "Button text color"
+},   
+{
+"type": "color",
+"id": "button_hover_bg_color",
+"label": "Button hover bg color"
+},   
+{
+"type": "color",
+"id": "button_hover_text_color",
+"label": "Button hover text color"
+},
+{
+"type": "color",
+"id": "deals_section_bg_color",
+"label": "Deals Section Timer BG color (numbered part)"
+},
+{
+"type": "color",
+"id": "deals_section_timer_color",
+"label": "Deals Section Timer Color (numbered part)"
+},
+{
+"type": "color",
+"id": "deals_section_timer_duration_color",
+"label": "Deals Section Timer Duration Color (text part)"
+},
+{
+"type": "header",
+"content": "Custom class"
+},
+{
+"type": "text",
+"id": "custom_class_name",
+"label": "Add your custom class name here"
+}
+],
+"presets": [
+{
+"name": "Deal banner",
+"category": "Grid banners"
+}
+]
+}
+{% endschema %}

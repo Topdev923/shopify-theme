@@ -1,0 +1,500 @@
+{% if section.settings.enable_overlay %}
+{% assign section_overlay = 'dt-sc-overlay' %}
+{% endif %}
+
+{% case section.settings.background_style %}
+{% when 'default' %}
+{% when 'parallax' %}
+{%- assign background_style = 'data-speed="2"' %}
+{% when 'fixed' %}
+{%- assign background_style = 'data-speed="1"' %}
+{% endcase %} 
+{% if section.settings.show_background_image %}
+{% assign lazyScript = "lazyload" %}
+{% endif %}
+<div class="dt-sc-section-wrapper {{lazyScript}}  {{section_overlay}} {% if section.settings.background_style == 'parallax' %} parallax-initiated{% endif %}" style="{% render 'bg-color-image-padding' %}" data-style="parallax" {{background_style}} {% include 'bg_image' %}>  
+  <div class="{% render 'container-settings' %}"> 
+    <div class="row {{ section.settings.custom_class_name }}">      
+      {% render 'section-heading', class: section.id %}     
+      <div class="dt-sc-newsletter-section {{ section.settings.news_style}} {{section.settings.section_position}}">  
+        <div class="dt-sc-newsletter-form">
+          {% form 'customer' %}
+          {{ form.errors | default_errors }}
+          {% if form.posted_successfully? %}
+          <p class="note form-success">{{ 'general.newsletter_form.mailing_list_success_message' | t }}</p>
+          {% else %}
+          <div class="contact-input">	
+            <input type="email" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'general.newsletter_form.newsletter_email' | t }}" name="contact[email]" class="mail" aria-label="{{ 'general.newsletter_form.newsletter_email' | t }}" required="required"  style="background-color:{{ section.settings.input_bg_color }};">
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <button type="submit" class="dt-sc-btn {% if section.settings.reverse_column %}reverse{% endif %}" name="subscribe" value="" ><span>{{ 'general.newsletter_form.submit' | t }}</span><i class=" fa fa-paper-plane"></i></button>   
+          </div>
+          {% endif %}
+          {% endform %}  
+          {% if section.settings.newsletter_description != blank %}
+          <p class="dt-sc-newsletter-description" style="color: {{ section.settings.newsletter_description_color }};">{{section.settings.newsletter_description}}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style type="text/css">
+
+  #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-heading .dt-sc-main-heading { color: var(--DTColor_Heading); color:{{ section.settings.section_heading_color }}; } 
+  #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-heading .dt-sc-sub-heading { color: var(--DTColor_Heading); color:{{ section.settings.section_sub_heading_color }}; } 
+  #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-heading .dt-sc-heading-description { color: var(--DTColor_Body); color:{{ section.settings.section_description_color }}; } 
+  #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-heading .dt-sc-btn { 
+    background: var(--DT_Button_BG_Color);  background:{{ section.settings.section_button_bg_color }}; 
+      color: var(--DT_Button_Text_Color); color:{{ section.settings.section_button_text_color }};
+        }
+  #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-heading .dt-sc-btn:hover { 
+    background: var(--DT_Button_BG_Hover_Color); background:{{ section.settings.section_button_hover_bg_color }}; 
+      color: var(--DT_Button_Text_Hover_Color); color:{{ section.settings.section_button_hover_text_color }};
+        }
+
+  #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-overlay:before { 
+    color: var(--DTTertiaryColor); 
+    color: {{ section.settings.background_color }};    
+    background: currentcolor; 
+    opacity: {{ section.settings.overlay_transparency }}; }
+
+  #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-section.default .dt-sc-newsletter-form,
+  #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-section.style-3 form,
+  #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-section.style-4 form { width: {{section.settings.newsletter_form_width }}; }
+
+  #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-section.default form .contact-input input[type="email"] {
+    margin-right: {{section.settings.space_in_between }}; 
+  }
+
+  #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-section.default form .contact-input .dt-sc-btn { 
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--DT_Button_BG_Color); 
+      border-color: {{ section.settings.newsletter_button_bg_color }}; 
+      }
+  #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-section.default form .contact-input .dt-sc-btn:hover { 
+    border-color: var(--DT_Button_BG_Hover_Color); 
+      
+      border-color: {{ section.settings.newsletter_button_hover_bg_color }}; 
+      }
+
+  #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-section.style-2 form .contact-input input[type="email"] { margin: 0 auto {{section.settings.space_in_between }}; }
+  #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-section.style-2.text-start form .contact-input input[type="email"] { margin-left: inherit; }
+  #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-section.style-2.text-end form .contact-input input[type="email"] { margin-right: inherit; }
+  #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-section.style-5 form .contact-input input[type="email"] { margin: 0 auto {{section.settings.space_in_between }}; }
+
+  #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-section form .contact-input input[type="email"] {     
+    border-color: var(--DTColor_Border);
+      border-color: {{ section.settings.newsletter_box_border_color }};
+      background: {{ section.settings.newsletter_box_bg_color }};
+      }
+
+  #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-section.style-4 form .contact-input button.dt-sc-btn { 
+    border-color: var(--DTColor_Border);
+      border-color: {{ section.settings.newsletter_box_border_color }}; 
+      }
+
+  #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-section form .contact-input input[type="email"]:focus,
+  #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-section.style-4 form .contact-input:focus-within button.dt-sc-btn { 
+    border-color: var(--DTPrimaryColor);
+      border-color: {{ section.settings.newsletter_box_border_focus_color }};
+      }  
+
+  #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-section:not(.style-4) form .contact-input .dt-sc-btn { 
+    background: var(--DT_Button_BG_Color); color: var(--DT_Button_Text_Color);
+      
+      background:{{ section.settings.newsletter_button_bg_color }}; 
+      
+      color: {{ section.settings.newsletter_button_text_color }}; 
+      }
+
+  #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-section:not(.style-4) form .contact-input .dt-sc-btn:hover { 
+    background: var(--DT_Button_BG_Hover_Color); color: var(--DT_Button_Text_Hover_Color);
+      background:{{ section.settings.newsletter_button_hover_bg_color }}; color:{{ section.settings.newsletter_button_hover_text_color }}; 
+      }  
+
+  .dt-sc-newsletter-section form { display: flex; flex-wrap: wrap; width: 100%; }
+  .dt-sc-newsletter-section form:not(:only-child) { margin-bottom: 15px; }
+  .dt-sc-newsletter-section form .errors { width: 100%; color: var(--DT_Error_Color); display: inline-block; }
+  .dt-sc-newsletter-section form .errors ul { margin: 0 0 15px; padding: 0; }
+  .dt-sc-newsletter-section form .note.form-success { display: inline-block; width: 100%; color: var(--DT_Success_Color); margin: 0; }
+  .dt-sc-newsletter-section form .dt-sc-newsletter-note { margin-top: 10px; width: 100%; display: inline-block; }
+
+  .dt-sc-newsletter-section.text-center form .contact-input { justify-content: center; margin: auto; }
+  .dt-sc-newsletter-section.text-end form .contact-input { justify-content: flex-end; }
+
+  .dt-sc-newsletter-section form .contact-input { display: flex; flex-wrap: wrap; width: 100%; }
+  .dt-sc-newsletter-section form .contact-input input[type="email"] { -webkit-transition: all linear .3s; transition: all linear .3s; width: 50%; }
+
+  .dt-sc-newsletter-section form .contact-input .dt-sc-btn { margin: 0; align-self: stretch; }
+  .dt-sc-newsletter-section form .contact-input .dt-sc-btn.reverse { direction: rtl; }
+  .dt-sc-newsletter-section form .contact-input .dt-sc-btn.reverse i { margin-right: 10px; }
+  .dt-sc-newsletter-section form .contact-input .dt-sc-btn:not(.reverse) i:not(:only-child) { margin-left: 10px; }
+
+  .dt-sc-newsletter-section.text-center form .contact-input { align-items: center; justify-content: center; }
+  .dt-sc-newsletter-section.text-end form .contact-input { align-items: center; justify-content: flex-end; }
+
+  .dt-sc-newsletter-section.default { width: 100%; display: flex; }
+
+  .dt-sc-newsletter-section.default.text-end { justify-content: flex-end; }
+  .dt-sc-newsletter-section.default.text-center { justify-content: center; }
+
+  .dt-sc-newsletter-section.style-2 form .contact-input { display: block; }
+  .dt-sc-newsletter-section.style-2 form .contact-input button.dt-sc-btn { display: inline-block; }
+
+  .dt-sc-newsletter-section.style-3 form { display: inline-block; }
+  .dt-sc-newsletter-section.style-3 form .contact-input { position: relative; }
+  .dt-sc-newsletter-section.style-3 form .contact-input button.dt-sc-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); }
+  .dt-sc-newsletter-section.style-3 form .contact-input input[type="email"] { width: 100%; padding: 15px; }
+
+  .dt-sc-newsletter-section.style-4 form { display: inline-block; }
+  .dt-sc-newsletter-section.style-4 form .contact-input { position: relative; }
+  .dt-sc-newsletter-section.style-4 form .contact-input input[type="email"] { width: 100%; }
+
+  .dt-sc-newsletter-section.style-4 form .contact-input button.dt-sc-btn { background: none; color: {{ settings.link_color}}; color: {{ section.settings.newsletter_button_text_color }}; position: absolute; right: 5px; top: 50%; 
+    transform: translateY(-50%); border-width: 0 0 0 1px; border-style: solid; padding-top: 0; padding-bottom: 0; border-radius: 0; }
+
+  .dt-sc-newsletter-section.style-4 form .contact-input button.dt-sc-btn:hover { 
+    color: {{ settings.link_hover_color}}; color:{{ section.settings.newsletter_button_hover_text_color }}; }
+  
+  .dt-sc-newsletter-section.style-5 form .contact-input { display: block; }
+  .dt-sc-newsletter-section.style-5 form .contact-input input[type="email"],
+  .dt-sc-newsletter-section.style-5 form .contact-input button.dt-sc-btn { width: 50%; display: inline-block; }  
+
+  .dt-sc-newsletter-section.style-5.text-start form .contact-input input[type="email"] { margin-left: inherit; }
+  .dt-sc-newsletter-section.style-5.text-end form .contact-input input[type="email"] { margin-right: inherit; }
+
+  @media (max-width: 767px) {
+
+    #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-container .dt-sc-newsletter-modal .dt-sc-newsletter-content.default form.contact-form { width: 80%; }
+
+    #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-container .dt-sc-newsletter-modal .dt-sc-newsletter-content.style-3 form.contact-form,
+    #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-container .dt-sc-newsletter-modal .dt-sc-newsletter-content.style-4 form.contact-form { width: 100%; }
+
+    #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-container .dt-sc-newsletter-modal .dt-sc-newsletter-content.default form.contact-form input[type="email"] {
+      margin-bottom: {{section.settings.space_in_between }}; margin-right: 0; width: 100%;
+    }
+   
+
+  }
+  
+  @media (max-width: 478px) {    
+    
+    #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-container .dt-sc-newsletter-modal .dt-sc-newsletter-content form { grid-template-columns: 1fr; }
+
+    #shopify-section-{{section.id}}.home-newsletter-section p.newsletter-success { padding: 30px; font-size: var(--DTFontSize_H5); } 
+
+    #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-container .dt-sc-newsletter-modal .dt-sc-newsletter-content.style-4 form.contact-form input[type="email"],
+    #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-container .dt-sc-newsletter-modal .dt-sc-newsletter-content.style-5 form.contact-form input[type="email"]{ padding: 15px 15px 65px; 
+      text-align: center; }
+
+    #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-container .dt-sc-newsletter-modal .dt-sc-newsletter-content.style-4 form.contact-form button.dt-sc-btn,
+    #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-container .dt-sc-newsletter-modal .dt-sc-newsletter-content.style-5 form.contact-form button.dt-sc-btn { bottom: 10px; left: 0px; right: 0; 
+      margin: auto; top: auto; transform: none; width: calc(100% - 20px); }    
+
+    #shopify-section-{{section.id}}.home-newsletter-section .dt-sc-newsletter-container .dt-sc-newsletter-modal .dt-sc-newsletter-content.style-4 form.contact-form button.dt-sc-btn { width: calc(100% - 60px);
+      padding: 15px 0px 5px; border-left: none; border-top: 1px solid; }
+  }
+
+
+</style>
+{% schema %}
+{
+"name": "Newsletter",
+"class": "index-section home-newsletter-section",
+"settings": [
+{
+"type": "checkbox",
+"id": "full",
+"label": "Show Full width"
+},
+{
+"type": "checkbox",
+"id": "spacing_both_ends",
+"label": "Enable Right & Left Spacing (Works only on Fullwidth)",
+"default": false
+},
+{
+"type": "text",
+"id": "padding",
+"label": "Style value (Padding)",
+"default":"0,0",
+"info":"Top(px),Bottom(px)"
+},
+{
+"type": "text",
+"id": "margin",
+"label": "Style value (Margin)",
+"default":"0,0",
+"info":"Top(px),Bottom(px)"
+},
+{
+"type": "image_picker",
+"id": "background_image",
+"label": "Background image",
+"info": "Size: 1920x1280"
+},
+{
+"type": "checkbox",
+"id": "show_background_image",
+"label": "Enable Background image"
+},
+{
+"type": "select",
+"id": "background_style",
+"label": "Background Style",
+"default": "default",
+"options": [
+{
+"value": "default",
+"label": "Default"
+},
+{
+"value": "parallax",
+"label": "Parallax"
+},
+{
+"value": "fixed",
+"label": "Fixed"
+}
+]
+},
+{
+"type": "color",
+"id": "background_color",
+"label":"Background color (Can also be used as overlay Color)"
+},
+{
+"type": "checkbox",
+"id": "enable_overlay",
+"label": "Enable Overlay"
+},
+{
+"type": "text",
+"id": "overlay_transparency",
+"label": "Overlay Transparency (0.01 to 1)",
+"default": "0.5"
+},
+{
+"type": "text",
+"id": "section_heading",
+"label": "Main Heading",
+"default": "Newsletter"
+},  
+{
+"type": "text",
+"id": "section_sub_heading",
+"label": "Sub Heading",
+"default": "Sub Heading"
+},  
+{
+"type": "text",
+"id": "section_description",
+"label": "Description",
+"default": "Use this text to share the information which you like!."
+},  
+{
+"type": "text",
+"id": "section_button_text",
+"label": "Link text"
+},
+{
+"type": "url",
+"id": "section_button_link",
+"label": "Link URL"
+},
+{
+"type": "header",
+"content": "Section Color settings"
+},
+{
+"type": "color",
+"id": "section_heading_color",
+"label": "Heading color"
+},    
+{
+"type": "color",
+"id": "section_sub_heading_color",
+"label": "Sub heading color"
+},   
+{
+"type": "color",
+"id": "section_description_color",
+"label": "Description color"
+},  
+{
+"type": "color",
+"id": "section_button_bg_color",
+"label": "Button bg color"
+},   
+{
+"type": "color",
+"id": "section_button_text_color",
+"label": "Button text color"
+},   
+{
+"type": "color",
+"id": "section_button_hover_bg_color",
+"label": "Button hover bg color"
+},   
+{
+"type": "color",
+"id": "section_button_hover_text_color",
+"label": "Button hover text color"
+},
+{
+"type": "select",
+"id": "heading_position",
+"label": "Heading Position",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "Right"
+}
+]
+},
+{
+"type": "header",
+"content": "Form Settings"
+},
+{
+"type": "select",
+"id": "section_position",
+"label": "Content Position",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "Right"
+}
+]
+},
+{
+"type": "text",
+"id": "newsletter_form_width",
+"label": "Form Width (in %)",
+"default": "65%"
+},
+{
+"type": "textarea",
+"id": "newsletter_description",
+"label": "Newsletter Description",
+"default": "Few lines of short description goes here..."
+},
+{
+"type": "select",
+"id": "news_style",
+"label": "Newsletter Style",
+"default": "default",
+"options": [
+{
+"value": "default",
+"label": "Style 1"
+},
+{
+"value": "style-2",
+"label": "Style 2"
+},
+{
+"value": "style-3",
+"label": "Style 3"
+},
+{
+"value": "style-4",
+"label": "Style 4 (Check the Colors below)"
+},
+{
+"value": "style-5",
+"label": "Style 5"
+}
+]
+},
+{
+"type": "checkbox",
+"id": "reverse_column",
+"label": "Swap Button Text & Icon Position",
+"default": false
+},
+{
+"type": "text",
+"id": "space_in_between",
+"label": "Gap between Text Box and Button (in px) - Not for Style 3 & 4",
+"default": "10px"
+},
+{
+"type": "header",
+"content": "Newsletter Color Settings"
+},  
+{
+"type": "color",
+"id": "newsletter_box_border_color",
+"label": "Box Border Color"
+},  
+{
+"type": "color",
+"id": "newsletter_box_bg_color",
+"label": "Box Background Color"
+}, 
+{
+"type": "color",
+"id": "newsletter_box_border_focus_color",
+"label": "Box Border Color (On Focus/Active)"
+},  
+{
+"type": "color",
+"id": "newsletter_button_bg_color",
+"label": "Button bg color (Leave empty for Style 4)"
+},   
+{
+"type": "color",
+"id": "newsletter_button_text_color",
+"label": "Button text color"
+},   
+{
+"type": "color",
+"id": "newsletter_button_hover_bg_color",
+"label": "Button hover bg color (Leave empty for Style 4)"
+},   
+{
+"type": "color",
+"id": "newsletter_button_hover_text_color",
+"label": "Button hover text color"
+},   
+{
+"type": "color",
+"id": "newsletter_description_color",
+"label": "Newsletter Description Color"
+},
+{
+"type": "header",
+"content": "Custom class"
+},
+{
+"type": "text",
+"id": "custom_class_name",
+"label": "Add your custom class name here"
+}
+],
+"presets": [
+{
+"name": "Newsletter",
+"category": "Form"
+}
+]
+}
+{% endschema %}

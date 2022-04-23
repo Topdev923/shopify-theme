@@ -1,0 +1,54 @@
+<div class="dt-sc-tabs-container">
+  <div class="dt-sc-tabs dt-sc-list-inline">       
+    {% if section.settings.product_tab1 %}<button class="tablinks" onclick="openTab(event, 'tab-description')">{{ section.settings.product_tab1_heading }}</button>{% endif %}
+    {% if section.settings.product_tab2 %}<button class="tablinks" onclick="openTab(event, 'tab-custom')">{{ section.settings.product_tab2_heading }}</button>{% endif %}
+    {% if section.settings.product_tab3 %}<button class="tablinks" onclick="openTab(event, 'tab-review')">{{ section.settings.product_tab3_heading }}</button>{% endif %}
+  </div>
+  {% if section.settings.product_tab1 %}
+  <div class="dt-sc-tabs-content  product-single__description rte" id="tab-description" style="display:block;">
+    {{ product.description }}
+  </div>
+  {% endif %}
+  {% if section.settings.product_tab2 %}
+  <div class="dt-sc-tabs-content"  id="tab-custom">
+    {{ pages[section.settings.page_content].content }}
+  </div>
+  {% endif %}  
+  {% if section.settings.product_tab3 %}
+  <div class="dt-sc-tabs-content" id="tab-review">
+    <div id="shopify-product-reviews" data-id="{{product.id}}">{{ product.metafields.spr.reviews }}</div>  
+  </div>
+  {% endif %} 
+</div>
+{% if section.settings.enable_enquiry %}
+<div class="text-center dt-sc-enquiry-form">
+  <h4>
+    <svg height="439pt" viewBox="0 0 439.57422 439" width="439pt" xmlns="http://www.w3.org/2000/svg">
+      <path d="m428.882812 376.707031-67.875-67.867187c-2.589843-2.597656-6.03125-4.027344-9.695312-4.027344 0 0-.003906 0-.007812 0-3.664063 0-7.109376 1.429688-9.699219 4.019531l-9.695313 9.695313-19.710937-19.714844c18.492187-21.519531 28.660156-48.589844 28.660156-77.265625 0-31.742187-12.359375-61.589844-34.808594-84.035156-6.878906-6.875-14.511719-12.679688-22.617187-17.597657v-92.199218c0-15.125-12.304688-27.425782-27.429688-27.425782h-168.398437l-2.671875 2.710938c-.003906.003906-.011719.007812-.015625.011719l-82.289063 83.527343-2.394531 2.476563-.23046875.234375v.007812l-.00390625.003907v25.980469l.00390625-.003907v296.476563c0 15.125 12.30468775 27.429687 27.42968775 27.429687h228.570312c15.125 0 27.429688-12.304687 27.429688-27.429687v-88.527344c5.542968-3.363281 10.84375-7.15625 15.835937-11.445312l19.710938 19.714843-9.695313 9.695313c-5.347656 5.347656-5.347656 14.046875 0 19.394531l67.878906 67.882813c6.90625 6.910156 16.089844 10.714843 25.863282 10.714843 9.765625 0 18.949218-3.804687 25.855468-10.714843 14.253907-14.257813 14.253907-37.464844 0-51.722657zm-106.308593-155.160156c0 26.867187-10.457031 52.125-29.453125 71.113281-18.996094 19.003906-44.25 29.457032-71.117188 29.457032-26.863281 0-52.117187-10.453126-71.109375-29.457032-18.996093-18.988281-29.460937-44.246094-29.460937-71.113281 0-26.859375 10.464844-52.117187 29.460937-71.105469 18.992188-19 44.246094-29.457031 71.109375-29.457031 26.867188 0 52.121094 10.457031 71.117188 29.457031 18.996094 18.988282 29.453125 44.246094 29.453125 71.105469zm-244.058594-185.78125c.820313-.835937 1.582031-1.605469 2.390625-2.425781.464844-.472656.921875-.9375 1.382812-1.40625v42.738281c0 5.042969-4.101562 9.140625-9.144531 9.140625h-42.046875c14.828125-15 32.164063-32.566406 47.417969-48.046875zm186.628906 375.949219c0 5.046875-4.101562 9.144531-9.140625 9.144531h-228.570312c-5.039063 0-9.144532-4.097656-9.144532-9.144531v-309.613282h54.855469c15.128907 0 27.429688-12.304687 27.429688-27.429687v-56.097656h155.429687c5.039063 0 9.140625 4.097656 9.140625 9.140625v83.125c-13.578125-5.289063-28.128906-8.140625-43.140625-8.140625-31.746094 0-61.59375 12.363281-84.039062 34.8125-22.453125 22.445312-34.816406 52.292969-34.816406 84.035156 0 31.75 12.363281 61.597656 34.816406 84.042969 22.445312 22.445312 52.292968 34.8125 84.039062 34.8125 15.011719 0 29.5625-2.855469 43.140625-8.140625zm150.8125 3.785156c-6.917969 6.921875-18.957031 6.902344-25.863281 0l-64.648438-64.652344 25.859376-25.855468 64.652343 64.644531c7.125 7.132812 7.125 18.730469 0 25.863281zm0 0"></path>
+      <path d="m45.714844 137.429688h18.285156v18.285156h-18.285156zm0 0"></path>
+      <path d="m45.714844 192.289062h18.285156v18.285157h-18.285156zm0 0"></path>
+      <path d="m45.714844 247.144531h18.285156v18.285157h-18.285156zm0 0"></path>
+      <path d="m45.714844 302h18.285156v18.289062h-18.285156zm0 0"></path>
+      <path d="m45.714844 356.859375h18.285156v18.285156h-18.285156zm0 0"></path>
+    </svg>
+    <a id="trigger-enquiry">{{ 'enquiry.form.heading' | t }}</a></h4>
+</div>
+{% endif %}
+<script>
+  function openTab(evt, TabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("dt-sc-tabs-content");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(TabName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+  $( ".tablinks" ).first().addClass( "active" );
+  $( ".dt-sc-tabs-content" ).first().css( "display", "block" );
+
+</script>

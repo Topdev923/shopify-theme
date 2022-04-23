@@ -1,0 +1,25 @@
+<div class="{{ footer_column_alignment}}">
+{% if block.settings.title != blank  and section.settings.show_footer_title %}             
+  <h6 class="footer__title ">{{ block.settings.title}}</h6> 
+  {% endif %}
+  {% if block.settings.logo %}
+
+  {%- assign footer_logo_size = block.settings.footer_logo_height | prepend: 'x' -%}  
+
+  <a href="{{ routes.root_url }}">
+    <img src="{{ block.settings.logo | img_url: footer_logo_size, scale: 2 }}" alt="{{ block.settings.logo.alt | default: shop.name }}" style="height:{{ block.settings.footer_logo_height}}px">
+  </a>
+  {% endif %}
+
+  <p>{{ block.settings.text }}</p>
+
+  {%- if block.settings.url  != blank and block.settings.link_text  != blank -%}
+  <a href="{{ block.settings.url }}" class="dt-sc-btn">{{ block.settings.link_text }}</a>
+  {%- endif -%}
+
+
+  {% if section.settings.social_placement == 'with_logo'  and section.settings.show_social %}
+  {% include 'social-links' %}
+  {% endif %}
+
+</div>

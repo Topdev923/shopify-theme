@@ -1,0 +1,33 @@
+{% if variant.title %}
+{%- assign compare_at_price = variant.compare_at_price -%}
+{%- assign price = variant.price -%}
+{%- assign available = variant.available -%}
+{% else %}
+{%- assign compare_at_price = 1999 -%}
+{%- assign price = 1999 -%}
+{%- assign available = true -%}
+{% endif %}
+{%- assign money_price = price | money -%}
+
+{% if compare_at_price > price %}
+{% assign on_sale = true %}
+{% endif %}
+
+<div class="product_price">          
+  <div class="grid-link__org_price" id="ProductPrice">
+    {{ money_price }}
+  </div>
+</div>
+
+{% if on_sale %}
+<del class="grid-link__sale_price" id="ComparePrice">
+  {{ compare_at_price | money }}
+</del>
+{% endif %}
+
+
+{% comment %}
+ {% assign my_integer = 12 %}
+    {% assign my_float = my_integer | times: 1.0 %}
+   Pay in 12 EMIS {{ price | divided_by: my_float | money }}
+{% endcomment %}

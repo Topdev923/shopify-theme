@@ -1,0 +1,66 @@
+{% assign file_extension = 'png' %}
+{% unless swatch == blank %}
+{% assign dt_sc_swatch_exist = false %}
+{% assign dt_sc_swatch_color = false %}
+{% assign option_index = 0 %}
+{% for option in product.options %}
+{% if option == swatch %}
+{% assign dt_sc_swatch_exist = true %}
+{% assign option_index = forloop.index0 %}
+
+<style>
+  label[for="product-select-option-{{ option_index }}"] { display: none; }
+  #product-select-option-{{ option_index }} { display: none; }
+  #product-select-option-{{ option_index }} + .custom-style-select-box { display: none !important; }
+</style>
+
+{% assign dt_sc_handlized = swatch | downcase %}
+{% if dt_sc_handlized contains 'color' or dt_sc_handlized contains 'colour' %}
+{% assign dt_sc_swatch_color = true %}
+{% endif %}
+{% endif %}
+{% endfor %}
+{% if dt_sc_swatch_exist %}
+<div class="product-attributes swatch clearfix {% unless dt_sc_swatch_color %} not_color-swatch-block {% endunless %}" data-option-index="{{ option_index }}">
+  <h6 class=" product-label  {% if dt_sc_swatch_color %} color-swatch-title {% else %} not_color-swatch-title {% endif %}">{{ swatch }}:</h6>
+
+  <div class="swatch-group">
+    {% assign values = '' %}
+    {% for variant in product.variants %}
+    {% assign value = variant.options[option_index] %}
+    {% unless values contains value %}
+    {% assign values = values | join: ',' %}
+    {% assign values = values | append: ',' | append: value %}
+    {% assign values = values | split: ',' %}
+    {% assign valueHandle = value | handle %}
+
+    <div data-value="{{ value | escape }}" class="swatch-element {% if dt_sc_swatch_color %}color {% else %} not_color {% endif %}{{ value | handle }} {% if variant.available %}available{% else %}soldout{% endif %}">
+      {% if dt_sc_swatch_color %}
+      <div class="tooltip">{{ value }}</div>
+      {% endif %}
+      <input id="swatch-{{section.id}}-{{product.id}}-{{ option_index }}-{{ value | handle }}-{{forloop.index}}" type="radio" name="option-{{ option_index }}" value="{{ value | escape }}"{% if forloop.first %} checked{% endif %} {% unless variant.available %}disabled{% endunless %} />
+      {% if dt_sc_swatch_color %}
+      <label for="swatch-{{section.id}}-{{product.id}}-{{ option_index }}-{{ value | handle }}-{{forloop.index}}" >
+        <i style="{% if valueHandle == "white"%} border: 1px solid; {% endif %}
+                  background-color: {{ value | split: ' ' | last | handle }}; 
+                  {% if variant.image != null %}
+                  background-image: url('{{ variant.image.src  | product_img_url: '460x' }}');background-size: contain;
+                  {% else %}
+                  background-image: url({{ value | handle | append: '.' | append: file_extension | file_img_url:"60x" }});background-size: contain;
+                  {% endif %}">
+        </i>
+        <img class="crossed-out" src="{{ 'soldout.png' | asset_url }}" alt="Crossed Out" />
+      </label>
+      {% else %}
+      <label for="swatch-{{section.id}}-{{product.id}}-{{ option_index }}-{{ value | handle }}-{{forloop.index}}">
+        {{ value }}
+        <img class="crossed-out" src="{{ 'soldout.png' | asset_url }}" alt="Crossed Out" />
+      </label>
+      {% endif %}
+    </div>
+    {% endunless %}
+    {% endfor %}
+  </div> 
+</div>
+{% endif %}  
+{% endunless %}

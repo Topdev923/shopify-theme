@@ -1,0 +1,12 @@
+{% if linklists[block.settings.menu].links.size > 0 %}
+<div class="{{ footer_column_alignment}}">
+{% if block.settings.title != blank  and section.settings.show_footer_title %}        
+  <h6 class="footer__title"> {{ block.settings.title }} </h6>
+  {% endif %}
+  <ul class="{{footer_menu_style }}">
+    {% for link in linklists[block.settings.menu].links %}
+    <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}

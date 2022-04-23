@@ -1,0 +1,21 @@
+{% comment %}
+  Show current amount sold for a single product (with default variant).
+  This assumes that you have created a metafield.
+  Message will show if variant is sold out.
+  https://d.pr/i/jDAla7
+{% endcomment %}
+{% if product.variants.first.inventory_quantity > 0 %}
+  {% assign productStartCount = product.metafields.stock.initial | times:1 %}
+  {% if productStartCount > 0 %}
+ {% assign productInventory = product.variants.first.inventory_quantity %}
+ <div class="items-left">
+   <div class="status-bar">
+     <div class="sold-bar" style="width: {{ productStartCount | minus:productInventory }}%"></div>
+   </div>
+   
+   <p><span class="item_sold">{{ 'products.product.sold' | t }} {{ productStartCount | minus:productInventory }}</span> <span class="item-ramain">{{ 'products.product.remain' | t }} {{ productInventory }}</span></p>
+</div>
+  {% endif %}
+{% else %}
+  <p> {{ 'products.product.all_sold' | t }}</p>
+{% endif %}

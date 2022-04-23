@@ -1,0 +1,57 @@
+<div class="container">
+  <div class="row">
+    <div class="dt-sc-column">
+      <form action="#" class="dT_CompareListGrid" id="dT_CompareListGrid">
+        <div class="cart_empty_msg" v-if="isNoRecords">
+          <img src="{{ "empty-cart.png" | asset_url }}" alt="{{ 'cart.general.empty' | t }}" />
+          <h4>{{ 'products.compare.no_records' | t }}</h4>
+          <p><a href="{{ routes.collections_url }}" class='dt-sc-btn'>{{ 'products.compare.continue' | t }}</a></p>
+        </div>
+        <div v-else>
+          <table>
+            <tr>
+              <template v-for="(item, i) in compareListRecords">	
+                <td :class="'product-thumbnail record-'+item.product_handle">
+                  <div class="compare_img">
+                    <a :href="item.product_url">
+                      <img :src="item.product_image" alt="">
+                    </a>
+                    <p :class="'record-'+item.product_handle">
+                      <a href="javascript:void(0);" class=" dt-sc-btn close-icon" :data-product_handle="item.product_handle" v-on:click="remove(item.product_handle)"></a>
+                    </p>
+                  </div>
+                  <div  class="compare_title"><a :href="item.product_url">${ item.product_title }</a></div>
+                  <div class="amount" v-html="item.money_price">${ item.money_price }</div>
+
+                  <div class="addtocart_btn">
+                    {% comment %}<a href="#" class="dt-sc-btn dT_QuickAddToCartBtn" :data-product-varient-id="item.variant_id">{{ 'products.product.add_to_cart' | t }}</a>{% endcomment %}
+                    <a :href="item.product_url" class="dt-sc-btn" :data-product-varient-id="item.variant_id">{{ 'products.product.select_options' | t }}</a>
+                  </div>
+
+                </td>			
+              </template>		
+            </tr>
+          </table>
+        </div>  
+      </form>
+    </div>
+  </div>
+</div>
+<style>
+  .dT_CompareListGrid { width:100%;overflow-x:auto }
+  .dT_CompareListGrid table th{font-weight:600;}
+  .dT_CompareListGrid table td, .dT_CompareListGrid table th{border:1px solid var(--DTColor_Border); min-width: 150px;vertical-align: top;}
+  .dT_CompareListGrid table td > *:not(.addtocart_btn){ margin-bottom: 10px; padding-bottom: 10px;}
+  .dT_CompareListGrid table .dt-sc-btn{display:inline-block;margin:0}
+  .product-thumbnail{position:relative}
+  .product-thumbnail .close-icon{position:absolute;right:10px;top:10px;line-height:0}
+  .dT_CompareListGrid table .compare_img img{ max-width:300px}
+
+  @media (max-width: 991px) {
+    .dT_CompareListGrid table td, .dT_CompareListGrid table th{display:inline-block; width:50%;}
+  }
+  
+  @media (max-width: 767px) {
+    .dT_CompareListGrid table td, .dT_CompareListGrid table th{display:block;width:100%;}
+  }
+</style>

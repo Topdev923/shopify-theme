@@ -1,0 +1,101 @@
+<div class="container">
+  <div class="row">
+    <div class="dt-sc-column">
+      <div class="cart-main-area">
+        <form action="#">
+          <div class=" cart-table-content dT_WishListGrid" id="dT_WishListGrid">
+            <div class="cart_empty_msg" v-if="isNoRecords">  
+              <img src="{{ "empty-cart.png" | asset_url }}" alt="{{ 'cart.general.empty' | t }}" />
+              <h4>{{ 'products.wishlist.no_records' | t }}</h4>
+              <p><a href="{{ routes.collections_url }}" class='dt-sc-btn'>{{ 'cart.general.start_shop' | t }}</a></p>
+            </div>
+            <div v-else>
+              <table>
+
+                <thead>
+                  <tr>
+                    <th>{{ 'products.wishlist.image' | t }}</th>
+                    <th>{{ 'products.wishlist.product_name' | t }}</th>
+                    <th>{{ 'products.wishlist.price' | t }}</th>
+                    <th>{{ 'products.wishlist.purchase' | t }}</th>
+                    <th>{{ 'products.wishlist.remove' | t }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <template v-for="(item, i) in wishList">
+                    <template v-if="item.product_handle">	
+                      <tr :id="'row_'+item.product_handle">
+                        <td class="product-thumbnail">
+                          <a :href="item.product_url">
+                            <img :src="item.product_image" alt="">
+                          </a>
+                        </td>
+                        <td class="product-name">
+                          <a :href="item.product_url">${ item.product_title }</a>
+                        </td>
+                        <td class="product-price-cart"><span class="amount" v-html="item.money_price">${ item.money_price }</span></td>
+                        {% comment %} <td class="product-quantity">
+                        <div class="cart-plus-minus">
+                          <div class="dec qtybutton">-</div>
+                          <input class="cart-plus-minus-box" type="text" name="qtybutton" :value="item.quantity">
+                          <div class="inc qtybutton">+</div>
+                        </div>
+                        </td>
+                        <td class="product-subtotal">${ item.money_price }</td> {% endcomment %}
+                        <td class="product-wishlist-cart">
+                          <a :href="item.product_url" class="dt-sc-btn product-cart" :data-product-varient-id="item.variant_id">{{ 'products.product.select_options' | t }}</a>
+                        </td>
+                        <td>
+                          <a href="javascript:void(0);" class="product-cart" :data-product_handle="item.product_handle" v-on:click="remove(item.product_handle)">
+                            <i class="fa fa-trash"></i>
+                          </a>
+                        </td>
+                      </tr>
+                    </template>
+
+                    <template v-else>
+                      <tr>
+                        <td colspan="5" align="center">{{ 'products.wishlist.no_records' | t }}</td>
+                      </tr>  
+                    </template>
+                  </template>
+                </tbody>
+              </table>
+            </div>				  
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+<style>
+  .cart-table-content{overflow:auto}
+  .cart-table-content table{border:1px solid var(--DTColor_Border);font-size:16px}
+  .cart-table-content table thead>tr{background-color:var(--DTColor_Border);border:1px solid var(--DTColor_Border)}
+  .cart-table-content table thead>tr th{border-top:medium none;text-align:center;text-transform:uppercase;vertical-align:middle;white-space:nowrap;font-weight:700}
+  .cart-table-content table tbody>tr{border-bottom:1px solid var(--DTColor_Border)}
+  .cart-table-content table tbody>tr td{ border:none}
+  .cart-table-content table tbody>tr td.product-thumbnail{width:150px}
+  .cart-table-content table tbody>tr td.product-name{font-weight: 600;} 
+  .cart-table-content table .dt-sc-btn{display:inline-block;margin:0;}
+
+
+  @media only screen and (max-width:991px){
+    .cart-table-content table thead{ display:none}
+    .cart-table-content table tbody>tr td,
+    .cart-table-content table tbody>tr td.product-thumbnail{ width: 100%; display:inline-block; }
+    .cart-table-content table tbody>tr td:last-child{ padding-bottom:30px;}
+    .cart-table-content table tbody>tr { width: 50%;  display: inline-block;  float: left;}
+  }
+  @media only screen and (max-width:767px){
+    .cart-table-content table thead{ display:none}
+    .cart-table-content table tbody>tr td,
+    .cart-table-content table tbody>tr td.product-thumbnail{ width: 100%; display: block; }
+    .cart-table-content table tbody>tr td:last-child{ padding-bottom:30px;}
+    .cart-table-content table tbody>tr { width: 100%;  }
+  }
+
+</style>

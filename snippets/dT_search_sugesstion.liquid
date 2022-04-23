@@ -1,0 +1,24 @@
+{%- liquid
+    assign priceTemp = 0
+    assign money_priceTemp = priceTemp | money
+    assign money_priceTemp = money_priceTemp | split: "0.00"
+    assign money_priceTemp = money_priceTemp[0] | strip
+-%}
+<template v-if="dT_ProductProactiveSugesstions">
+  <ul class="dt-sc-ProductSugesstions" >
+    <li  v-for="(item, i) in filteredSearchResults" :key="i" class="autocomplete-results" v-show="isOpen" :class="{ 'is-active': i === arrowCounter }">
+      <template v-if="item.image">
+        <a :href="item.url">
+          <img :src="item.image" alt="">
+        </a>
+      </template>
+      <div class="media-body">
+        <a :href="item.url">${ item.product_title }</a>
+        <div class="price">
+          {% comment %} {{ shop.money_format }} ${item.price} {% endcomment %}
+           {{ money_priceTemp }} ${item.price} 
+        </div>
+      </div>
+    </li>
+  </ul>
+</template>

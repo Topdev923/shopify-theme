@@ -1,0 +1,73 @@
+<div id="dT_BundleProductJson-{{ product.id  }}" style="display:none">
+  {{ product | json }}
+</div>
+<ul>
+  <li>
+    <div  class="checkbox_style">
+      
+      <input type="checkbox" value="{{ product.handle  }}" 
+             id="bundle_chk_{{ product.id  }}" data-product-id="{{ product.id }}" data-product-handle="{{ product.handle }}" 
+             class="dT_bundleCheck" checked="" autocomplete="off" style="display: block">
+
+      <span class="dT_bundleLabel checkmark" data-product-id="{{ product.id }}" data-product-handle="{{ product.handle }}">
+        {{ product.title }}
+      </span>
+
+      <input type="hidden" 
+             name="bundle_product_price[]" 
+             data-product-id="{{ product.id }}" 
+             data-product-handle="{{ product.handle }}" 
+             data-varient-id="{{ product.variants[0].id }}"
+             id="bundle_product_price_{{ product.id  }}" 
+             class="dT_bundleProductPrice" 
+             value = "{{ product.variants[0].price }}" />
+    </div>
+  </li>
+  <li>{{ product.title }}</li>
+
+  <li>
+    {% if product.variants[0].compare_at_price > product.variants[0].price %}
+
+    <div class="price-sale-{{ product.id }}">
+      <span class="old-price" id="old-price-{{ product.id }}">
+        {{ product.variants[0].compare_at_price | money }}
+      </span>
+      <span class="special-price" id="sale-price-{{ product.id }}">
+        {{ product.variants[0].price | money }}
+      </span>
+    </div>
+    {% else %}
+    <div class="price-regular-{{ product.id }}" id="sale-price-{{ product.id }}">
+      {{ product.variants[0].price | money }}
+    </div>
+    {% endif %}
+  </li>
+
+  <li><a href="#" class="dt-sc-btn dT_bundleProductToggle" data-bundle-product-handle="{{ product.handle  }}" data-bundle-product-id="{{ product.id }}">{{ 'products.product.select_options' | t }}</a></li>
+</ul>
+<div class="varient-options dT_varientBWrap dT_varientOptions_{{ product.id }}">
+  {% unless product.has_only_default_variant %}
+  <div class="product-form__controls-group">
+    {% for option in product.options_with_values %}
+    <div class="selector-wrapper js product-form__item">
+      <label for="SingleOptionSelector-{{ forloop.index0 }}">
+        {{ option.name }}
+      </label>
+      <select id="selector-bundle{{forloop.index0}}-{{product.id}}" class="single-option-selector dT_bundleOptions vvvsingle-option-selector-{{ section.id }} product-form__input"
+              id="SingleOptionSelector-{{ forloop.index0 }}"
+              data-index="option{{ forloop.index }}"
+              >
+        {% for value in option.values %}
+        <option value="{{ value | escape }}"{% if option.selected_value == value %} selected="selected"{% endif %}>{{ value }}</option>
+        {% endfor %}
+      </select>     
+    </div>
+    {% endfor %}
+  </div>
+  {% endunless %}
+  <select name="id" id="bundle_productSelect_{{ product.id }}" class="product-single__variants"  style="display:none">
+    {% for variant in product.variants %}
+    <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} value="{{ variant.id }}">{{ variant.title }}</option>
+    {% endfor %}
+  </select>
+</div>

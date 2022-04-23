@@ -1,0 +1,483 @@
+{% if section.settings.enable %}
+{% case section.blocks.size %}
+{% when '1' %}
+{% when '2' %}
+{%- assign column = 'two-column' -%}
+{% when '3' %}
+{%- assign column = 'three-column' -%}              
+{% when '4' %}
+{%- assign column = 'four-column' -%}              
+{% else %}
+{%- assign column = 'five-column' -%}              
+{% else %}
+{%- assign column = 'four-column' -%}              
+{% endcase %} 
+
+{% if section.settings.enable_overlay %}
+{% assign section_overlay = 'dt-sc-overlay' %}
+{% endif %}
+
+{% case section.settings.background_style %}
+{% when 'default' %}
+{% when 'parallax' %}
+{%- assign background_style = 'data-speed="2"' %}
+{% when 'fixed' %}
+{%- assign background_style = 'data-speed="1"' %}
+{% endcase %}
+{% if section.settings.show_background_image %}
+{% assign lazyScript = "lazyload" %}
+{% endif %}
+<div class="dt-sc-section-wrapper {{lazyScript}} {{section_overlay}} {% if section.settings.background_style == 'parallax' %} parallax-initiated{% endif %}" style="{% render 'bg-color-image-padding' %}" data-style="parallax" {{background_style}} {% include 'bg_image' %}>
+  <div class="{% render 'container-settings' %}"> 
+    <div class="row">
+      {% render 'section-heading', class: section.id %}   
+
+      {% if section.blocks.size > 0 %}    
+      <div class="dt-sc-team-section dt-sc-column {{section.settings.column}}">
+        {% for block in section.blocks %} 
+        <div class="dt-sc-team">
+          <div class="dt-sc-team-image">
+            {% if block.settings.image != blank  %} 
+           {%- assign img_url = block.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+              <img class="lazyload"
+		   src="{{ 'loading.gif' | asset_url }}"
+                   data-src="{{ block.settings.image | img_url: '800x' }}"
+                   data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+                   data-aspectratio="{{ block.settings.image.aspect_ratio }}"
+                   data-sizes="auto"            
+                   alt="{{ block.settings.image.alt | escape }}">            
+              <noscript>
+               {{ block.settings.image | img_url: '480x480', scale: 2 | img_tag: block.settings.image.alt, 'dt-sc-noscript-image' }}
+              </noscript>
+            {% endif %}              
+            <ul class="social-icon">
+              <li><a href="{{block.settings.facebook}}"  targer="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+              <li><a href="{{block.settings.twitter}}"   target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+              <li><a href="{{block.settings.pinterest}}" targer="_blank"><i class="fa fa-pinterest" aria-hidden="true"></i></a></li>
+              <li><a href="{{block.settings.youtube}}"   targer="_blank"><i class="fa fa-youtube" aria-hidden="true"></i></a></li>
+            </ul>
+          </div>
+          <div class="dt-sc-team-content">
+            {% if block.settings.name != blank  %} 
+            <h5 class="dt-sc-main-title">{{ block.settings.name }}</h5>
+            {% endif %}
+            {% if block.settings.name != blank  %} 
+            <p>{{block.settings.designation}}</p>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}  
+      </div>
+      {% endif %}           
+    </div>
+  </div>
+</div>
+
+<style type="text/css">
+  
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-overlay:before {      
+    color: var(--DTPrimaryColor); 
+    color: {{ section.settings.background_color }};    
+    background: currentcolor; 
+    opacity: {{ section.settings.overlay_transparency }};
+  } 
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-heading .dt-sc-main-heading { 
+    color: var(--DTColor_Heading); color:{{ section.settings.section_heading_color }}; } 
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-heading .dt-sc-sub-heading { 
+    color: var(--DTColor_Heading); color:{{ section.settings.section_sub_heading_color }}; } 
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-heading .dt-sc-heading-description { 
+    color: var(--DTColor_Body); color:{{ section.settings.section_description_color }}; } 
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-heading .dt-sc-btn { 
+    background: var(--DT_Button_BG_Color); color: var(--DT_Button_Text_Color);
+    background:{{ section.settings.section_button_bg_color }}; color:{{ section.settings.section_button_text_color }}; }
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-heading .dt-sc-btn:hover { 
+    background: var(--DT_Button_BG_Hover_Color); color: var(--DT_Button_Text_Hover_Color);
+    background:{{ section.settings.section_button_hover_bg_color }}; color:{{ section.settings.section_button_hover_text_color }}; }
+
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-team-section .dt-sc-team {
+    display: flex;
+    flex-wrap: wrap;
+    height: 100%;
+    align-content: flex-start;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-team-section .dt-sc-team .dt-sc-team-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;       
+    transition: var(--DTBaseTransition);
+      position: relative;
+      margin: 0 0 30px;
+      }
+
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-team-section .dt-sc-team .dt-sc-team-image:before,
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-team-section .dt-sc-team .dt-sc-team-image:after {
+    top: 0;
+    content: "";
+    height: 100%;  
+    position: absolute;
+    width: 0%;  
+    transition: var(--DTBaseTransition);
+    opacity: 0.5;
+    z-index: 1;
+  }
+
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-team-section .dt-sc-team .dt-sc-team-image:before { right: 0; }
+
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-team-section .dt-sc-team .dt-sc-team-image:after { left: 0; }
+
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-team-section .dt-sc-team:hover .dt-sc-team-image:before,
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-team-section .dt-sc-team:hover .dt-sc-team-image:after { width: 50%; }
+
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-team-section .dt-sc-team .dt-sc-team-image .social-icon {
+    z-index: 2;
+    text-align: center;
+    left: 0;
+    margin: 0 auto;
+    bottom: 0;
+    position: absolute;
+    right: 0px;
+    opacity: 0;  
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    transition: var(--DTBaseTransition);
+      padding: 0 15px;
+      }
+
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-team-section .dt-sc-team .dt-sc-team-image .social-icon li {
+    display: flex;
+    flex-wrap: wrap;
+    height: 100%;
+    align-content: center;
+    align-items: center;
+    margin: 5px;
+  }
+
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-team-section .dt-sc-team .dt-sc-team-image .social-icon li a {
+    font-size: 16px;
+    padding: 0;
+    height: 40px;
+    width: 40px;
+    line-height: 40px;  
+    text-align: center;
+    transition: var(--DTBaseTransition);
+  }
+
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-team-section .dt-sc-team:hover .dt-sc-team-image .social-icon { opacity: 1; bottom: 20px; }
+
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-team-section .dt-sc-team .dt-sc-team-content { display: flex; flex-wrap: wrap; align-items: center; text-align: center; justify-content: center; width: 100%; }
+
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-team-section .dt-sc-team .dt-sc-team-content .dt-sc-main-title { padding: 0; margin:0; font-size: 20px; width: 100%; }
+
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-team-section .dt-sc-team .dt-sc-team-content h6 { margin: 0; color: #adadad; width: 100%; }
+  
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-team-section .dt-sc-team .dt-sc-team-content .dt-sc-main-title {
+    color: var(--DTColor_Heading); color:{{ section.settings.block_heading_color }}; }  
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-team-section .dt-sc-team .dt-sc-team-content h6 {
+    color: var(--DTColor_Body); color:{{ section.settings.block_designation_color }};}  
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-team-section .dt-sc-team .dt-sc-team-image:before,
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-team-section .dt-sc-team .dt-sc-team-image:after { 
+    background-color: var(--DTTertiaryColor); background-color:{{ section.settings.block_bg }}; }
+  
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-team-section .dt-sc-team .dt-sc-team-image .social-icon li a { 
+    background-color:var(--DTTertiaryColor); color: var(--DTPrimaryColor);
+    background-color:{{ section.settings.block_social_icon_bg_color }}; color:{{ section.settings.block_social_icon_color }}; }
+  #shopify-section-{{section.id}}.inner-page-team-section .dt-sc-team-section .dt-sc-team .dt-sc-team-image .social-icon li a:hover { 
+    background-color: var(--DTPrimaryColor); color:var(--DTTertiaryColor);
+    background-color: {{ section.settings.block_social_icon_hover_bg_color }}; color:{{ section.settings.block_social_icon_hover_color }}; }
+
+</style>
+{% endif %}
+{% schema %}
+{
+"name": "Team section",
+"class": "inner-page-team-section",
+"settings": [
+{
+"type": "checkbox",
+"id": "enable",
+"label": "Show this section",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "full",
+"label": "Show Full width"
+},
+{
+"type": "checkbox",
+"id": "spacing_both_ends",
+"label": "Enable Right & Left Spacing (Works only on Fullwidth)",
+"default": false
+},
+{
+"type": "text",
+"id": "padding",
+"label": "Style value (Padding)",
+"default":"0,0",
+"info":"Top(px),Bottom(px)"
+},
+{
+"type": "text",
+"id": "margin",
+"label": "Style value (Margin)",
+"default":"0,0",
+"info":"Top(px),Bottom(px)"
+},
+{
+"type": "image_picker",
+"id": "background_image",
+"label": "Background image",
+"info": "Size: 1920x1280"
+},
+{
+"type": "checkbox",
+"id": "show_background_image",
+"label": "Enable Background image"
+},
+{
+"type": "select",
+"id": "background_style",
+"label": "Background Style",
+"default": "default",
+"options": [
+{
+"value": "default",
+"label": "Default"
+},
+{
+"value": "parallax",
+"label": "Parallax"
+},
+{
+"value": "fixed",
+"label": "Fixed"
+}
+]
+},
+{
+"type": "checkbox",
+"id": "enable_overlay",
+"label": "Enable Background Color (Used as Background Image Overlay Color too)"
+},
+{
+"type": "color",
+"id": "background_color",
+"label":"Background color"
+},
+{
+"type": "text",
+"id": "overlay_transparency",
+"label": "Overlay Transparency (0.01 to 1)",
+"default": "0.5"
+},
+{
+"type": "text",
+"id": "section_heading",
+"label": "Main Heading",
+"default": "inner-page our team"
+},  
+{
+"type": "text",
+"id": "section_sub_heading",
+"label": "Sub Heading",
+"default": "Sub Heading"
+},  
+{
+"type": "text",
+"id": "section_description",
+"label": "Description",
+"default": "Use this text to share the information which you like!."
+},  
+{
+"type": "text",
+"id": "section_button_text",
+"label": "Link text"
+},
+{
+"type": "url",
+"id": "section_button_link",
+"label": "Link URL"
+},
+{
+"type": "header",
+"content": "Section Color settings"
+},
+{
+"type": "color",
+"id": "section_heading_color",
+"label": "Heading color"
+},    
+{
+"type": "color",
+"id": "section_sub_heading_color",
+"label": "Sub heading color"
+},   
+{
+"type": "color",
+"id": "section_description_color",
+"label": "Description color"
+},  
+{
+"type": "color",
+"id": "section_button_bg_color",
+"label": "Button bg color"
+},   
+{
+"type": "color",
+"id": "section_button_text_color",
+"label": "Button text color"
+},   
+{
+"type": "color",
+"id": "section_button_hover_bg_color",
+"label": "Button hover bg color"
+},   
+{
+"type": "color",
+"id": "section_button_hover_text_color",
+"label": "Button hover text color"
+},
+{
+"type": "select",
+"id": "heading_position",
+"label": "Heading Position",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "Right"
+}
+]
+},
+{
+"type": "header",
+"content": "Block settings"
+},
+{
+"type": "select",
+"id": "column",
+"label": "Item per row",
+"default": "four-column",
+"options": [
+{
+"value": "one-column",
+"label": "1"
+},
+{
+"value": "two-column",
+"label": "2"
+},
+{
+"value": "three-column",
+"label": "3"
+},
+{
+"value": "four-column",
+"label": "4"
+}
+]
+},
+{
+"type": "header",
+"content": "Block Color settings"
+},
+{
+"type": "color",
+"id": "block_heading_color",
+"label": "Heading Color"
+},
+{
+"type": "color",
+"id": "block_designation_color",
+"label": "Description Color"
+},
+{
+"type": "color",
+"id": "block_bg",
+"label": "Image Overlay Background Color"
+},
+{
+"type": "color",
+"id": "block_social_icon_bg_color",
+"label": "Social Icon BG color"
+},
+{
+"type": "color",
+"id": "block_social_icon_color",
+"label": "Social Icon color"
+},
+{
+"type": "color",
+"id": "block_social_icon_hover_bg_color",
+"label": "Social Icon BG Hover color"
+},
+{
+"type": "color",
+"id": "block_social_icon_hover_color",
+"label": "Social Icon Hover color"
+}
+],
+"blocks": [
+{
+"type": "content",
+"name": "Content",        
+"settings": [
+{
+"type": "image_picker",
+"id": "image",
+"label": "Image"          
+},
+{
+"type": "text",
+"id": "name",
+"label": "Name",
+"default": "Name"
+},
+{
+"type": "text",
+"id": "designation",
+"label": "Designation",
+"default": "Customer support"
+},
+{
+"type": "text",
+"id": "facebook",
+"label": "Facebook",
+"default": "#"
+},
+{
+"type": "text",
+"id": "twitter",
+"label": "Twitter",
+"default": "#"
+},
+{
+"type": "text",
+"id": "pinterest",
+"label": "Pinterest",
+"default": "#"
+},
+{
+"type": "text",
+"id": "youtube",
+"label": "Youtube",
+"default": "#"
+}
+]
+}
+]
+}
+{% endschema %}

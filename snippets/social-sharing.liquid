@@ -1,0 +1,57 @@
+{% if template contains 'article' or template contains 'blog' %}
+  {% capture permalinkURL %}{{ shop.url }}{{ article.url }}{% endcapture %}
+  {% capture shareTitle %}{{ article.title | url_param_escape }}{% endcapture %}
+{% elsif template contains 'product' %}
+  {% capture permalinkURL %}{{ shop.url }}{{ product.url }}{% endcapture %}
+  {% capture shareTitle %}{{ product.title | url_param_escape }}{% endcapture %}
+{% elsif template == 'password' %}
+  {% capture permalinkURL %}{{ shop.url }}{% endcapture %}
+  {% capture shareTitle %}{% unless shop.metafields.global.description_tag == blank %}{{ shop.metafields.global.description_tag | url_param_escape }}{% else %}{{ shop.name | url_param_escape }}{% endunless %}{% endcapture %}
+{% endif %}
+<div class="social-sharing" data-permalink="{{ permalinkURL }}">
+  <h6 class="social_share_title">{{ 'general.social.share_title' | t }}:</h6>      
+  
+  {% if settings.share_facebook %}
+    <a target="_blank" href="//www.facebook.com/sharer.php?u={{ permalinkURL }}" class="share-facebook">
+      <span class="fa fa-facebook"></span>
+    <!--  <span class="share-title">{{ 'general.social.share_on_facebook' | t }}</span>
+      {% if settings.social_sharing_count %}
+        <span class="share-count">0</span>
+      {% endif %}-->
+    </a>
+  {% endif %}
+
+  {% if settings.share_twitter %}
+    <a target="_blank" href="//twitter.com/share?text={{ shareTitle }}&amp;url={{ permalinkURL }}" class="share-twitter">
+      <span class="fa fa-twitter"></span>
+     <!-- <span class="share-title">{{ 'general.social.share_on_twitter' | t }}</span>
+      {% if settings.social_sharing_count %}
+        <span class="share-count">0</span>
+      {% endif %}-->
+    </a>
+  {% endif %}
+  
+    {% if settings.share_pinterest %}
+      <a target="_blank" href="//pinterest.com/pin/create/button/?url={{ permalinkURL }}&amp;media=http:{% if template contains 'product' %}{{ product | img_url: '1024x1024' }}{% else %}{{ article | img_url: '1024x1024' }}{% endif %}&amp;description={{ shareTitle }}" class="share-pinterest">
+        <span class="fa fa-pinterest"></span>
+       <!-- <span class="share-title">{{ 'general.social.share_on_pinterest' | t }}</span>
+        {% if settings.social_sharing_count %}
+          <span class="share-count">0</span>
+        {% endif %}-->
+      </a>  
+
+  {% endif %}
+
+  {% if settings.share_google %}
+    <a target="_blank" href="//plus.google.com/share?url={{ permalinkURL }}" class="share-google">
+      <!-- Cannot get Google+ share count with JS yet -->
+      <span class="fa fa-google"></span>
+     <!-- {% if settings.social_sharing_count %}
+        <span class="share-count">+1</span>
+      {% else %}
+        <span class="share-title">+1</span>
+      {% endif %}-->
+    </a>
+  {% endif %}
+
+</div>

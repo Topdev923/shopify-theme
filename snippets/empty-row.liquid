@@ -1,0 +1,27 @@
+
+<li class="swiper-slide">
+  <div class="products">
+    <div class="product-container">
+      <a href="#" class="grid-link"> 
+        {% if forloop.index == 3 %}
+        <div class="featured-tag">
+          <span class="badge badge--sale">
+            <span class="gift-tag badge__text{% if sale_text.size > 7 %} badge__text--small{% endif %}">{{ 'products.product.sale' | t }}</span>
+          </span>
+        </div>{% endif %}
+
+        <div class="reveal"> 
+          {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+          {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }} 
+        </div>
+      </a>
+
+    </div>
+    <div class="product-detail"> 
+      <a href="#" class="grid-link__title">Sample title {{ i }}</a>            
+      <div class="grid-link__meta">
+        <div class="product_price"> <span class="money" data-currency-usd="$320.00">$0.00</span> </div>
+        <del class="grid-link__sale_price"><span class="money" data-currency-usd="$756.00">$0.00</span></del> </div>              
+    </div>
+  </div>
+</li>

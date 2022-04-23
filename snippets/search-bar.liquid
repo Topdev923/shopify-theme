@@ -1,0 +1,20 @@
+<div id="SearchDrawer" class="dT_ProductProactiveSearch">
+  <form action="/search" method="get">    
+    <input type="hidden" name="type" value="product">
+     <input type="search" id="SearchInput" name="q" value="{{ search.terms | escape }}" 
+           placeholder="{{ 'general.search.placeholder' | t }}" aria-label="{{ 'general.search.placeholder' | t }}" 
+           class="search-bar__input"
+           autocomplete="off"
+           v-model="search" @keyup="inputChanged" @keydown.down="onArrow" @keydown.up="onArrow">
+    <button type="submit" class="dt-sc-btn">
+      {% render 'icon-search' %}      
+    </button>
+    <button type="button" class="dt-sc-btn close dT_SearchClose" style="display:none;">
+      {% render 'icon-close' %}      
+    </button>  
+  </form>
+
+  <div class="dT_PredictiveSearchResult_Section">
+    {% render 'dT_search_sugesstion' %}
+  </div>
+</div>

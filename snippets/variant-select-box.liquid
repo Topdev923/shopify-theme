@@ -1,0 +1,14 @@
+{%- unless product.has_only_default_variant -%}
+  {%- for option in product.options_with_values -%}      
+      <select id="ProductSelect-{{ forloop.index0 }}" data-index="option{{ forloop.index }}">
+        {%- for value in option.values -%}
+          <option value="{{ value | escape }}"{% if option.selected_value == value %} selected="selected"{% endif %}>
+            {{ value | escape }}
+          </option>
+        {%- endfor -%}
+      </select>
+  {%- endfor -%}
+{%- endunless -%}
+<script type="application/json" id="ProductSelect-option-{{ current_variant.id }}">
+      {{ product | json }}
+</script>

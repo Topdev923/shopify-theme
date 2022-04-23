@@ -1,0 +1,128 @@
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1">  
+    <meta name="theme-color" content="{{ settings.color_primary }}">
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.shopify.com" crossorigin>
+    <link rel="preconnect" href="https://monorail-edge.shopifysvc.com">
+    {%- if canonical_url != blank  -%}
+    <link rel="canonical" href="{{ canonical_url }}">
+    {%- endif -%}
+
+    {%- if settings.favicon != blank  -%}
+    <link rel="shortcut icon" href="{{ settings.favicon | img_url: '16x16' }}" type="image/png" />
+    {%- endif -%}
+
+    {% include 'SEO-tags' %}
+    
+    <!-- Social meta ================================================== -->
+    {% include 'social-meta-tags' %}
+    
+    {{ 'dt-framework.css' | asset_url | stylesheet_tag }}  
+    {{ 'dt-custom.css' | asset_url | stylesheet_tag }}
+    {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }} 
+    {% unless template contains 'customers' or template contains 'cart' %}
+    {{ 'select2.min.css' | asset_url | stylesheet_tag }} 
+    {% endunless %}
+    {{ 'slick.css' | asset_url | stylesheet_tag }} 
+    {{ 'font-all.min.css' | asset_url | stylesheet_tag }} 
+
+
+    <script src="{{ 'jquery-3.5.1.min.js' | asset_url }}"></script>
+    <script src="{{ 'api.js' | shopify_asset_url }}" defer="defer"></script>
+    <script src="{{ 'ajax-cart.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'dt-plugins.js' | asset_url }}"></script>  
+    {% unless template contains 'customers' or template contains 'cart' %}
+    <script src="{{ 'select2.min.js' | asset_url }}" defer="defer"></script>
+    {% endunless %}
+    <script src="{{ 'slick.min.js' | asset_url }}" defer="defer"></script>  
+    
+   
+  {% if template contains 'customers' %}
+      {{ "shopify_common.js" | shopify_asset_url | script_tag }}
+      {{ "customer_area.js"  | shopify_asset_url | script_tag }}
+  {% endif %}
+    <!-- connter for header -->
+    {{ content_for_header }}       
+    <!-- connter for header -->
+    
+    <script>  
+      var DT_THEME = {
+        strings: {
+          addToWishList: {{ 'products.product.addToWishList' | t | json }},
+          viewMyWishList: {{ 'products.product.viewMyWishList' | t | json }},
+          addToCompareList: {{ 'products.product.addToCompareList' | t | json }},
+          viewMyCompareList: {{ 'products.product.viewMyCompareList' | t | json }},
+          addToCart: {{ 'products.product.add_to_cart' | t | json }},
+          soldOut: {{ 'products.product.sold_out' | t | json }},
+          unavailable: {{ 'products.product.unavailable' | t | json }},
+          minCompareProductNav: {{ 'products.product.minCompareProductNav' | t | json }},
+          minCompareProduct: {{ 'products.product.minCompareProduct' | t | json }}
+        },
+        moneyFormat: {{ shop.money_format | json }}
+      };      
+    </script>
+  </head>
+  <body id="{{ page_title | handle }}" class="{% if settings.home_sidebar   %}{% endif %} {% if settings.enable_boxed %}body-boxed {% endif %}{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }} {% unless tempate contains 'index' %} others {% endunless %}" style="{% if settings.boxed_bg_image != blank %}background-image:url('{{ settings.boxed_bg_image | img_url: 'master' }}');background-attachment:fixed;background-repeat:no-repeat;background-position:center center;{% endif %}">
+    {% if settings.preloader_enable %}
+    <div class="se-pre-con"></div>
+    {% endif %}
+    <div class="mobile-menu" data-menu="dt-main-menu"></div>
+    <div class="mobile-menu-overlay"></div>    
+    <div class="off-canvas--viewport">
+      {% if settings.ajax_cart_method == 'drawer' %}
+      {% include 'timber-cart' %}
+      {% endif %}
+      {% section 'header' %}  
+      {% include 'breadcrumb' %}     
+      <div class="clearfix"></div>
+      <div class="shifter-page {% if settings.ajax_cart_method == 'drawer' %}is-moved-by-drawer{% endif %}" id="container">
+        {{content_for_layout}}
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    {% section 'footer' %}              
+    {% if settings.ajax_cart_method == 'drawer' %}   
+    {{ 'handlebars.min.js' | asset_url | script_tag }}
+    {% endif %}
+    {{ 'dt-theme.js' | asset_url | script_tag }}     
+    <script src="{{ 'lazysizes.js' | asset_url }}" async="async"></script>
+    {% if template contains 'article' or template contains 'product' %}
+    {% if settings.social_sharing_blog or settings.social_sharing_products %}
+    {{ 'social-buttons.js' | asset_url | script_tag }}
+    {% endif %}
+    {% endif %}
+    {% section 'modal-newsletter' %}     
+    {% section 'gdpr-cookies' %}     
+    {% section 'customer-purchased' %}
+    {% render 'dT_loading-overlay' %}
+<!--     <script src="{{ 'dT_bundle_base.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'dT_bundle.js' | asset_url }}" defer="defer"></script>   -->
+    <script src="{{ 'dT_main.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'dT_main_app.js' | asset_url }}" defer="defer"></script>    
+    {% include 'ajax-cart-template' %}         
+    <script>
+      Handlebars.registerHelper('formatPrice', function (aString) {
+          return new Handlebars.SafeString(aString);
+      });
+    
+      $(document).ready(function () {  
+        if ($('#shipping-calculator select').data('select2')) {
+         	$("#shipping-calculator select").select2('destroy'); 
+        } 
+        
+        if ($('.dT_bundleSelector select').data('select2')) {
+          	$(".dT_bundleSelector select").select2('destroy'); 
+        } 
+        
+         {% unless template contains 'customers' or template contains 'cart' %}
+         $('select').select2({  minimumResultsForSearch: Infinity, theme: "classic" });
+        {% endunless %}
+      });   
+	</script>
+    {% include 'scroll-to-top' %}
+  </body>
+</html>

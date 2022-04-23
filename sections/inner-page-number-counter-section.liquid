@@ -1,0 +1,690 @@
+{% if section.settings.enable %}
+{% case section.settings.grid %}
+{% when '1' %}
+{% when '2' %}
+{%- assign column = 'two-column' -%}
+{% when '3' %}
+{%- assign column = 'three-column' -%}              
+{% when '4' %}
+{%- assign column = 'four-column' -%}              
+{% when '5' %}
+{%- assign column = 'five-column' -%}   
+{% when '6' %}
+{%- assign column = 'six-column' -%}   
+{% else %}
+{%- assign column = 'three-column' -%}              
+{% endcase %} 
+{% if section.settings.counter_style == 'grid' %}
+{% assign dt_style = 'grid-style' %}
+{% elsif section.settings.counter_style == 'list' %}
+{% assign verticalAlign = section.settings.vertical_position %}
+{% assign dt_style = 'list-style' %}
+{% endif %}
+{% if section.settings.enable_boxed %}
+{% assign boxedStyle = 'dt-sc-boxed' %}
+{% endif %}
+{% if section.settings.enable_overall_border %}
+{% assign boxedStyle = 'dt-sc-overall-border' %}
+{% endif %}
+{% if section.settings.enable_icon_border %}
+{% assign iconBorder = 'dt-sc-icon-border' %}
+{% endif %}
+{% if section.settings.reverse_column %}
+{% assign reverseTrue = 'dt-sc-reverse-columns' %}
+{% endif %}
+
+{% if section.settings.enable_overlay %}
+{% assign section_overlay = 'dt-sc-overlay' %}
+{% endif %}
+
+{% case section.settings.background_style %}
+{% when 'default' %}
+{% when 'parallax' %}
+{%- assign background_style = 'data-speed="2"' %}
+{% when 'fixed' %}
+{%- assign background_style = 'data-speed="1"' %}
+{% endcase %}
+{% if section.settings.show_background_image %}
+{% assign lazyScript = "lazyload" %}
+{% endif %}
+<div class="dt-sc-section-wrapper {{lazyScript}} {{section_overlay}} {% if section.settings.background_style == 'parallax' %} parallax-initiated{% endif %}" style="{% render 'bg-color-image-padding' %}" data-style="parallax" {{background_style}} {% include 'bg_image' %} data-section-id="{{ section.id }}" data-section-type="number-counter-section">  
+	<div class="{% render 'container-settings' %}">  
+      <div class="row">
+      {% render 'section-heading', class: section.id %}     
+      {% if section.blocks.size > 0 %}
+      <div class="dt-sc-number-counter-section dt-sc-column {{column}} {{dt_style}}">
+        {% for block in section.blocks %}      
+          {% if block.type == 'icon' %}
+          <div class="dt-sc-number-counter inview-{{section.id}}-initialized {{ section.settings.block_text_align}} {{boxedStyle}} {{verticalAlign}} {{reverseTrue}} {{iconBorder}}">
+            <div class="dt-sc-number-counter-icon">
+              {% if block.settings.icon != blank %}
+              {%- assign img_url = block.settings.icon | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+              <img class="lazyload"
+                   src="{{ 'loading.gif' | asset_url }}"
+                   data-src="{{ block.settings.icon | img_url: 'master' }}"
+                   data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+                   data-aspectratio="{{ block.settings.icon.aspect_ratio }}"
+                   data-sizes="auto"            
+                   alt="{{ block.settings.icon.alt | escape }}">            
+              <noscript>
+                {{ block.settings.icon | img_url: '480x480', scale: 2 | img_tag: block.settings.icon.alt, 'dt-sc-noscript-image' }}
+              </noscript>
+              {% else %}
+              {{ 'image' | placeholder_svg_tag: 'placeholder_svg' }}
+              {% endif%} 
+            </div>         
+          {% if block.settings.value != blank  or block.settings.value_text != blank %}
+            <h3>
+              <span class="dt-sc-number-counter-value" data-value="{{block.settings.value}}"></span><span style="color:{{ section.settings.block_value_text_color }};">{{block.settings.value_text}}</span>
+            </h3>        
+            {% endif%}       
+            {% if block.settings.title != blank  %}  
+            <h5 class="dt-sc-number-counter-title">{{ block.settings.title }}</h5>
+            {% endif %}
+            {% if block.settings.text != blank  %}  
+            <p class="dt-sc-number-counter-description">{{ block.settings.text }}</p>
+            {% endif %}
+          </div>
+          {% endif %}
+          {% if block.type == 'class' %}
+          <div class="dt-sc-number-counter inview-{{section.id}}-initialized {{ section.settings.block_text_align}} {{boxedStyle}} {{verticalAlign}} {{reverseTrue}}">
+            {% if block.settings.class != blank %}
+            <div class="dt-sc-number-counter-icon">              
+              <i class="{{ block.settings.class}}"></i>              
+            </div>         
+            {% endif%} 
+             {% if block.settings.value != blank  or block.settings.value_text != blank %}
+            <h3>
+              <span class="dt-sc-number-counter-value" data-value="{{block.settings.value}}"></span><span style="color:{{ section.settings.block_value_text_color }};">{{block.settings.value_text}}</span>
+            </h3> 
+            {% endif%} 
+            {% if block.settings.title != blank  %}  
+            <h5 class="dt-sc-number-counter-title">{{ block.settings.title }}</h5>
+            {% endif %}
+            {% if block.settings.text != blank  %}  
+            <p class="dt-sc-number-counter-description">{{ block.settings.text }}</p>
+            {% endif %}
+          </div>
+          {% endif %}          
+        {% endfor %}  
+        </div>   
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style type="text/css"> 
+  
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-overlay:before  { 
+    color: var(--DTPrimaryColor);
+      color: {{ section.settings.background_color }};    
+      background: currentcolor; 
+      opacity: {{ section.settings.overlay_transparency }}; }
+  
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-heading .dt-sc-main-heading { color: var(--DTColor_Heading); color:{{ section.settings.section_heading_color }}; } 
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-heading .dt-sc-sub-heading { color: var(--DTColor_Heading); color:{{ section.settings.section_sub_heading_color }}; } 
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-heading .dt-sc-heading-description { color: var(--DTColor_Body); color:{{ section.settings.section_description_color }}; } 
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-heading .dt-sc-btn { 
+    background: var(--DT_Button_BG_Color); background:{{ section.settings.section_button_bg_color }}; 
+    color: var(--DT_Button_Text_Color); color:{{ section.settings.section_button_text_color }}; }
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-heading .dt-sc-btn:hover { 
+    background: var(--DT_Button_BG_Hover_Color); background:{{ section.settings.section_button_hover_bg_color }}; 
+    color: var(--DT_Button_Text_Hover_Color); color:{{ section.settings.section_button_hover_text_color }}; }
+  
+
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-number-counter-section {  grid-gap: {{ section.settings.column_gap }}px; } 
+  
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-number-counter-section .dt-sc-number-counter,
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-number-counter-section .dt-sc-number-counter.dt-sc-boxed:before { 
+    border-radius: var(--DTRadius); border-radius: {{ section.settings.border_radius }}px; }
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-number-counter-section .dt-sc-number-counter .dt-sc-number-counter-icon { 
+    border-radius: var(--DTRadius); border-radius: {{ section.settings.icon_border_radius }}; }
+  
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-number-counter-section .dt-sc-number-counter .dt-sc-number-counter-icon svg { 
+    width: 100%; height: auto;
+  }
+  
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-number-counter:not(.dt-sc-boxed):not(.dt-sc-overall-border) { background: none; }
+   
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-number-counter.dt-sc-overall-border,
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-number-counter.dt-sc-boxed:before { 
+    background: var(--DTBodyBGColor);
+    background: {{ section.settings.block_bg_color }}; 
+  }
+  
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-number-counter.dt-sc-overall-border,
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-number-counter.dt-sc-boxed:before { 
+    
+    
+    border-width: 1px; border-style: solid;
+    border-color: {{ settings.primary_color }}; 
+    border-color: {{ section.settings.block_border_color }}; 
+  }
+  
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-number-counter .dt-sc-number-counter-icon {
+  	border-width: 1px; border-style: solid;
+    border-color: {{ settings.primary_color }}; 
+    border-color: {{ section.settings.block_icon_border_color }}; 
+  }
+
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-number-counter .dt-sc-number-counter-icon {
+    color: var(--DT_Button_Text_Color); color:{{ section.settings.block_icon_color }}; } 
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-number-counter .dt-sc-number-counter-title { 
+    color: var(--DTColor_Heading); color:{{ section.settings.block_title_color }}; } 
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-number-counter .dt-sc-number-counter-description { 
+    color: var(--DTColor_Body); color:{{ section.settings.block_text_color }}; }
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-number-counter .dt-sc-number-counter-value { 
+    color: var(--DTColor_Body); color:{{ section.settings.block_value_color }}; 
+  }
+  
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-number-counter-section .dt-sc-number-counter .dt-sc-number-counter-icon { 
+    background: var(--DT_Button_BG_Color); background:{{ section.settings.block_icon_bg_color }}; 
+    {% if section.settings.enable_box_shadow %} box-shadow: var(--DTboxShadow); {% endif %}  
+      width: {{ section.settings.block_icon_outer_size }}px; height: {{ section.settings.block_icon_outer_size }}px; 
+      }
+  
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-number-counter-section .dt-sc-number-counter .dt-sc-number-counter-icon img,
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-number-counter-section .dt-sc-number-counter .dt-sc-number-counter-icon i{ 
+    max-width: {{ section.settings.block_icon_size }}px; font-size: {{ section.settings.block_icon_size }}px; margin-bottom: 0;
+  }
+  
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-number-counter-section.list-style .dt-sc-number-counter { 
+    grid-template-columns: {{ section.settings.block_icon_outer_size }}px 1fr; }
+  #shopify-section-{{section.id}}.inner-page-number-counter .dt-sc-number-counter-section.list-style .dt-sc-number-counter.dt-sc-reverse-columns { 
+    grid-template-columns: 1fr {{ section.settings.block_icon_outer_size }}px; }
+  
+  
+  .dt-sc-number-counter-section .dt-sc-number-counter .dt-sc-number-counter-icon { padding: 10px; display: flex; align-items: center; justify-content: center; }
+  
+  .dt-sc-number-counter-section .dt-sc-number-counter.text-center .dt-sc-number-counter-icon { display: flex; justify-content: center; margin-left: auto; margin-right: auto; }
+  .dt-sc-number-counter-section .dt-sc-number-counter.text-end .dt-sc-number-counter-icon { display: flex; margin-left: auto; }
+  
+  .dt-sc-number-counter-section .dt-sc-number-counter.dt-sc-boxed { padding: 0 20px 20px 20px; position: relative; z-index: 1; }
+  .dt-sc-number-counter-section .dt-sc-number-counter.dt-sc-boxed:before { position: absolute; content: ""; width: 100%; pointer-events: none; height: 100%; top: 0; 
+    left: 0; z-index: -1; {% if section.settings.enable_box_shadow %} box-shadow: var(--DTboxShadow); {% endif %} }
+  
+  .dt-sc-number-counter-section .dt-sc-number-counter.dt-sc-overall-border { padding: 20px; {% if section.settings.enable_box_shadow %} box-shadow: var(--DTboxShadow); {% endif %} }
+  
+  .dt-sc-number-counter-section.grid-style .dt-sc-number-counter.dt-sc-boxed:before { height: calc(100% - {{ section.settings.block_icon_outer_size | divided_by: 2 }}px); 
+    bottom: 0; top: auto;  }
+  .dt-sc-number-counter-section.grid-style .dt-sc-number-counter.dt-sc-reverse-columns.dt-sc-boxed { padding: 20px 20px 0 20px;  }
+  .dt-sc-number-counter-section.grid-style .dt-sc-number-counter.dt-sc-reverse-columns.dt-sc-boxed:before { top: 0; bottom: auto; 
+    height: calc(100% - {{ section.settings.block_icon_outer_size | divided_by: 2 }}px);  }
+  
+  .dt-sc-number-counter-section.list-style .dt-sc-number-counter.dt-sc-boxed { padding: 20px 20px 20px 0;  }
+  .dt-sc-number-counter-section.list-style .dt-sc-number-counter.dt-sc-boxed:before { width: calc(100% - {{ section.settings.block_icon_outer_size | divided_by: 2 }}px); right: 0; left: auto;  }
+  .dt-sc-number-counter-section.list-style .dt-sc-number-counter.dt-sc-reverse-columns.dt-sc-boxed { padding: 20px 0 20px 20px;  }  
+  .dt-sc-number-counter-section.list-style .dt-sc-number-counter.dt-sc-reverse-columns.dt-sc-boxed:before { left: 0; right: auto;
+    width: calc(100% - {{ section.settings.block_icon_outer_size | divided_by: 2 }}px); }
+  
+  .dt-sc-number-counter-section .dt-sc-number-counter.dt-sc-reverse-columns { display: flex; width: 100%; flex-wrap: wrap; flex-direction: column;  }
+  .dt-sc-number-counter-section .dt-sc-number-counter.dt-sc-reverse-columns .dt-sc-number-counter-icon { order: 1; float: left; width: 100%; margin-top: 15px;  }
+  .dt-sc-number-counter-section .dt-sc-number-counter.dt-sc-reverse-columns *:first-child { margin-bottom: 0; }
+  
+  .dt-sc-number-counter-section .dt-sc-number-counter *,.dt-sc-number-counter-section .dt-sc-number-counter *:not(:only-child) { margin: 0;  }
+  .dt-sc-number-counter-section .dt-sc-number-counter *:not(:last-child) { margin: 0 0 15px 0; }
+  
+  .dt-sc-number-counter-section.list-style .dt-sc-number-counter { display: grid; column-gap: 20px; align-self: flex-start; position: relative; }
+  .dt-sc-number-counter-section.list-style .dt-sc-number-counter .dt-sc-number-counter-icon { grid-row-end: 4; grid-row-start: 1; margin: 0; width: 100%; 
+    position: relative;  }
+  .dt-sc-number-counter-section.list-style .dt-sc-number-counter .dt-sc-number-counter-icon img { max-width: 100%;  }
+  .dt-sc-number-counter-section.list-style .dt-sc-number-counter.dt-sc-reverse-columns .dt-sc-number-counter-icon { grid-column-start: 2;  }
+  .dt-sc-number-counter-section.list-style .dt-sc-number-counter.vertical-center .dt-sc-number-counter-icon { top: 50%; transform: translateY(-50%); 
+    width: 100%; right: 0;  }
+  .dt-sc-number-counter-section.list-style .dt-sc-number-counter.vertical-bottom .dt-sc-number-counter-icon { 
+	transform: translateY(100%); 
+  } 
+  .dt-sc-number-counter-section.list-style .dt-sc-number-counter.vertical-bottom.dt-sc-overall-border .dt-sc-number-counter-icon { 
+    transform: translateY(100%); 
+  } 
+  
+</style>
+{% endif %}
+{% schema %}
+{
+"name": "Number counter",
+"class": "inner-page-number-counter",
+"max_blocks": 10,
+"settings": [
+{
+"type": "checkbox",
+"id": "enable",
+"label": "Show this section",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "full",
+"label": "Show Full width"
+},
+{
+"type": "checkbox",
+"id": "spacing_both_ends",
+"label": "Enable Right & Left Spacing (Works only on Fullwidth)",
+"default": false
+},
+{
+"type": "text",
+"id": "padding",
+"label": "Style value (Padding)",
+"default":"0,0",
+"info":"Top(px),Bottom(px)"
+},
+{
+"type": "text",
+"id": "margin",
+"label": "Style value (Margin)",
+"default":"0,0",
+"info":"Top(px),Bottom(px)"
+},
+{
+"type": "image_picker",
+"id": "background_image",
+"label": "Background image",
+"info": "Size: 1920x1280"
+},
+{
+"type": "checkbox",
+"id": "show_background_image",
+"label": "Enable Background image"
+},
+{
+"type": "select",
+"id": "background_style",
+"label": "Background Style",
+"default": "default",
+"options": [
+{
+"value": "default",
+"label": "Default"
+},
+{
+"value": "parallax",
+"label": "Parallax"
+},
+{
+"value": "fixed",
+"label": "Fixed"
+}
+]
+},
+{
+"type": "checkbox",
+"id": "enable_overlay",
+"label": "Enable Background Color (Used as Background Image Overlay Color too)"
+},
+{
+"type": "color",
+"id": "background_color",
+"label":"Background color"
+},
+{
+"type": "text",
+"id": "overlay_transparency",
+"label": "Overlay Transparency (0.01 to 1)",
+"default": "0.5"
+},
+{
+"type": "text",
+"id": "section_heading",
+"label": "Main Heading",
+"default": "Number Counter"
+},  
+{
+"type": "text",
+"id": "section_sub_heading",
+"label": "Sub Heading",
+"default": "Sub Heading"
+},  
+{
+"type": "text",
+"id": "section_description",
+"label": "Description",
+"default": "Use this text to share the information which you like!."
+},  
+{
+"type": "text",
+"id": "section_button_text",
+"label": "Link text"
+},
+{
+"type": "url",
+"id": "section_button_link",
+"label": "Link URL"
+},
+{
+        "type": "header",
+        "content": "Section Color settings"
+        },
+        {
+        "type": "color",
+        "id": "section_heading_color",
+        "label": "Heading color"
+        },    
+        {
+        "type": "color",
+        "id": "section_sub_heading_color",
+        "label": "Sub heading color"
+        },   
+        {
+        "type": "color",
+        "id": "section_description_color",
+        "label": "Description color"
+        },  
+        {
+        "type": "color",
+        "id": "section_button_bg_color",
+        "label": "Button bg color"
+        },   
+        {
+        "type": "color",
+        "id": "section_button_text_color",
+        "label": "Button text color"
+        },   
+        {
+        "type": "color",
+        "id": "section_button_hover_bg_color",
+        "label": "Button hover bg color"
+        },   
+        {
+        "type": "color",
+        "id": "section_button_hover_text_color",
+        "label": "Button hover text color"
+        },
+{
+"type": "select",
+"id": "heading_position",
+"label": "Heading Position",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "right"
+}
+]
+},
+{
+"type": "header",
+"content": "Block Settings"
+},
+{
+"type": "select",
+"id": "grid",
+"label": "Item per row",
+"default": "4",
+"options": [
+{
+"value": "1",
+"label": "1"
+},
+{
+"value": "2",
+"label": "2"
+},
+{
+"value": "3",
+"label": "3"
+},
+{
+"value": "4",
+"label": "4"
+},
+{
+"value": "5",
+"label": "5"
+},
+{
+"value": "6",
+"label": "6"
+}
+]
+}, 
+{
+"type": "text",
+"id": "column_gap",
+"label": "Column Gap - Leave empty for Default Gap (Units not needed)",
+"default":"30"
+},
+{
+"type": "select",
+"id": "counter_style",
+"label": "Counter Style",
+"options": [
+{
+"value": "grid",
+"label": "Grid"
+},
+{
+"value": "list",
+"label": "List"
+}
+]
+},
+{
+"type": "select",
+"id": "vertical_position",
+"label": "Content position",
+"info": "Only for List Style",
+"options": [
+{
+"value": "vertical-top",
+"label": "Vertical top"
+},
+{
+"value": "vertical-center",
+"label": "Vertical center"
+},
+{
+"value": "vertical-bottom",
+"label": "Vertical bottom"
+}
+],
+"default": "vertical-top"
+},
+{
+"type": "select",
+"id": "block_text_align",
+"label": "Text alignment",
+"options": [
+{
+"value": "text-center",
+"label": "center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "right"
+}
+],
+"default":"text-start"
+},
+{
+"type": "header",
+"content": "Reverse Columns"
+}, 
+{
+"type": "checkbox",
+"id": "reverse_column",
+"label": "Content reverse",
+"default": false
+},
+{
+"type": "checkbox",
+"id": "enable_boxed",
+"label": "Enable boxed style",
+"default": false
+},
+{
+"type": "checkbox",
+"id": "enable_overall_border",
+"label": "Enable Overall Border (Boxed Style will not work, if this is enabled)",
+"default": false
+},
+{
+"type": "text",
+"id": "border_radius",
+"label": "Overall Radius (Units not needed)",
+"default":"0",
+"info": "Works only if you have enabled Overall Border"
+},
+{
+"type": "text",
+"id": "icon_border_radius",
+"label": "Icon Radius (in px) - Set 50% for Rounded Icon",
+"default":"0px",
+"info": "Leave Empty for Default Border Radius"
+},
+{
+"type": "text",
+"id": "block_icon_outer_size",
+"label": "Icon/Image Outer Size (Units not needed)",
+"default":"75"
+},
+{
+"type": "text",
+"id": "block_icon_size",
+"label": "Icon/Image Size (Units not needed)",
+"default":"50"
+},
+{
+"type": "checkbox",
+"id": "enable_box_shadow",
+"label": "Enable Box Shadow",
+"default": false
+},
+{
+"type": "header",
+"content": "Block Color settings"
+},  
+{
+"type": "color",
+"id": "block_bg_color",
+"label": "Block BG color (Enable boxed style or Overall Border Checkbox above)"
+}, 
+{
+"type": "color",
+"id": "block_icon_border_color",
+"label": "Icon Border Color"
+},
+{
+"type": "color",
+"id": "block_icon_bg_color",
+"label": "Icon BG color"
+},
+{
+"type": "color",
+"id": "block_icon_color",
+"label": "Icon color"
+},
+{
+"type": "color",
+"id": "block_title_color",
+"label": "Heading color"
+},    
+{
+"type": "color",
+"id": "block_text_color",
+"label": "Description color"
+},   
+{
+"type": "color",
+"id": "block_value_color",
+"label": "Value color"
+},  
+{
+"type": "color",
+"id": "block_value_text_color",
+"label": "Value text Color (Suffixes like K, %)"
+}, 
+{
+"type": "color",
+"id": "block_border_color",
+"label": "Overall Border Color"
+}
+],
+"blocks": [
+{
+"type": "icon",
+"name": "Image",        
+"settings": [
+{
+"type": "image_picker",
+"id": "icon",
+"label": "Icon"        
+},
+{
+"type": "text",
+"id": "title",
+"label": "Title",
+"default": "Title"
+},
+{
+"type": "text",
+"id": "text",
+"label": "Text",  
+"default": "Lorem ipsum dolor sit amet"
+},
+{
+"type": "text",
+"id": "value",
+"label": "Value",
+"default": "50"
+},
+{
+"type": "text",
+"id": "value_text",
+"label": "Value text",
+"default": "K"
+}
+]
+},
+
+{
+"type": "class",
+"name": "Font Awesome Class",        
+"settings": [
+{
+"type": "text",
+"id": "class",
+"label": "Font Awesome class",
+"default": "fa fa-plus"   
+},
+{
+"type": "text",
+"id": "title",
+"label": "Title",
+"default": "Title"
+},
+{
+"type": "text",
+"id": "text",
+"label": "Text",  
+"default": "Lorem ipsum dolor sit amet"
+},
+{
+"type": "text",
+"id": "value",
+"label": "Value",
+"default": "50"
+},
+{
+"type": "text",
+"id": "value_text",
+"label": "Value text",
+"default": "K"
+}
+]
+}
+]
+}
+{% endschema %}

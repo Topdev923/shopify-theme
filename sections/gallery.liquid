@@ -1,0 +1,246 @@
+<div data-section-id="{{ section.id }}" data-section-type="gallery_page" class="gallery_page">  
+  <div class="grid-uniform collectionItems">  
+    <div class="wrapper">
+      <div class="banner-images">
+        {% if section.blocks.size > 0 %}      
+        {% for block in section.blocks %}
+        {% case section.blocks.size %}
+        {% when 1 %}
+        {%- assign block_width = 'one-whole text-center' -%}
+        {% when 2 %}
+        {%- assign block_width = 'wide--one-half post-large--one-half large--one-half medium--one-half small-grid__item' -%}
+        {% when 3 %}
+        {%- assign block_width = 'wide--one-third post-large--one-third large--one-third medium--one-half small-grid__item' -%}
+        {% when 4 %}
+        {%- assign block_width = 'wide--one-quarter post-large--one-quarter large--one-half medium--one-half small-grid__item' -%}
+        {% else %}
+        {%- assign block_width = 'wide--one-third post-large--one-third large--one-half medium--one-half small-grid__item' -%}
+        {% endcase %}
+
+
+
+
+
+
+        <div class="grid__item {{ block_width }} wow fadeInUp animated">
+          <div class="bg-effect-{{block.id }} gallery" style="position:relative;">
+            {% unless section.settings.use_overlay_icons %}
+            <a href="{% if block.settings.image != blank %}{{ block.settings.image | img_url: 'master' }}{% endif %}" data-fancybox="images" data-caption="{{block.settings.title}}">                
+              {% endunless %}
+
+              {% if block.settings.image != blank %}            
+              {%- assign img_url = block.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+              <img class="lazyload"
+                   data-src="{{ img_url }}"
+                   data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+                   data-aspectratio="{{ section.settings.image.aspect_ratio }}"
+                   data-sizes="auto"            
+                   alt="{{ block.settings.title}}">            
+              <noscript>
+                {{ block.settings.image | img_url: '480x480', scale: 2 | img_tag: block.settings.image.alt, 'dt-sc-noscript-image' }}
+              </noscript>
+              {% else %}
+              {% capture current %}{% cycle 1, 2, 3, 4, 5 %}{% endcapture %}
+              {{ 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+              {% endif %}
+              <div class="ovrly17"> 
+                {% if section.settings.use_overlay %}
+                <div class="image-overlay">  
+                  {% endif %}
+                  {% if section.settings.use_overlay_icons %}
+
+                  <div class="links">   
+                    <a href="{% if block.settings.image != blank %}{{ block.settings.image | img_url: 'master' }}{% endif %}" data-fancybox="images" data-caption="{{block.settings.title}}"><i class="fa fa-search"></i></a>                
+
+
+                    <a href="{{ block.settings.gallery_link }}" class="link"><i class="fa fa-link"></i></a>
+                  </div>
+                  {% endif %}
+                  {% if block.settings.gallery_title != blank or block.settings.category != blank %}
+                  <div class="image-overlay-details">
+                    {% if block.settings.gallery_title != blank %} <h4><a href="{{ block.settings.gallery_link }}">{{ block.settings.gallery_title }}</a></h4>{% endif %}
+                    {% if block.settings.category != blank %} <p>{{ block.settings.category }}</p>{% endif %}
+                  </div>
+                  {% endif %}
+                  {% if section.settings.use_overlay %}        
+                </div>
+                {% endif %}    
+              </div>
+
+              {% unless section.settings.use_overlay_icons %}
+            </a>
+            {% endunless %}   
+          </div>
+        </div>   
+
+        {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="dt-sc-hr-invisible-large"></div>
+
+</div>
+
+
+
+<style>
+  {% if section.settings.use_overlay %}
+
+  {% assign hex2rgb_hex = section.settings.img_overlay %}
+
+
+  .gallery_page .gallery .image-overlay { background:{{section.settings.img_overlay | color_modify: 'alpha', 0.7 }} }
+  {% endif %}
+  .gallery_page .gallery:hover .image-overlay {    opacity: 1;}
+  .gallery_page .gallery .links a { border:2px solid {{ section.settings.img_overlay_icon }};color:{{ section.settings.img_overlay_icon_txt }}; }
+  .gallery_page .gallery .links a:hover { border-color:{{ section.settings.img_overlay_icon_bg }};background:{{ section.settings.img_overlay_icon_bg }};color:{{ section.settings.img_overlay_icon_hover_txt }}; }
+  .gallery_page .gallery .image-overlay-details h4 a { color:{{ section.settings.img_overlay_title }}; }
+  .gallery_page .gallery .image-overlay-details p { color:{{ section.settings.img_overlay_catgry }}; }
+
+  .gallery_page .grid__item .gallery .image-overlay-details { background:{{section.settings.texthover_bg_color | color_modify: 'alpha', 0.7 }}!important;}
+  /* .gallery_page .collectionItems .ovrly17::after{background:{{section.settings.overlay_bg_color}};}*/
+
+  .gallery_page .grid__item:hover h2 {background:{{section.settings.texthover_bg_color | color_modify: 'alpha', 0.7 }}!important;color:{{section.settings.texthover_txt_color}}!important;}
+
+  .gallery_page .grid__item:hover h2 a{color:{{section.settings.texthover_txt_color}}!important;}
+</style>
+
+
+
+{% schema %}
+{
+"name": "Gallery Block",
+
+"max_blocks":100,
+"settings": [
+{
+"type": "text",
+"id": "portfolio_title",
+"label": "Heading",
+"default": "Best Sellers"
+},
+{
+"type": "color",
+"id": "portfolio_title_clr",
+"label": "Heading",
+"default": "#000"
+},	
+{
+"type": "richtext",
+"id": "portfolio_text",
+"label": "Description"          
+},
+{
+"type": "color",
+"id": "portfolio_text_clr",
+"label": "Description",
+"default": "#000"
+},
+{
+"type": "checkbox",
+"id": "use_overlay",
+"label": "Use Overlay"
+},
+{
+"type": "color",
+"id": "img_overlay",
+"label": "Image Overlay",
+"default": "#000"
+},
+{
+"type": "color",
+"id": "img_overlay_title",
+"label": "Overlay Title",
+"default": "#000"
+},
+{
+"type": "color",
+"id": "img_overlay_catgry",
+"label": "Overlay Category",
+"default": "#000"
+},
+{
+"type": "checkbox",
+"id": "use_overlay_icons",
+"label": "Use Overlay Icons"
+},
+{
+"type": "color",
+"id": "img_overlay_icon",
+"label": "Overlay Icon Border",
+"default": "#000"
+},
+{
+"type": "color",
+"id": "img_overlay_icon_txt",
+"label": "Overlay Icon Text",
+"default": "#000"
+},
+{
+"type": "color",
+"id": "img_overlay_icon_bg",
+"label": "Overlay Icon Hover Bg",
+"default": "#000"
+},
+{
+"type": "color",
+"id": "img_overlay_icon_hover_txt",
+"label": "Overlay Icon Hover Text",
+"default": "#000"
+},
+{
+"type": "color",
+"id": "texthover_bg_color",
+"label": "Text Hover Bg Color",
+"default":"#000"	
+},
+{
+"type": "color",
+"id": "texthover_txt_color",
+"label": "Text Hover Text Color",
+"default":"#000"	
+}
+],
+"blocks": [
+{
+"type": "Image",
+"name": "support block",
+"settings": [ 
+{
+"type": "image_picker",
+"id": "image",
+"label": "Image",
+"info": "Size: 650x760"
+},
+{
+"type": "text",
+"id": "title",
+"label": "Alt Text",
+"default": "Collection Name"	
+},
+{
+"type": "text",
+"id": "gallery_title",
+"label": "Title" 		  
+},  
+{
+"type": "text",
+"id": "category",
+"label": "Category" 		  
+},   
+{
+"type": "url",
+"id": "gallery_link",
+"label": "Link"          
+}
+
+
+
+]
+}
+]
+
+}
+{% endschema %}

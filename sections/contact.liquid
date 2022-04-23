@@ -1,0 +1,584 @@
+
+<div class="dt-sc-section-wrapper">  
+  <div class="{% render 'container-settings' %}"> 
+    <div class="row">  
+      {% render 'section-heading', class: section.id %} 
+      {{ page.content }}
+      <div class="layout-type {{section.settings.contact_layout}}">
+        {% if section.settings.enable_gmap %}
+        <div id="map">{{ section.settings.contact_iframe_code }} </div>
+        {% endif %}
+
+        {% if section.settings.enable_contact_info %}
+        <ul class="dt-contact-iconblock-section dt-sc-column three-column">
+          {% if section.settings.contact_phone %}         
+          <li class="dt-contact-icon-block">
+            {% if section.settings.contact_icon_1 != blank  %}
+            <div class="dt-contact-icon-image">
+              <i class="{{section.settings.contact_icon_1}}"></i> 
+            </div>
+            {% endif %}
+            <div class="dt-contact-icon-content">
+              <h5>{{ section.settings.contact_module_contact_phonetitle }}</h5>
+              <p>  {{ section.settings.contact_phone1 }} <br>{{ section.settings.contact_phone2 }}</p><mark></mark> 
+            </div>
+          </li>
+          {% endif %}        
+          {% if section.settings.contact_module_email %}        
+          <li class="dt-contact-icon-block">
+            {% if section.settings.contact_icon_2 != blank  %}
+            <div class="dt-contact-icon-image">
+              <i class="{{section.settings.contact_icon_2}}"></i>
+            </div>
+            {% endif %}
+            <div class="dt-contact-icon-content">
+              <h5>{{ section.settings.contact_module_contact_title }}</h5>
+              <p> 
+                <a title="" href="">{{ section.settings.contact_module_email1 }}</a><br><a title="" href="">{{ section.settings.contact_module_email2 }}</a>
+              </p> 
+            </div>
+          </li>
+          {% endif %}        
+          {% if section.settings.contact_module_address %} 
+          <li class="dt-contact-icon-block"> 
+            {% if section.settings.contact_icon_3 != blank  %}
+            <div class="dt-contact-icon-image">
+              <i class="{{section.settings.contact_icon_3}}"></i>
+            </div> 
+            {% endif %}
+            <div class="dt-contact-icon-content">
+              <h5>{{ section.settings.contact_module_address_title }}</h5>
+              <p> {{ section.settings.contact_module_address1 }}<br /> {{ section.settings.contact_module_address2 }}<br />{{ section.settings.postcode }}</p><mark></mark> 
+            </div>
+          </li>
+          {% endif %}
+        </ul>
+        {% endif %}
+
+        {% if section.settings.enable_contact_form %}
+        <div class="contact-form-section">
+          <h4> {{ section.settings.contact_form_title }} </h4>
+          {% form 'contact' %}
+          {% if form.posted_successfully? %}
+          <p class="note form-success">
+            {{ 'contact.form.post_success' | t }}
+          </p>
+          {% endif %}
+          {{ form.errors | default_errors }}         
+          <label for="ContactFormName" class="label--hidden">{{ 'contact.form.name' | t }}</label>
+          <input type="text" id="ContactFormName" class="input-full" name="contact[name]" placeholder="{{ 'contact.form.name' | t }}" autocapitalize="words" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}">
+          <label for="ContactFormEmail" class="label--hidden">{{ 'contact.form.email' | t }}</label>
+          <input type="email" id="ContactFormEmail" class="input-full" name="contact[email]" placeholder="{{ 'contact.form.email' | t }}" autocorrect="off" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}">
+          <label for="ContactFormPhone" class="label--hidden">{{ 'contact.form.phone' | t }}</label>
+          <input type="tel" id="ContactFormPhone" class="input-full" name="contact[phone]" placeholder="{{ 'contact.form.phone' | t }}" pattern="[0-9\-]*" value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}">
+          <label for="ContactFormMessage" class="label--hidden">{{ 'contact.form.message' | t }}</label>
+          <textarea rows="10" id="ContactFormMessage" class="input-full" name="contact[body]" placeholder="{{ 'contact.form.message' | t }}">{% if form.body %}{{ form.body }}{% endif %}</textarea>
+          <button type="submit" class="btn">
+            {{ 'contact.form.send' | t }} 
+          </button>
+          {% endform %}          
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+
+    #shopify-section-contact .dt-sc-heading { margin-bottom: 35px; }
+    #shopify-section-contact .dt-sc-heading .dt-sc-main-heading { color: var(--DTColor_Heading); color:{{ section.settings.section_heading_color }}; } 
+    #shopify-section-contact .dt-sc-heading .dt-sc-sub-heading { color: var(--DTColor_Heading); color:{{ section.settings.section_sub_heading_color }}; } 
+    #shopify-section-contact .dt-sc-heading .dt-sc-heading-description { color: var(--DTColor_Body);  color:{{ section.settings.section_description_color }}; } 
+    #shopify-section-contact .dt-sc-heading .dt-sc-btn { 
+      background: var(--DT_Button_BG_Color); background:{{ section.settings.section_button_bg_color }}; 
+        color: var(--DT_Button_Text_Color); color:{{ section.settings.section_button_text_color }}; }
+    #shopify-section-contact .dt-sc-heading .dt-sc-btn:hover { 
+      background: var(--DT_Button_BG_Hover_Color); background:{{ section.settings.section_button_hover_bg_color }}; 
+        color: var(--DT_Button_Text_Hover_Color); color:{{ section.settings.section_button_hover_text_color }}; }  
+
+    .dt-contact-iconblock-section { margin: 0; }
+    .dt-contact-iconblock-section .dt-contact-icon-block { 
+
+      border-width: 1px; border-style: solid;
+      border-color: {{ settings.border_color}};
+      border-color: {{ section.settings.contactborder_color }}; 
+      padding: 25px; 
+      transition: var(--DTBaseTransition); 
+        border-radius: var(--DTRadius);
+          }
+
+    .dt-contact-iconblock-section .dt-contact-icon-block .dt-contact-icon-image > i { 
+      background: var(--DT_Button_BG_Color);
+        color: var(--DT_Button_Text_Color);
+          background: {{ section.settings.contacticon_bg_color}}; 
+          color:{{ section.settings.contacticon_color}};
+          border-radius: var(--DTRadius);
+            display: inline-block; 
+            font-size: 20px; height: 50px; line-height: 50px; position: relative;text-align: center; width: 50px; transition: var(--DTBaseTransition); }
+    .dt-contact-iconblock-section .dt-contact-icon-block .dt-contact-icon-content br { display: block; margin-top: 6px; }
+
+    .dt-contact-iconblock-section .dt-contact-icon-block:hover { border-color: var(--DTPrimaryColor); border-color: {{ section.settings.contact_hvrborder_color }};}  
+    .dt-contact-iconblock-section .dt-contact-icon-block:hover .dt-contact-icon-image > i { 
+      background: var(--DT_Button_BG_Hover_Color); background: {{ section.settings.contacticon_hoverbg_color}}; 
+        color: var(--DT_Button_Text_Hover_Color); color:{{ section.settings.contacticonhover_color}}; 
+          }
+
+    .dt-contact-iconblock-section .dt-contact-icon-block .dt-contact-icon-content h4 { 
+      color: var(--DTColor_Heading); color: {{section.settings.icontactheading_color}}; margin-top: 25px; transition: var(--DTBaseTransition); } 
+    .dt-contact-iconblock-section .dt-contact-icon-block:hover .dt-contact-icon-content h4 { 
+      color: var(--DTPrimaryColor); color: {{ section.settings.contacticon_hoverbg_color}}; }
+
+    .layout-type > .contact-form-section h4 {margin-top:10px;text-align:center;}
+    .layout-type form.contact-form { display: grid; gap: var(--DTGutter_Width); grid-template-columns: 1fr 1fr 1fr; }
+    .layout-type form.contact-form textarea#ContactFormMessage { grid-column: 1/4; }
+    .layout-type form.contact-form button { grid-column: 2/3; margin: 0; } 
+
+    .layout-type form.contact-form .note.form-success { grid-column-start: 1; grid-column-end: 4; margin-bottom: 0; }
+
+
+    .layout-type { display: flex; flex-wrap: wrap; margin: 0 calc(-.5* var(--DTGutter_Width)); }
+    .layout-type > * { padding: calc(.5*var(--DTGutter_Width)); width: 100%; }
+
+
+
+    /* Block Layout */
+    .layout-type.block_layout > * { flex: 1 1 100%; }
+    .layout-type.block_layout > * + * { margin-top: 35px; }
+
+
+    /*  Left Map + Form  */
+    .layout-type.left_map_form_inline > * { flex: 1; }
+    .layout-type.left_map_form_inline .dt-contact-iconblock-section { flex: 1 1 100%; order: -1; margin-bottom: 35px; }  
+
+    .layout-type.left_map_form_inline > .contact-form-section h4 { margin-top: 10px; }
+    .layout-type.left_map_form_inline > *:nth-child(3):nth-last-child(1) form.contact-form > input, 
+    .layout-type.left_map_form_inline > *:nth-child(3):nth-last-child(1) form.contact-form textarea#ContactFormMessage { grid-column: 1/4; }
+    .layout-type.left_map_form_inline > *:nth-child(3):nth-last-child(1) form.contact-form button { grid-column: 1/2; }
+
+
+    /*  Left Map + Icon Blocks  */
+    .layout-type.left_map_iconblock_inline > * { flex: 1; }
+    .layout-type.left_map_iconblock_inline #map { flex-grow: 2; }
+    .layout-type.left_map_iconblock_inline .contact-form-section { flex: 1 1 100%; }  
+
+    .layout-type.left_map_iconblock_inline > #map + .dt-contact-iconblock-section .dt-contact-icon-block { grid-column: 1/6; display: flex; align-items: center; }
+    .layout-type.left_map_iconblock_inline > #map + .dt-contact-iconblock-section .dt-contact-icon-block .dt-contact-icon-content { padding-left: 25px; }
+    .layout-type.left_map_iconblock_inline > #map + .dt-contact-iconblock-section .dt-contact-icon-block .dt-contact-icon-content h5 { margin-top: 0; }
+
+
+    /*  Left Icon Blocks + Map  */
+    .layout-type.left_iconblock_form_inline > * { flex: 1; }
+    .layout-type.left_iconblock_form_inline #map { flex: 1 1 100%; margin-bottom: 35px; order: 1; }  
+    .layout-type.left_iconblock_form_inline .contact-form-section { flex-grow: 2; order: 3; }
+    .layout-type.left_iconblock_form_inline .dt-contact-iconblock-section { order: 2; }
+
+    .layout-type.left_iconblock_form_inline > .contact-form-section h4 { margin-top: 0; margin-bottom: 20px; }
+
+    .layout-type.left_iconblock_form_inline > .dt-contact-iconblock-section + .contact-form-section form.contact-form > input, 
+    .layout-type.left_iconblock_form_inline > .dt-contact-iconblock-section + .contact-form-section form.contact-form textarea#ContactFormMessage { grid-column: 1/4; }
+
+    .layout-type.left_iconblock_form_inline > .dt-contact-iconblock-section + .contact-form-section form.contact-form button { grid-column: 1/2; }  
+
+    .layout-type.left_iconblock_form_inline > *:nth-child(1):nth-last-child(2) .dt-contact-icon-block,
+    .layout-type.left_iconblock_form_inline > *:nth-child(2):nth-last-child(2) .dt-contact-icon-block{ grid-column: 1/6; display: flex; align-items: center; }
+
+    .layout-type.left_iconblock_form_inline > *:nth-child(1):nth-last-child(2) .dt-contact-icon-block .dt-contact-icon-content, 
+    .layout-type.left_iconblock_form_inline > *:nth-child(2):nth-last-child(2) .dt-contact-icon-block .dt-contact-icon-content { padding-left: 25px; }
+
+    .layout-type.left_iconblock_form_inline > *:nth-child(1):nth-last-child(2) .dt-contact-icon-block .dt-contact-icon-content h5, 
+    .layout-type.left_iconblock_form_inline > *:nth-child(2):nth-last-child(2) .dt-contact-icon-block .dt-contact-icon-content h5 { margin-top: 0; }  
+
+
+    /*  Responsive  */
+
+    @media only screen and (max-width: 1199px) {  
+
+      .layout-type.block_layout .dt-contact-iconblock-section,
+      .layout-type.left_map_form_inline .dt-contact-iconblock-section { display: flex; flex-wrap: wrap; gap: 0; justify-content: center; }
+
+      .layout-type.block_layout .dt-contact-iconblock-section li,
+      .layout-type.left_map_form_inline .dt-contact-iconblock-section li { flex: 1 1 40%; max-width: 50%; margin: 15px; }
+
+      .layout-type.left_map_iconblock_inline #map,
+      .layout-type.left_iconblock_form_inline .contact-form-section { flex-grow: 1; }
+
+      .layout-type.left_map_iconblock_inline .dt-contact-iconblock-section:nth-child(1):nth-last-child(2),
+
+      .layout-type.left_iconblock_form_inline > .dt-contact-iconblock-section:nth-child(1):nth-last-child(2), 
+      .layout-type.left_iconblock_form_inline > .dt-contact-iconblock-section:nth-child(2):nth-last-child(2) { display: flex; flex-wrap: wrap; gap: 0; justify-content: center; }
+
+
+      .layout-type.left_map_iconblock_inline .dt-contact-iconblock-section:nth-child(1):nth-last-child(2) .dt-contact-icon-block { flex: 1 1 40%; max-width: 50%; margin: 15px; }
+
+      .layout-type.left_iconblock_form_inline > .dt-contact-iconblock-section:nth-child(1):nth-last-child(2) .dt-contact-icon-block, 
+      .layout-type.left_iconblock_form_inline > .dt-contact-iconblock-section:nth-child(2):nth-last-child(2) .dt-contact-icon-block { flex: 1 1 100%; }
+
+      .layout-type.left_iconblock_form_inline > .dt-contact-iconblock-section:nth-child(1):nth-last-child(2) .dt-contact-icon-block + .dt-contact-icon-block, 
+      .layout-type.left_iconblock_form_inline > .dt-contact-iconblock-section:nth-child(2):nth-last-child(2) .dt-contact-icon-block + .dt-contact-icon-block { margin-top: 30px; }
+    }
+
+
+    @media only screen and (max-width: 767px) {
+      
+      .layout-type.left_map_form_inline > *,
+      .layout-type.left_iconblock_form_inline > * { flex: auto; }
+
+      .layout-type.block_layout .dt-contact-iconblock-section li,
+      .layout-type.left_map_form_inline .dt-contact-iconblock-section li { flex: 1 1 40%; max-width: 50%; }
+
+      .layout-type.left_map_form_inline > :nth-child(3):nth-last-child(1) form.contact-form button { grid-column: 1/3; }
+
+      .layout-type.left_map_iconblock_inline > #map + .dt-contact-iconblock-section { gap: 0; justify-content: stretch; }
+      .layout-type.left_map_iconblock_inline > #map + .dt-contact-iconblock-section li { width: 100%; }
+      .layout-type.left_map_iconblock_inline > #map + .dt-contact-iconblock-section li + li { margin-top: 30px; }
+
+    }
+
+
+    @media only screen and (max-width: 576px) {
+
+      .layout-type.block_layout form.contact-form > input, 
+      .layout-type.block_layout form.contact-form textarea#ContactFormMessage,
+
+      .layout-type.left_map_iconblock_inline form.contact-form > input, 
+      .layout-type.left_map_iconblock_inline form.contact-form textarea#ContactFormMessage,
+
+      .layout-type.left_iconblock_form_inline form.contact-form > input, 
+      .layout-type.left_iconblock_form_inline form.contact-form textarea#ContactFormMessage { grid-column: 1/4; }
+
+
+      .layout-type.block_layout form.contact-form button,
+      .layout-type.left_iconblock_form_inline form.contact-form button { grid-column: 1/2; }
+
+
+      .layout-type.block_layout .dt-contact-iconblock-section li,
+      .layout-type.left_map_form_inline .dt-contact-iconblock-section li,
+      .layout-type.left_map_iconblock_inline .dt-contact-iconblock-section:nth-child(1):nth-last-child(2) li { flex: 1 1 80%; max-width: 80%; }
+
+
+      .layout-type.left_map_form_inline > * { flex: 1 1 100%; }
+      .layout-type.left_map_form_inline > .contact-form-section:nth-child(3):nth-last-child(1) form.contact-form button { grid-column: 2/3; }
+
+      .layout-type.left_map_iconblock_inline > *, .layout-type.left_iconblock_form_inline > * { flex: auto; }
+      .layout-type.left_map_iconblock_inline > #map + .dt-contact-iconblock-section li { margin-top: 30px; }
+      
+      .layout-type.left_iconblock_form_inline > .dt-contact-iconblock-section + .contact-form-section form.contact-form button { grid-column: 1/3; }
+      .layout-type.block_layout form.contact-form button, .layout-type.left_iconblock_form_inline form.contact-form button{grid-column:1/3;}
+
+    }  
+
+  </style>
+
+  {% schema %}
+  {
+  "name": "Contact options",
+  "settings": [
+  {
+  "type": "checkbox",
+  "id": "full",
+  "label": "Show Full width",
+  "default": false
+  },
+  {
+  "type": "checkbox",
+  "id": "spacing_both_ends",
+  "label": "Enable Right & Left Spacing (Works only on Fullwidth)",
+  "default": false
+  },
+  {
+  "type": "text",
+  "id": "padding",
+  "label": "Style value (Padding)",
+  "default":"0,0",
+  "info":"Top(px),Bottom(px)"
+  },
+  {
+  "type": "text",
+  "id": "margin",
+  "label": "Style value (Margin)",
+  "default":"0,0",
+  "info":"Top(px),Bottom(px)"
+  },
+  {
+  "type": "text",
+  "id": "section_heading",
+  "label": "Main Heading",
+  "default": "Contact us"
+  },  
+  {
+  "type": "text",
+  "id": "section_sub_heading",
+  "label": "Sub Heading",
+  "default": "Sub Heading"
+  },  
+  {
+  "type": "text",
+  "id": "section_description",
+  "label": "Description",
+  "default": "Use this text to share the information which you like!."
+  },  
+  {
+  "type": "text",
+  "id": "section_button_text",
+  "label": "Link text"
+  },
+  {
+  "type": "url",
+  "id": "section_button_link",
+  "label": "Link URL"
+  },
+  {
+  "type": "header",
+  "content": "Section Color settings"
+  },
+  {
+  "type": "color",
+  "id": "section_heading_color",
+  "label": "Heading color"
+  },    
+  {
+  "type": "color",
+  "id": "section_sub_heading_color",
+  "label": "Sub heading color"
+  },   
+  {
+  "type": "color",
+  "id": "section_description_color",
+  "label": "Description color"
+  },  
+  {
+  "type": "color",
+  "id": "section_button_bg_color",
+  "label": "Button bg color"
+  },   
+  {
+  "type": "color",
+  "id": "section_button_text_color",
+  "label": "Button text color"
+  },   
+  {
+  "type": "color",
+  "id": "section_button_hover_bg_color",
+  "label": "Button hover bg color"
+  },   
+  {
+  "type": "color",
+  "id": "section_button_hover_text_color",
+  "label": "Button hover text color"
+  },
+  {
+  "type": "select",
+  "id": "heading_position",
+  "label": "Heading Position",
+  "options": [
+  {
+  "value": "text-center",
+  "label": "Center"
+  },
+  {
+  "value": "text-start",
+  "label": "Left"
+  },
+  {
+  "value": "text-end",
+  "label": "Right"
+  }
+  ]
+  },
+
+  {
+  "type": "select",
+  "id": "contact_layout",
+  "label":"Layout Type",
+  "default": "block_layout",
+  "info":"You can see variations only if enabled all the sections", 
+  "options": [
+  {
+  "value": "block_layout",
+  "label": "Block Layout"
+  }, 
+  {
+  "value": "left_map_form_inline",
+  "label": "Left Map + Form"
+  }, 
+  {
+  "value": "left_map_iconblock_inline",
+  "label": "Left Map + Icon Blocks"
+  },        
+  {
+  "value": "left_iconblock_form_inline",
+  "label": "Left Icon Blocks + Form "
+  }               
+  ]
+  },
+
+  {
+  "type": "header",
+  "content": "Map Section"            
+  },
+  {
+  "type": "checkbox",
+  "id": "enable_gmap",
+  "label": "Enable Map Section"
+  },
+  {
+  "type": "textarea",
+  "id": "contact_iframe_code",
+  "label": "Map Code[iframe]",
+  "info": "[Where do I find googlemap action URL?](https:\/\/support.google.com\/maps\/answer\/3544418?hl=en)"
+  },
+
+  {
+  "type": "header",
+  "content": "Contact-Info Section"            
+  },
+  {
+  "type": "checkbox",
+  "id": "enable_contact_info",
+  "label": "Enable Contact-Info Section"
+  },
+
+  {
+  "type": "color",
+  "id": "contactborder_color",
+  "label": "Contact Border Color"
+  },
+  {
+  "type": "color",
+  "id": "contact_hvrborder_color",
+  "label": "Contact Hover Border Color"
+  },
+  {
+  "type": "color",
+  "id": "icontactheading_color",
+  "label": "Contact Icon Heading Color"
+  },
+  {
+  "type": "color",
+  "id": "contacticon_bg_color",
+  "label": "Contact Icon Bg Color"
+  },
+  {
+  "type": "color",
+  "id": "contacticon_color",
+  "label": "Contact Icon Color"
+  },
+  {
+  "type": "color",
+  "id": "contacticon_hoverbg_color",
+  "label": "Contact Icon Hover Bg Color"
+  },
+  {
+  "type": "color",
+  "id": "contacticonhover_color",
+  "label": "Contact Icon Hover Color"
+  },
+
+  {
+  "type": "checkbox",
+  "id": "contact_phone",
+  "label": "Enable Phone"
+  },
+  {
+  "type": "text",
+  "id": "contact_module_contact_phonetitle",
+  "label": "Title",
+  "default": "Phone"
+  },
+  {
+  "type": "text",
+  "id": "contact_icon_1",
+  "label": "Icon Class",
+  "default": "fa fa-phone"
+  },
+  {
+  "type": "text",
+  "id": "contact_phone1",
+  "label": "Phone 1",
+  "default": "<b>Toll-Free: </b> 0803 - 080 - 3081"
+  },
+  {
+  "type": "text",
+  "id": "contact_phone2",
+  "label": "Phone 2",
+  "default": "<b>Fax: </b> 0803 - 080 - 3082"
+  },
+
+  {
+  "type": "checkbox",
+  "id": "contact_module_email",
+  "label": "Enable Email"
+  },
+  {
+  "type": "text",
+  "id": "contact_module_contact_title",
+  "label": "Title",
+  "default": "Email"
+  },
+  {
+  "type": "text",
+  "id": "contact_icon_2",
+  "label": "Icon Class",
+  "default": "fa fa-envelope"
+  },
+  {
+  "type": "text",
+  "id": "contact_module_email1",
+  "label": "Email 1",
+  "default": "mail@example.com"
+  },
+  {
+  "type": "text",
+  "id": "contact_module_email2",
+  "label": "Email 2",
+  "default": "support@example.com"
+  },
+  {
+  "type": "checkbox",
+  "id": "contact_module_address",
+  "label": "Enable Address"
+  },
+  {
+  "type": "text",
+  "id": "contact_module_address_title",
+  "label": "Title",
+  "default": "Address"
+  },
+  {
+  "type": "text",
+  "id": "contact_icon_3",
+  "label": "Icon Class",
+  "default": "fa fa-location-arrow"
+  },
+  {
+  "type": "textarea",
+  "id": "contact_module_address1",
+  "label": "Address 1",
+  "default": "No: 58 A, East Madison Street,"
+  },
+  {
+  "type": "textarea",
+  "id": "contact_module_address2",
+  "label": "Address 2",
+  "default": "Baltimore, MD, USA 4508"
+  },
+
+  {
+  "type": "header",
+  "content": "Contact-Form Section"            
+  },
+  {
+  "type": "checkbox",
+  "id": "enable_contact_form",
+  "label": "Enable Contact-Form Section"
+  },
+  {
+  "type": "text",
+  "id": "contact_form_title",
+  "label": "Form Title",
+  "default":"Contact Form"
+  }
+
+  ]
+  }
+  {% endschema %}

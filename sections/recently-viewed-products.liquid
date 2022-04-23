@@ -1,0 +1,223 @@
+{%- if section.settings.show_product_recently -%}
+{{ '//ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js' | script_tag }}
+<script type="text/javascript">
+  /**
+ * Cookie plugin
+ *
+ * Copyright (c) 2006 Klaus Hartl (stilbuero.de)
+ * Dual licensed under the MIT and GPL licenses:
+ * http://www.opensource.org/licenses/mit-license.php
+ * http://www.gnu.org/licenses/gpl.html
+ *
+ */
+
+  jQuery.cookie=function(b,j,m){if(typeof j!="undefined"){m=m||{};if(j===null){j="";m.expires=-1}var e="";if(m.expires&&(typeof m.expires=="number"||m.expires.toUTCString)){var f;if(typeof m.expires=="number"){f=new Date();f.setTime(f.getTime()+(m.expires*24*60*60*1000))}else{f=m.expires}e="; expires="+f.toUTCString()}var l=m.path?"; path="+(m.path):"";var g=m.domain?"; domain="+(m.domain):"";var a=m.secure?"; secure":"";document.cookie=[b,"=",encodeURIComponent(j),e,l,g,a].join("")}else{var d=null;if(document.cookie&&document.cookie!=""){var k=document.cookie.split(";");for(var h=0;h<k.length;h++){var c=jQuery.trim(k[h]);if(c.substring(0,b.length+1)==(b+"=")){d=decodeURIComponent(c.substring(b.length+1));break}}}return d}};
+  window.money_format = "{{shop.money_format}}";
+  
+  
+</script>
+<section class="recently-viewed-products" data-section-id="recently-viewed-products" data-section-type="recently-viewed-products" >
+  <div class="container">
+  <div class="dt-sc-hr-invisible-medium"></div>
+  {% if section.settings.title != '' %} 
+  <div class="section-header section-header--small recently-heading">
+    <div class="title">    
+      <h3 class="section-header__title {{ section.settings.heading_position}}"> {{ section.settings.title  }}</h3>      
+    </div>
+  </div>
+  {% endif %}
+    <div class="dt-sc-column four-column dT_VProdWrapper" id="recently-viewed-products-grid">
+    </div>
+  </div>
+</section>
+
+
+{% raw %}
+<script id="recently-viewed-product-grid-template"  type="text/x-jquery-tmpl">
+{% endraw %}
+<div class="products grid__item{% raw %}">
+  <div id="product-${id}" class="product-container inner product-item{{if !available}} sold-out {{/if}}{{if compare_at_price_min > price_min}} on-sale {{/if}}">
+    <div class="inner-top products">
+      <div class="product-top">
+        <div class="product-image">
+          <a href="${url}" class="product-grid-image">
+            <img src="${Shopify.Products.resizeImage(featured_image, "master")}" alt="${featured_image.alt}"/>
+
+  </a>
+  </div>
+
+        {{if compare_at_price_min > price_min || !available}}
+        <div class="badge badge--sale">
+          {{if compare_at_price_min > price_min}} 
+            <span class="badge__text"> {% endraw %}{{ 'products.product.sale' | t }}{% raw %}</span>
+          {{/if}}
+          {{if !available}}
+            <span class="badge__text"> {% endraw %} {{ 'products.product.sold_out' | t }}{% raw %}</span>
+          {{/if}}
+  </div>
+        {{/if}}
+  </div>
+
+      <div class="product-bottom product-detail {% endraw %}{{ settings.item_aignment}}{% raw %}">
+        {% endraw %}        
+        {% raw %}
+          <a class="product-title grid-link__title" href="${url}">${title} </a>
+        {% endraw %}        
+        {% raw %}
+
+
+
+        <div class="price-box grid-link__meta">   
+        {{if compare_at_price_min > price_min}} 
+          <p class="sale">
+            <span class="special-price grid-link__org_price">{{if price_varies}}{% endraw %}{% raw %}{{/if}}{{html Shopify.formatMoney(price_min,  window.money_format)}}</span>
+                        <del class="old-price grid-link__sale_price"> {{html Shopify.formatMoney(compare_at_price_min, window.money_format)}}</del>
+
+
+  </p>
+        {{else}}
+          <p class="regular-product">
+            <span class="special-price grid-link__org_price">{{if price_varies}}{% endraw %}{% raw %}{{/if}}{{html Shopify.formatMoney(price_min,  window.money_format)}}</span>
+  </p>
+        {{/if}}
+  </div>
+        <div class="action">
+          <form action="/cart/add" method="post" class="variants" id="product-actions-${id}" enctype="multipart/form-data" style="padding:0px;">    
+            {{if !available}} 
+            <input class="btn add-to-cart-btn" type="submit" {% endraw %} value="{{ 'products.product.unavailable' | t }}{% raw %}" disabled="disabled"/>
+            {{else variants.length > 1 }}
+            <input class="btn" type="button" onclick="window.location.href='${url}'" {% endraw %} value="{{ 'products.product.select_options' | t }}{% raw %}"/>
+            {{else}}
+            <input type="hidden" name="id" value="${variants[0].id}" />      
+            <input class="btn add-to-cart-btn" type="submit" {% endraw %} value="{{ 'products.product.add_to_cart' | t }}{% raw %}"/>
+            {{/if}}
+  </form>
+  </div>    
+  </div>       
+  </div>
+  </div>
+  </div>
+</script>
+{% endraw %}
+
+<script>
+
+//   var sectionId = "recently-viewed-products";
+
+  Shopify.Products=function(){var e={howManyToShow:3,howManyToStoreInMemory:10,wrapperId:"recently-viewed-products",templateId:"recently-viewed-product-template",onComplete:null};var t=[];var n=null;var r=null;var i=0;var s={configuration:{expires:90,path:"/",domain:window.location.hostname},name:"shopify_recently_viewed",write:function(e){jQuery.cookie(this.name,e.join(" "),this.configuration)},read:function(){var e=[];var t=jQuery.cookie(this.name);if(t!==null&&t!=undefined){e=t.split(" ")}return e},destroy:function(){jQuery.cookie(this.name,null,this.configuration)},remove:function(e){var t=this.read();var n=jQuery.inArray(e,t);if(n!==-1){t.splice(n,1);this.write(t)}}};var o=function(){n.show();if(e.onComplete){try{e.onComplete()}catch(t){}}};var u=function(){if(t.length&&i<e.howManyToShow){jQuery.ajax({dataType:"json",url:"/products/"+t[0]+".js",cache:false,success:function(e){r.tmpl(e).appendTo(n);t.shift();i++;u()},error:function(){s.remove(t[0]);t.shift();u()}})}else{o()}};return{resizeImage:function(e,t){if(t==null){return e}if(t=="master"){return e.replace(/http(s)?:/,"")}var n=e.match(/\.(jpg|jpeg|gif|png|bmp|bitmap|tiff|tif)(\?v=\d+)?/i);if(n!=null&&n!=undefined){var r=e.split(n[0]);var i=n[0];return(r[0]+"_"+t+i).replace(/http(s)?:/,"")}else{return null}},showRecentlyViewed:function(i){var i=i||{};jQuery.extend(e,i);t=s.read();r=jQuery("#"+e.templateId);n=jQuery("#"+e.wrapperId);e.howManyToShow=Math.min(t.length,e.howManyToShow);if(e.howManyToShow&&r.length&&n.length){u()}},getConfig:function(){return e},clearList:function(){s.destroy()},recordRecentlyViewed:function(t){var t=t||{};jQuery.extend(e,t);var n=s.read();if(window.location.pathname.indexOf("/products/")!==-1){var r=window.location.pathname.match(/\/products\/([a-z0-9\-]+)/)[1];var i=jQuery.inArray(r,n);if(i===-1){n.unshift(r);n=n.splice(0,e.howManyToStoreInMemory)}else{n.splice(i,1);n.unshift(r)}s.write(n)}}}}()
+
+  var sectionId = "recently-viewed-products";
+
+  Shopify.Products.showRecentlyViewed({ 
+    howManyToShow: {{ section.settings.items_to_show }}, 
+  wrapperId: 'recently-viewed-products-grid', 
+  templateId: 'recently-viewed-product-grid-template',
+  onComplete: function() {
+  var Count = jQuery(".products.grid__item").length;
+  if( Count > 0 )
+    {     jQuery(".recently-viewed-products").show();   }
+  else   {  	 jQuery(".recently-viewed-products").hide();  }
+
+  }
+
+                                         
+});
+  
+  
+  
+  window.addEventListener('load', (event) => {
+    var Count = jQuery(".products.grid__item").length;
+    if( Count > 0 )
+    {  
+      jQuery(".recently-heading").show()
+
+    }
+    else
+    {
+
+      jQuery(".recently-heading").remove()
+    }
+  });
+
+  
+
+ 
+</script>
+{% endif %}
+
+{% schema %}
+{
+"name": "Recently viewed prducts",
+"settings": [
+{
+"type": "checkbox",
+"id": "show_product_recently",
+"label": "Enable recently viewed product ",
+"default": false
+},
+{
+"id": "title",
+"type": "text",
+"label": "Section title",
+"default": "Recently viewed products"
+},
+{
+"type": "select",
+"id": "heading_position",
+"label": "Heading Position",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "Right"
+}
+]
+},
+{
+"type": "select",
+"id": "items_to_show",
+"label": "Item per row",
+"default": "4",
+"options": [
+{
+"value": "1",
+"label": "1"
+},
+{
+"value": "2",
+"label": "2"
+},
+{
+"value": "3",
+"label": "3"
+},
+{
+"value": "4",
+"label": "4"
+},
+{
+"value": "5",
+"label": "5"
+},
+{
+"value": "6",
+"label": "6"
+}
+]
+}
+]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

@@ -1,0 +1,18 @@
+{%- capture unit_price_separator -%}
+  <span aria-hidden="true">/</span>
+{%- endcapture -%}
+
+{%- capture unit_price_base_unit -%}
+  <span data-unit-price-base-unit>
+    {%- if variant.unit_price_measurement -%}
+      {%- if variant.unit_price_measurement.reference_value != 1 -%}
+        {{- variant.unit_price_measurement.reference_value -}}
+      {%- endif -%}
+      {{ variant.unit_price_measurement.reference_unit }}
+    {%- endif -%}
+  </span>
+{%- endcapture -%}
+
+{%- if variant.unit_price_measurement -%}
+  {{ variant.unit_price | money }}{{- unit_price_separator -}}{{- unit_price_base_unit -}}
+{%- endif -%}

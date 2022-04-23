@@ -1,0 +1,1003 @@
+{% assign full = section.settings.full %}
+{% assign padding = section.settings.padding | split: ',' %}
+{% assign padding_top = padding[0] %}
+{% assign padding_bottom = padding[1] %} 
+{% assign margin = section.settings.top_space %}
+
+{% if section.settings.social_style == 'inline' %}
+{% assign social_icon_style = 'dt-sc-list-inline' %}
+
+{% elsif section.settings.social_style == 'with_brand_name' %}
+{% assign social_icon_style = 'dt-sc-icon-brand' %}
+{% endif %}
+
+<footer class="site-footer" data-section-id="{{ section.id }}" data-section-type="footer-section" style="margin-top:{{margin}}px;{% if section.settings.footer_bg_img %} background-image:url('{{ section.settings.image_1 | img_url: 'master' }}');background-size:cover;background-repeat:no-repeat;{% endif %}">
+
+  {% if section.settings.newsletter_placement == 'footer_top' %} 
+  <div class="{% render 'container-settings' %}"> 
+    <div class="row">
+      <div class="full-width-newsletter" style="padding-top:40px;">
+        {% for block in section.blocks %}
+        {% assign footer_column_alignment = block.settings.column_alignment %}
+        {% if block.type == 'newsletter' %}
+        {% include 'footer-newsletter', block: block, footer_column_alignment: footer_column_alignment, social_styleClass: social_icon_style %}
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="site-footer__top" style="padding-top:{{padding_top}}px; padding-bottom:{{padding_bottom}}px;">
+    <div class="{% render 'container-settings' %}"> 
+      <div class="row">
+        <div class="dt-sc-flex-space-between">
+          {% if section.settings.footer_menu_style == 'vertical' %}
+          {% assign footer_menu_style = 'footer_menu dt-sc-list' %}
+          {% else %}
+          {% assign footer_menu_style = 'footer_menu dt-sc-list-inline' %}
+          {% endif %}
+
+          {% assign row_width = 0 %}
+          {% for block in section.blocks %}
+          {% assign footer_column_alignment = block.settings.column_alignment %}
+          {% assign row_width = row_width | plus: block.settings.container_width %}
+
+
+          {% if row_width > 100 %}
+          <div class="footer__clear"></div>
+          {% assign row_width = row_width | minus: 100 %}
+          {% endif %}
+
+          {% case block.type %}
+          {% when 'logo' %}
+          <div {{ block.shopify_attributes }} class=" footer__item--{{ block.id }} footer-logo">
+            {% include 'footer-logo', block: block, footer_column_alignment: footer_column_alignment, social_styleClass: social_icon_style,  first_instance: true %}
+          </div>
+
+          {% when 'social' %}
+          {% if section.settings.social_placement == 'default' %}
+          <div {{ block.shopify_attributes }} class=" footer__item--{{ block.id }} footer-social">
+            {% include 'social-links', block: block, footer_column_alignment: footer_column_alignment, social_styleClass: social_icon_style %}
+          </div>
+          {% endif %}
+          {% when 'custom' %}
+          <div {{ block.shopify_attributes }} class=" footer__item--{{ block.id }} footer-custom-text">
+            {% include 'footer-custom-text', block: block, footer_column_alignment: footer_column_alignment, social_styleClass: social_icon_style %}
+          </div>
+          {% when 'newsletter' %}
+          {% if section.settings.newsletter_placement == 'default' %}
+          <div {{ block.shopify_attributes }} class=" footer__item--{{ block.id }} footer-newsletter">
+            {% include 'footer-newsletter', block: block, footer_column_alignment: footer_column_alignment, social_styleClass: social_icon_style %}
+          </div>
+          {% endif %}
+          {% when 'menu' %}
+          <div {{ block.shopify_attributes }} class=" footer__item--{{ block.id }} footer-links">
+            {% include 'footer-menu', block: block, footer_column_alignment: footer_column_alignment, footer_menu_style: footer_menu_style %}
+          </div>
+          {% when 'address' %}
+          <div {{ block.shopify_attributes }} class=" footer__item--{{ block.id }} footer-contact-info">
+            {% include 'footer-address', block: block, footer_column_alignment: footer_column_alignment, social_styleClass: social_icon_style %}
+          </div>
+          {% when 'html' %}
+          <div {{ block.shopify_attributes }} class=" footer__item--{{ block.id }} footer-html">
+            {% include 'footer-html', block: block, footer_column_alignment: footer_column_alignment %}
+          </div>
+          {% endcase %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if section.settings.newsletter_placement == 'footer_bottom' %} 
+  <div class="{% render 'container-settings' %}"> 
+    <div class="row">
+      <div class="full-width-newsletter text-center" style="padding-bottom:40px;">
+        {% for block in section.blocks %}
+        {% assign footer_column_alignment = block.settings.column_alignment %}
+        {% if block.type == 'newsletter' %}
+        {% include 'footer-newsletter', block: block, footer_column_alignment: footer_column_alignment, social_styleClass: social_icon_style %}
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if section.settings.show_copyright or  section.settings.enable_inline_footer_menu or section.settings.show_payment_icons %}
+  <div class="site-footer__bottom">
+    <div class="{% render 'container-settings' %}"> 
+      <div class="row">
+        <div class="dt-sc-flex-space-between">
+          {% if section.settings.show_copyright %}
+          <div class="footer__copyright grid__item wide--one-third post-large--one-third large--one-third medium--one-whole">
+            <p>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}
+              {% if section.settings.copyright_text != blank %}
+              {% if section.settings.copyright_link != blank %} <a  href="{{ section.settings.copyright_link }}" target="_blank"> {% endif %}
+              {{ section.settings.copyright_text }} 
+              {% if section.settings.copyright_link != blank %}</a>{% endif %}
+              {% endif %}
+            </p>
+          </div>
+          {% endif %}
+
+
+          {% if section.settings.enable_inline_footer_menu %}
+          {% if linklists[section.settings.footer].links.size > 0 %}
+          <ul class="footer_menu dt-sc-list-inline">
+            {% for link in linklists[section.settings.footer].links %}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+          {% endif %}
+
+          {% if section.settings.social_placement == 'footer_bottom' and section.settings.show_social %}
+          {% include 'social-links', social_styleClass: 'dt-sc-list-inline footer-social-icons' %}
+          {% endif %}
+
+          {% if section.settings.show_payment_icons %}
+          {% unless shop.enabled_payment_types == empty %}
+          <div class="footer__payment-icons grid__item wide--one-third post-large--one-third large--one-third medium--one-whole">
+            <ul class="dt-sc-list-inline payment-icons">
+              {% for type in shop.enabled_payment_types %}
+              <li class="icon--payment">
+                {{ type | payment_type_svg_tag }}
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endunless %}
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endif %}
+</footer>
+
+<style>
+
+  .site-footer .footer__title  { margin:0; color:{{ section.settings.footer_heading_clr }}; }
+  .site-footer:before{ content:''; position: absolute; left: 0; right: 0; top: 0; bottom: 0;  background-color:{{ section.settings.footer_bg_clr }}; opacity:{{ section.settings.color_opacity }}; }
+  .site-footer, .site-footer p { color:{{ section.settings.footer_txt_clr }}; }
+  .site-footer li a { color:{{ section.settings.footer_link_clr }}; }
+  .site-footer li a:hover { color:{{ section.settings.footer_link_hover_clr }}; }
+
+  /**************/
+  .site-footer{ position:relative; }
+  .site-footer > *{ z-index: 1; position: relative;}
+  .site-footer .footer__title:empty{ display:none;}
+  footer { clear:both; }
+  footer ul, footer p { padding: 0; margin: 0; clear:both; }
+  footer svg{ height: 20px; width: 30px; }
+  footer div[class*="text-"] > *:not(.dt-sc-list-inline){ margin-bottom:15px; display: block; }
+  footer div[class*="text-"] > *:last-child{ margin-bottom:0; }
+
+  footer .footer-logo .dt-sc-btn{ display: inline-block !important; }
+
+
+
+  footer .footer-social-icons svg{width: 20px; height: 20px; padding: 2px; border-radius:0; }
+  footer .footer-social-icons.dt-sc-icon-brand svg{ border: none; width: 25px; height: 16px; padding: unset; border-radius: unset; }
+  footer .text-start li{margin-bottom:5px;text-transform:uppercase;}
+
+  footer .text-start .contact-info li{ position: relative; padding-left: 30px; }
+  footer .text-start .contact-info li:last-child{ margin:0;}
+  footer .text-start .contact-info i{ padding-right: 10px; position: absolute; line-height: 1.5em;left: 5px;}
+  footer .text-end .contact-info li{position: relative;padding-right: 30px;}
+  footer .text-end .contact-info i{padding-left: 10px;position: absolute;line-height: 1.5em;right: 5px;}
+  footer .text-center .contact-info i{position: relative;right: 10px;}
+  footer .footer__social{display: inline-flex;}
+  footer .site-footer__bottom p, footer .site-footer__bottom a {color:{{ section.settings.footer_color}};}
+  footer .site-footer__bottom a:hover{color:{{ section.settings.footer_link_hover}};}
+
+  footer .site-footer__bottom{display: flex;flex-wrap: wrap;background-color:{{ section.settings.footer__bottom_bg}}; line-height: 2em}
+  footer .site-footer__bottom:before{content:"";width:100%;height:1px;top:0;background-color:{{ section.settings.color_borders }};}
+  footer div[class*="dt-sc-flex"]{align-items: self-start;}
+  footer .site-footer__bottom div[class*="dt-sc-flex"] div:only-child{margin: auto;text-align: center;}
+  footer .site-footer__bottom div[class*="dt-sc-flex"]{ padding:15px 0;}
+  footer .site-footer__bottom .payment-icons > * + *{ margin-left:2px}
+
+  footer .footer__newsletter { margin: 10px 0 15px; float: left; width: 100%;} 
+  footer div[class*="footer__item--footer"] .footer__newsletter > *{margin-bottom:15px; width:100%;}
+
+  footer .text-end .footer__newsletter > *{ margin-left: auto;}
+  footer .text-center .footer__newsletter > *{ margin-left: auto; margin-right: auto; }
+  footer .footer__newsletter input, footer .footer__newsletter input:focus{ border:none; padding: var(--DTPadding_Btn); background-color:var(--DTBodyBGColor); }
+
+  footer .text-start .dt-sc-social-icons li{ margin-right: 15px;}
+  footer .text-end .dt-sc-social-icons li{ margin-left: 15px; line-height: initial;}
+  footer .text-center .dt-sc-social-icons li{ margin:0 5px;}
+
+  footer .copyright { border-top: 1px solid var(--DTColor_Border); }
+
+  footer .footer__copyright a{color:{{ section.settings.copyright_link_color}}; }
+  footer .footer__copyright a:hover{ color:{{ section.settings.copyright_link_color_hover}};}
+
+  .icon__fallback-text { font-size: 0;}
+  .dt-sc-icon-brand .icon__fallback-text {font-size:var(--DTFontSizeBase); padding-left: 5px;}
+  label.for-option-color { text-indent: -99999px; width: 30px; height: 30px; border-radius: 50%; }
+
+  .full-width-newsletter div[class*="dt-sc-flex"]>div { width: 100%; max-width: 600px; margin: auto; }
+  .full-width-newsletter div[class*="dt-sc-flex"] h4{ text-align: center; margin-top: 0; }
+  .full-width-newsletter .footer__newsletter{ display: flex; align-items: center; /*gap: calc(var(--DTGutter_Width) / 2);*/ }
+  .full-width-newsletter .footer__newsletter input{ width:calc(100% - 150px); }
+  .full-width-newsletter .footer__newsletter button{ margin:0; width:150px; }
+
+/*   .site-footer .footer_menu.dt-sc-list li a:before{ content: "\f105"; font-family: 'FontAwesome'; position:relative; padding-right: 10px; } */
+  .site-footer .footer_menu.dt-sc-list-inline li a:before{ content: "|"; position:relative; padding:0 10px;  color:{{ section.settings.footer_link_clr }}; }
+  .site-footer .dt-sc-list-inline li:first-child a:before{ display:none;padding-right: 0;}
+
+  .site-footer .site-footer__bottom .footer_menu.dt-sc-list-inline li a:before{ color:{{ section.settings.footer_color}};}
+  footer address:only-of-type{ margin:0; }
+
+  /***********************************
+  Responsive
+  ***********************************/
+
+  {% for block in section.blocks %}
+
+  @media only screen and (max-width: 575px) {
+    .footer__item--{{ block.id }} { width:100%;  margin-bottom:40px;}
+    footer div[class*="text-"] > *:not(.dt-sc-list-inline){ margin-bottom:10px;}
+  }
+
+  @media only screen and (min-width: 576px) {
+    .footer__item--{{ block.id }} { width:calc(50% - calc(var(--DTGutter_Width) / 2 )); margin-bottom:30px;}
+  }
+
+  @media only screen and (min-width: 1200px) {
+    .footer__item--{{ block.id }} { width:calc({{ block.settings.container_width }}% - calc(var(--DTGutter_Width) / 2 )); margin-bottom:30px;}
+  }
+  {% if  block.type == 'newsletter' %}
+  
+  .footer__newsletter{position:relative;}
+  .footer__newsletter-btn{ background-color: {{ block.settings.newsletter_btn_bg }}; color: {{ block.settings.newsletter_btn_color }};position:absolute;
+    margin:0;padding:15px;right:0;bottom:0;}
+  .footer__newsletter-btn:hover{ background-color: {{ block.settings.newsletter_btn_hover_bg }}; color: {{ block.settings.newsletter_btn_hover_color }}; }
+
+  {% endif %}
+
+  {% if  block.type == 'logo' %}
+
+  .footer-logo .dt-sc-btn{ background-color: {{ block.settings.footer_btn_bg }}; color: {{ block.settings.footer_btn_color }}; }
+  .footer-logo .dt-sc-btn:hover{ background-color: {{ block.settings.footer_btn_hover_bg }}; color: {{ block.settings.footer_btn_hover_color }}; }
+
+  {% endif %}
+  {% endfor %} 
+
+
+
+  @media (max-width: 1540px) {
+  .footer__newsletter-btn{padding:15px;}
+  }
+
+  @media (max-width: 1199px) { }
+
+  @media (max-width: 767px) {
+
+    footer.site-footer { margin-top: 40px !important;}
+
+  }
+
+  @media (max-width:576px) {
+    footer .site-footer__bottom div[class*="dt-sc-flex"]{ justify-content: center; }
+    footer .site-footer__bottom div[class*="dt-sc-flex"] > *{ margin:0 15px;}
+
+    footer .footer__newsletter{ margin-top: 0; }
+  } 
+
+</style>
+
+{% schema %}
+{
+"name": "Footer",
+"max_blocks": 6,
+"settings": [
+{
+"type": "checkbox",
+"id": "full",
+"label": "Enable Full width"
+},
+{
+"type": "checkbox",
+"id": "spacing_both_ends",
+"label": "Enable Right & Left Spacing (Works only on Fullwidth)",
+"default": true
+},
+{
+"type": "text",
+"id": "padding",
+"label": "Style value (Padding)",
+"default": "0,0",
+"info": "Top(px),Bottom(px)"
+},
+{
+"type": "range",
+"id": "top_space",
+"label": "Top space",
+"default": 50,
+"min": 0,
+"max": 200,
+"step": 2,
+"unit": "px"
+},
+{
+"type": "color",
+"id": "footer_bg_clr",
+"label": "Footer Background color",
+"default": "#1a1a1a"
+},
+{
+"type": "range",
+"id": "color_opacity",
+"label": "Background Opacity",
+"default": 1,
+"min": 0,
+"max": 1,
+"step": 0.1,
+"unit": "%"
+},
+{
+"type": "checkbox",
+"id": "footer_bg_img",
+"label": "Background Image"
+},
+{
+"type": "image_picker",
+"id": "image_1",
+"label": "Image"
+},
+{
+"type": "checkbox",
+"id": "show_footer_title",
+"label": "Enable all title",
+"default": true
+},
+{
+"type": "color",
+"id": "footer_heading_clr",
+"label": "Heading",
+"default": "#ffffff"
+},
+{
+"type": "color",
+"id": "footer_txt_clr",
+"label": "Text",
+"default": "#ffffff"
+},
+{
+"type": "color",
+"id": "footer_link_clr",
+"label": "Link",
+"default": "#ffffff"
+},
+{
+"type": "color",
+"id": "footer_link_hover_clr",
+"label": "Link Hover Color",
+"default": "#206469"
+},
+{
+"type": "header",
+"content": "Footer bottom"
+},
+{
+"type": "color",
+"id": "footer__bottom_bg",
+"label": "Footer Bottom BG",
+"default": "#212121"
+},
+{
+"type": "color",
+"id": "footer_color",
+"label": "Footer Color",
+"default": "#ffffff"
+},
+{
+"type": "color",
+"id": "footer_link_hover",
+"label": "Footer Link Hover",
+"default": "#ffffff"
+},
+{
+"type": "color",
+"id": "color_borders",
+"label": "Footer Border Color",
+"default": "#545454"
+},
+{
+"type": "checkbox",
+"id": "show_payment_icons",
+"label": "Enable payment icons",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "show_copyright",
+"label": "Enable copyright",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "show_social",
+"label": "Enable social",
+"default": true
+},
+{
+"type": "select",
+"id": "social_placement",
+"label": "Social Icon Placement",
+"options": [
+{
+"value": "default",
+"label": "Column"
+},
+{
+"value": "with_logo",
+"label": "With logo"
+},
+{
+"value": "with_custom_text",
+"label": "With custom text"
+},
+{
+"value": "with_address",
+"label": "With address"
+},
+{
+"value": "with_newsletter",
+"label": "With newsletter"
+},
+{
+"value": "footer_bottom",
+"label": "Bottom"
+}
+]
+},
+{
+"type": "select",
+"id": "social_style",
+"label": "Social Icons style",
+"options": [
+{
+"value": "inline",
+"label": "Icon Only"
+},
+{
+"value": "with_brand_name",
+"label": "Brand Name"
+}
+]
+},
+{
+"type": "select",
+"id": "newsletter_placement",
+"label": "Newsletter placement",
+"default": "default",
+"options": [
+{
+"value": "default",
+"label": "Column"
+},
+{
+"value": "footer_top",
+"label": "Footer Top"
+},
+{
+"value": "footer_bottom",
+"label": "Footer Bottom"
+}
+]
+},
+{
+"type": "select",
+"id": "footer_menu_style",
+"label": "Menu style",
+"default": "vertical",
+"options": [
+{
+"value": "vertical",
+"label": "Vertical"
+},
+{
+"value": "Horizontal",
+"label": "Horizontal"
+}
+]
+},
+{
+"type": "checkbox",
+"id": "enable_inline_footer_menu",
+"label": "Enable Footer Bottom Menu ",
+"default": true
+},
+{
+"type": "link_list",
+"id": "footer",
+"label": "Choose a menu",
+"default": "footer",
+"info": "This menu won't show dropdown items"
+},
+{
+"type": "text",
+"id": "copyright_text",
+"label": "Additional copyright text"
+},
+{
+"type": "url",
+"id": "copyright_link",
+"label": "Copyright link"
+},
+{
+"type": "color",
+"id": "copyright_link_color",
+"label": "Link color",
+"default": "#ffffff"
+},
+{
+"type": "color",
+"id": "copyright_link_color_hover",
+"label": "Link hover",
+"default": "#ffffff"
+}
+],
+"blocks": [
+{
+"type": "logo",
+"name": "Logo",
+"limit": 1,
+"settings": [
+{
+"type": "text",
+"id": "title",
+"label": "Heading",
+"default": "About Us"
+},
+{
+"type": "textarea",
+"id": "text",
+"label": "Description",
+"default": "Write few lines about your shop"
+},
+{
+"type": "text",
+"id": "link_text",
+"label": "Link text",
+"default": "Know more"
+},
+{
+"type": "url",
+"id": "url",
+"label": "Link"
+},
+{
+"type": "color",
+"id": "footer_btn_color",
+"label": "Button Color",
+"default": "#206469"
+},
+{
+"type": "color",
+"id": "footer_btn_bg",
+"label": "Button BG",
+"default": "#206469"
+},
+{
+"type": "color",
+"id": "footer_btn_hover_color",
+"label": "Button Hover Color",
+"default": "#206469"
+},
+{
+"type": "color",
+"id": "footer_btn_hover_bg",
+"label": "Button Hover BG",
+"default": "#206469"
+},
+{
+"type": "image_picker",
+"id": "logo",
+"label": "Logo image"
+},
+{
+"type": "range",
+"id": "footer_logo_height",
+"label": "Logo height",
+"default": 50,
+"min": 20,
+"max": 200,
+"step": 2,
+"unit": "px"
+},
+{
+"type": "range",
+"id": "container_width",
+"label": "Column width",
+"default": 20,
+"min": 15,
+"max": 100,
+"step": 1,
+"unit": "%"
+},
+{
+"type": "select",
+"id": "column_alignment",
+"label": "Alignment",
+"default": "text-start",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "Right"
+}
+]
+}
+]
+},
+{
+"type": "menu",
+"name": "Menu",
+"settings": [
+{
+"type": "text",
+"id": "title",
+"label": "Heading",
+"default": "Footer menu"
+},
+{
+"type": "link_list",
+"id": "menu",
+"label": "Choose a menu",
+"default": "footer",
+"info": "This menu won't show dropdown items"
+},
+{
+"type": "range",
+"id": "container_width",
+"label": "Column width",
+"default": 20,
+"min": 15,
+"max": 100,
+"step": 1,
+"unit": "%"
+},
+{
+"type": "select",
+"id": "column_alignment",
+"label": "Alignment",
+"default": "text-start",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "Right"
+}
+]
+}
+]
+},
+{
+"type": "newsletter",
+"name": "Newsletter",
+"limit": 1,
+"settings": [
+{
+"type": "paragraph",
+"content": "Any customers who sign up will have an account created for them in Shopify. [View customers](/admin/customers)."
+},
+{
+"type": "text",
+"id": "title",
+"label": "Heading",
+"default": "Sign up and save"
+},
+{
+"type": "richtext",
+"id": "richtext",
+"label": "Text",
+"info": "Optional",
+"default": "<p>Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.</p>"
+},
+{
+"type": "color",
+"id": "newsletter_btn_color",
+"label": "Button Color",
+"default": "#206469"
+},
+{
+"type": "color",
+"id": "newsletter_btn_bg",
+"label": "Button BG",
+"default": "#206469"
+},
+{
+"type": "color",
+"id": "newsletter_btn_hover_color",
+"label": "Button Hover Color",
+"default": "#206469"
+},
+{
+"type": "color",
+"id": "newsletter_btn_hover_bg",
+"label": "Button Hover BG",
+"default": "#206469"
+},
+{
+"type": "range",
+"id": "container_width",
+"label": "Column width",
+"default": 20,
+"min": 15,
+"max": 100,
+"step": 1,
+"unit": "%"
+},
+{
+"type": "select",
+"id": "column_alignment",
+"label": "Alignment",
+"default": "text-start",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "Right"
+}
+]
+}
+]
+},
+{
+"type": "address",
+"name": "Address",
+"settings": [
+{
+"type": "text",
+"id": "title",
+"label": "Heading",
+"default": "Contact us"
+},
+{
+"type": "textarea",
+"id": "footer_address",
+"label": "Address"
+},
+{
+"type": "text",
+"id": "footer_contact_no",
+"label": "Phone"
+},
+{
+"type": "text",
+"id": "office_hours",
+"label": "Office hours"
+},
+{
+"type": "text",
+"id": "footer_contact_id",
+"label": "E-Mail"
+},
+{
+"type": "range",
+"id": "container_width",
+"label": "Column width",
+"default": 20,
+"min": 15,
+"max": 100,
+"step": 1,
+"unit": "%"
+},
+{
+"type": "select",
+"id": "column_alignment",
+"label": "Alignment",
+"default": "text-start",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "Right"
+}
+]
+}
+]
+},
+{
+"type": "social",
+"name": "Social icons",
+"limit": 1,
+"settings": [
+{
+"type": "text",
+"id": "title",
+"label": "Heading"
+},
+{
+"type": "range",
+"id": "container_width",
+"label": "Column width",
+"default": 20,
+"min": 15,
+"max": 100,
+"step": 1,
+"unit": "%"
+},
+{
+"type": "select",
+"id": "column_alignment",
+"label": "Alignment",
+"default": "text-start",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "Right"
+}
+]
+}
+]
+},
+{
+"type": "custom",
+"name": "Custom text",
+"settings": [
+{
+"type": "text",
+"id": "title",
+"label": "Heading",
+"default": "Custom text"
+},
+{
+"type": "richtext",
+"id": "text",
+"label": "Text",
+"default": "<p>Add your own custom text here.</p>"
+},
+{
+"type": "range",
+"id": "container_width",
+"label": "Column width",
+"default": 20,
+"min": 15,
+"max": 100,
+"step": 1,
+"unit": "%"
+},
+{
+"type": "select",
+"id": "column_alignment",
+"label": "Alignment",
+"default": "text-start",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "Right"
+}
+]
+}
+]
+},
+{
+"type": "html",
+"name": "Html",
+"settings": [
+{
+"type": "text",
+"id": "title",
+"label": "Heading",
+"default": "HTML"
+},
+{
+"type": "html",
+"id": "html",
+"label": "Html text or custom code",
+"default": "<p>Add your own custom script here.</p>"
+},
+{
+"type": "range",
+"id": "container_width",
+"label": "Column width",
+"default": 20,
+"min": 15,
+"max": 100,
+"step": 1,
+"unit": "%"
+},
+{
+"type": "select",
+"id": "column_alignment",
+"label": "Alignment",
+"default": "text-start",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "Right"
+}
+]
+}
+]
+}
+],
+"default": {
+"settings": {},
+"blocks": [
+{
+"type": "custom",
+"settings": {}
+},
+{
+"type": "menu",
+"settings": {}
+},
+{
+"type": "menu",
+"settings": {}
+},
+{
+"type": "newsletter",
+"settings": {}
+},
+{
+"type": "logo",
+"settings": {}
+}
+]
+}
+}
+{% endschema %}

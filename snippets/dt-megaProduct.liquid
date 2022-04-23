@@ -1,0 +1,108 @@
+{% if product == empty %}
+{%- assign section_onboarding = true -%}
+{% endif %}
+{% unless section_onboarding %}
+{%- assign product1 = all_products[block.settings.product1] -%}
+{%- assign product2 = all_products[block.settings.product2] -%}
+{%- assign product3 = all_products[block.settings.product3] -%}
+{%- assign product4 = all_products[block.settings.product4] -%}
+{% if product1 != blank %}
+<li class="dt-sc-menu-product">
+  <div class="dt-sc-menu-product__item">
+    <div class="dt-sc-menu-product_item-image">
+      <a href="{{ product1.url | within: collection }}">             
+        <img class="lazyload"
+             src="{{ 'loading.gif' | asset_url }}"
+             data-src="{{ product1.featured_image.src | img_url: 'master' }}"
+          data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+             data-aspectratio="{{ product1.featured_image.src.aspect_ratio }}"
+             data-sizes="auto"            
+             alt="{{ product1.title | escape }}">               
+        <noscript>
+          {{ product1.featured_image.src | img_url: 'master' | img_tag: product1.title, 'dt-sc-noscript-image' }}
+        </noscript>
+      </a>
+    </div>
+    <div class="dt-sc-menu-product_item-info">       
+      <a class="dt-sc-product__title" href="{{ product1.url | within: collection }}">{{ product1.title }}</a>
+      <span class="dt-sc-price">{{ product1.price | money }}</span>
+    </div>
+  </div>
+</li>
+{% endif %}
+{% if product2 != blank %}
+<li class="dt-sc-menu-product">
+  <div class="dt-sc-menu-product__item">
+    <div class="dt-sc-menu-product_item-image">
+      {%- assign product2 = all_products[block.settings.product2] -%}
+      <a href="{{ product2.url | within: collection }}">        
+        <img class="lazyload"
+             src="{{ 'loading.gif' | asset_url }}"
+            data-src="{{ product2.featured_image.src | img_url: 'master' }}"
+             data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+             data-aspectratio="{{ product2.featured_image.src.aspect_ratio }}"
+             data-sizes="auto"            
+             alt="{{ product2.title | escape }}">            
+        <noscript>
+          {{ product2.featured_image.src | img_url: '480x480', scale: 2 | img_tag: product2.title, 'dt-sc-noscript-image' }}
+        </noscript>
+      </a>
+    </div>
+    <div class="dt-sc-menu-product_item-info">       
+      <a class="dt-sc-product__title" href="{{ product2.url | within: collection }}">{{ product2.title }}</a>
+      <span class="dt-sc-price">{{ product2.price | money }}</span>
+    </div>
+  </div>
+</li>  
+{% endif %}
+{% if product3 != blank %}
+<li class="dt-sc-menu-product">
+  <div class="dt-sc-menu-product__item">
+    <div class="dt-sc-menu-product_item-image">
+      {%- assign product3 = all_products[block.settings.product3] -%}
+      <a href="{{ product3.url | within: collection }}">        
+        <img class="lazyload"
+             src="{{ 'loading.gif' | asset_url }}"
+             data-src="{{ product3.featured_image.src | img_url: 'master' }}"
+             data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+             data-aspectratio="{{ product3.featured_image.src.aspect_ratio }}"
+             data-sizes="auto"            
+             alt="{{ product3.title | escape }}">            
+        <noscript>
+          {{ product3.featured_image.src | img_url: '480x480', scale: 2 | img_tag: product3.title, 'dt-sc-noscript-image' }}
+        </noscript>
+      </a>
+    </div>
+    <div class="dt-sc-menu-product_item-info">       
+      <a class="dt-sc-product__title" href="{{ product3.url | within: collection }}">{{ product3.title }}</a>
+      <span class="dt-sc-price">{{ product3.price | money }}</span>
+    </div>
+  </div>
+</li>
+{% endif %}
+{% if product4 != blank %}
+<li class="dt-sc-menu-product">
+  <div class="dt-sc-menu-product__item">
+    <div class="dt-sc-menu-product_item-image">
+      {%- assign product4 = all_products[block.settings.product4] -%}
+      <a href="{{ product4.url | within: collection }}">       
+        <img class="lazyload"
+             src="{{ 'loading.gif' | asset_url }}"
+             data-src="{{ product4.featured_image.src | img_url: 'master' }}"
+             data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+             data-aspectratio="{{ product4.featured_image.src.aspect_ratio }}"
+             data-sizes="auto"            
+             alt="{{ product4.title | escape }}">            
+        <noscript>
+          {{ product4.featured_image.src | img_url: '480x480', scale: 2 | img_tag: product4.title, 'dt-sc-noscript-image' }}
+        </noscript>
+      </a>
+    </div>
+    <div class="dt-sc-menu-product_item-info">       
+      <a class="dt-sc-product__title" href="{{ product4.url | within: collection }}">{{ product4.title }}</a>
+      <span class="dt-sc-price">{{ product4.price | money }}</span>
+    </div>
+  </div>
+</li>  
+{% endif %}
+{% endunless %}  

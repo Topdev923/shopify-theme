@@ -1,0 +1,28 @@
+<div class="sortby">
+  <label for="SortBy">{{ 'collections.sorting.title' | t}} </label>
+  <select name="SortBy" id="SortBy" class="dT_SortBy">
+    {% for option in collection.sort_options %}
+    <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected{% endif %}>{{ option.name }}</option>
+    {% endfor %}
+  </select>
+</div>
+
+<script>
+  // Save existing sort parameters
+//   Shopify.queryParams = {};
+//   if(location.search.length) {
+//     for(var aKeyValue, i = 0, aCouples = location.search.substr(1).split('&'); i < aCouples.length; i++) {
+//       aKeyValue = aCouples[i].split('=');
+//       if (aKeyValue.length > 1) {
+//         Shopify.queryParams[decodeURIComponent(aKeyValue[0])] = decodeURIComponent(aKeyValue[1]);
+//       }
+//     }
+//   }
+
+  // Add existing sort parameters to current URL
+//   document.querySelector('#SortBy').addEventListener('change', function(e) {
+//     var value = e.currentTarget.value;
+//     Shopify.queryParams.sort_by = value;
+//     location.search = new URLSearchParams(Shopify.queryParams).toString();
+//   });
+</script>

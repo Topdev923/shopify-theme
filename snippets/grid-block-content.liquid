@@ -1,0 +1,43 @@
+<div class="dt-sc-grid-banner {{ grid_style}} {{list_style}} {{overlay_style}} {% if block.settings.reverse_column %}dt-sc-reverse-columns{% endif %} {{block.type}}-{{block.id}}">      
+  {% if block.settings.show_image %}
+  <div class="dt-sc-grid-banner-image {{ overlay_class}}">
+    {% if block.settings.block_image != blank %}
+    {%- assign block_img_url = block.settings.block_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+    <img class="lazyload"
+         src="{{ 'loading.gif' | asset_url }}"
+         data-src="{{ block_img_url }}"
+         data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+         data-aspectratio="{{ block.settings.block_image.aspect_ratio }}"
+         data-sizes="auto"            
+         alt="{{ block.settings.block_title }}">            
+    <noscript>
+      {{ block.settings.block_image | img_url: '480x480', scale: 2 | img_tag: block.settings.block_image.alt, 'dt-sc-noscript-image' }}
+    </noscript>
+    {% else %}
+    {{ 'image' | placeholder_svg_tag: 'placeholder_svg' }}
+    {% endif%}  
+  </div>
+  {% endif%}         
+  {% if block.settings.block_title != blank or  block.settings.block_sub_title != blank or  block.settings.block_description != blank or  block.settings.block_button_link != blank %}
+  <div class="dt-sc-grid-banner-content 
+              {% unless section.settings.block_banner_style == 'grid' %} {{ block.settings.content_position }}{% endunless%}
+              {% if section.settings.block_banner_style == 'grid' %}{{ block.settings.block_text_align}}{% endif %}">
+    {% unless section.settings.block_banner_style == 'grid' %}
+    <div class="dt-sc-grid-banner-inner {{ block.settings.block_text_align}}">
+      {% endunless %}
+      {% if block.settings.block_title != blank %}
+      <h4 class="dt-sc-main-title">{{block.settings.block_title}}</h4>
+      {% endif %}
+      {% if block.settings.block_sub_title != blank %}
+      <h6 class="dt-sc-sub-title">{{block.settings.block_sub_title}}</h6>
+      {% endif %}
+      {% if block.settings.block_description != blank %}
+      <p class="dt-sc-description">{{block.settings.block_description}}</p>
+      {% endif %}
+      {% if block.settings.block_button_link != blank %}
+      <a href="{{block.settings.block_button_link}}" class="dt-sc-btn">{{block.settings.block_button_text}}</a>
+      {% endif %}
+      {% unless section.settings.block_banner_style == 'grid' %}</div>{% endunless %}
+  </div>
+  {% endif%}     
+</div>

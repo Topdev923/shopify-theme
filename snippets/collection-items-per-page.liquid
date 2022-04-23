@@ -1,0 +1,25 @@
+<div class="collection-items-per-page">
+<label for="paginateBy">{{ 'collections.items.paginate_by' | t }}</label>
+<select name="paginateBy" id="paginateBy">
+  {%- assign paginationAmounts = '9,12,16,20,24,30,48' | split:',' -%}
+  {%- for i in paginationAmounts -%}
+  {% assign v = i | append:'' %}
+  <option value="{{ v }}"{% if cart.attributes.pagination != blank and cart.attributes.pagination %}{% if cart.attributes.pagination == v %} selected{% endif %}{% else %}{% if i == 40 %} selected{% endif %}{% endif %}>{{ i }}</option>
+  {% endfor %}
+</select>
+</div>
+
+<script type="text/javascript">
+$('#paginateBy').on('change', function(){
+  var val = $(this).val();
+  $.ajax({
+    type: "POST",
+    url: '/cart.js',
+    data: {"attributes[pagination]": val}, 
+    success: function(d){
+      window.location.reload(); 
+    },
+    dataType: 'json'
+  });
+});
+</script>

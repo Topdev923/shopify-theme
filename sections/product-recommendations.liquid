@@ -1,0 +1,61 @@
+{%- if section.settings.show_product_recommendations -%}
+<div class="product-recommendations " data-product-id="{{ product.id }}" data-limit="4">
+ <div class="container">
+  {%- if recommendations.products_count > 0 -%}
+  <h3 class="section-header__title {{ section.settings.heading_position}}">   {{ section.settings.heading}}</h3>
+  <div class="dT_VProdRecommendations">
+    <ul class="dt-sc-column four-column">
+      {%- for product in recommendations.products -%}
+      {% include 'product-grid-item',  product: product, imageSize: 'large' %}
+      {%- endfor -%}
+    </ul>
+  </div>
+  {%- endif -%}
+  </div>
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+"name": "Product recommendations",
+"settings": [
+{
+"type": "checkbox",
+"id": "show_product_recommendations",
+"label": "Enable product recommendations",
+"default": false
+},
+{
+"type": "text",
+"id": "heading",
+"label": "Heading",
+"default": "Recommended products"
+},
+{
+"type": "select",
+"id": "heading_position",
+"label": "Heading Position",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "Right"
+}
+]
+}
+]
+}
+{% endschema %}
+
+
+
+{% javascript %}
+{% endjavascript %}
+

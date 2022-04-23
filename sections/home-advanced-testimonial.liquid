@@ -1,0 +1,783 @@
+{% if section.blocks.size > 0 %}
+{% if section.settings.enable_overlay %}
+{% assign section_overlay = 'dt-sc-overlay' %}
+{% endif %}
+
+{% case section.settings.background_style %}
+{% when 'default' %}
+{% when 'parallax' %}
+{%- assign background_style = 'data-speed="2"' %}
+{% when 'fixed' %}
+{%- assign background_style = 'data-speed="1"' %}
+{% endcase %} 
+
+{% if section.settings.show_background_image %}
+{% assign lazyScript = "lazyload" %}
+{% endif %}
+<div class="dt-sc-section-wrapper {{lazyScript}}  {{section_overlay}} {% if section.settings.background_style == 'parallax' %} parallax-initiated{% endif %}" style="{% render 'bg-color-image-padding' %}" data-style="parallax" {{background_style}} {% include 'bg_image' %}>  
+  <div class="{% render 'container-settings' %}"> 
+    <div class="row {{ section.settings.custom_class_name }}">
+      {% render 'section-heading', class: section.id %}         
+      <div class="advanced-testimonials-section">
+        <div class="dt-sc-testimonial-section advanced-testimonial-content">
+          {% for block in section.blocks %}  
+          <div class="dt-sc-testimonial style_1">
+            <div class="dt-sc-testimonial-content {{section.settings.text_position}}">
+              <div class="dt-sc-testimonial-content-inner">
+                <div class="dt-sc-testimonial-quote">{% if block.settings.quote != blank %}{{ block.settings.quote }}{% endif %}</div>
+                <div class="dt-sc-author-rating">
+                  {% case block.settings.star %}
+                  {% when '0' %}
+                  <div class="no-star-rating"></div>
+                  {% when '0.5' %}
+                  <div class="half-star-rating"></div>
+                  {% when '1' %}
+                  <div class="one-star-rating"></div>
+                  {% when '1.5' %}
+                  <div class="one-half-star-rating"></div>
+                  {% when '2' %}
+                  <div class="two-star-rating"></div>
+                  {% when '2.5' %}
+                  <div class="two-half-star-rating"></div>
+                  {% when '3' %}
+                  <div class="three-star-rating"></div>
+                  {% when '3.5' %}
+                  <div class="three-half-star-rating"></div>
+                  {% when '4' %}
+                  <div class="four-star-rating"></div>
+                  {% when '4.5' %}
+                  <div class="four-half-star-rating"></div>
+                  {% when '5' %}
+                  <div class="five-star-rating"></div>
+                  {% endcase %}
+                </div>
+                {% if block.settings.author != blank  or  block.settings.job != blank %}
+                <div class="dt-sc-author-info {{ section.settings.author_info_style }}">
+                  <cite><i>{{block.settings.author}}</i><span>{{block.settings.job}}</span></cite>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% endfor %}       
+        </div>         
+        <div class="advanced-testimonial-gallery">          
+          {% for block in section.blocks %}              
+          <div class="dt-sc-testimonial-image">                      
+            <img class="lazyload"
+                 data-src="{{ block.settings.icon | img_url: '200x200' }}"                                          
+                 data-aspectratio="{{ block.settings.icon.aspect_ratio }}"
+                 data-sizes="auto"            
+                 alt="{{ block.settings.title }}">            
+            <noscript>
+              {{ block.settings.icon_image | img_url: '480x480', scale: 2 | img_tag: block.settings.icon.alt, 'dt-sc-noscript-image' }}
+            </noscript>
+          </div>             
+          {% endfor %}          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+<style>
+
+  #shopify-section-{{section.id}}.home-advanced-testimonial .dt-sc-heading .dt-sc-main-heading { color: var(--DTColor_Heading); color:{{ section.settings.section_heading_color }}; } 
+  #shopify-section-{{section.id}}.home-advanced-testimonial .dt-sc-heading .dt-sc-sub-heading { color: var(--DTColor_Heading); color:{{ section.settings.section_sub_heading_color }}; } 
+  #shopify-section-{{section.id}}.home-advanced-testimonial .dt-sc-heading .dt-sc-heading-description { color: var(--DTColor_Body); color:{{ section.settings.section_description_color }}; } 
+  #shopify-section-{{section.id}}.home-advanced-testimonial .dt-sc-heading .dt-sc-btn { 
+    background: var(--DT_Button_BG_Color); background:{{ section.settings.section_button_bg_color }}; 
+      color: var(--DT_Button_Text_Color); color:{{ section.settings.section_button_text_color }}; }
+  #shopify-section-{{section.id}}.home-advanced-testimonial .dt-sc-heading .dt-sc-btn:hover { 
+    background: var(--DT_Button_BG_Hover_Color);  background:{{ section.settings.section_button_hover_bg_color }}; 
+      color: var(--DT_Button_Text_Hover_Color); color:{{ section.settings.section_button_hover_text_color }}; }
+
+  #shopify-section-{{section.id}}.home-advanced-testimonial .dt-sc-overlay:before { 
+    color: var(--DTTertiaryColor); 
+      color: {{ section.settings.background_color }};    
+      background: currentcolor; 
+      opacity: {{ section.settings.overlay_transparency }}; }
+
+  #shopify-section-{{section.id}}.home-advanced-testimonial .dt-sc-testimonial-image.slick-slide  {opacity:0.3; transform: scale(.85); }
+  #shopify-section-{{section.id}}.home-advanced-testimonial .dt-sc-testimonial-image.slick-slide.slick-current.slick-active.slick-center {opacity:1;
+   transform: scale(1); }
+
+
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial-image img { margin: auto; width: 150px; height: auto;
+  border-radius: var(--DTRadius); border-radius: {{section.settings.border_radius }};   
+  }
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content { 
+    width: {{section.settings.testimonial_content_width}}%; margin: auto;
+  padding: 30px; 
+    background: var(--DTTertiaryColor); background: {{section.settings.testimonial_content_bg_color}}; 
+     color: var(--DTColor_Body); color: {{section.settings.testimonial_content_color}};
+        border-radius: var(--DTRadius); border-radius: {{section.settings.boxed_border_radius }}px; 
+        {% if section.settings.enable_box_shadow %} box-shadow: var(--DTboxShadow); {% endif %}
+  }
+  
+  
+  {% if section.settings.quote_icon != blank %}
+  
+  
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content:before { 
+    content: ""; position: relative; width: 50px; height: 50px; display: flex; align-items: flex-start; justify-content: flex-start; top: -5px;  
+    background-color: var(--DTPrimaryColor);
+      background-color: {{ section.settings.testimonial_quote_icon_color }}; 
+      mask-image: url({{ section.settings.quote_icon | img_url: 'master' }}); 
+    -webkit-mask-image: url({{ section.settings.quote_icon | img_url: 'master' }});
+    mask-size: 100%; mask-repeat: no-repeat; mask-position: center;
+  -webkit-mask-size: 100%; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center; }
+  
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content.text-center:before { 
+  margin: auto;  
+  }
+  
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content.text-end:before { 
+    margin-left: auto;
+  }
+  
+  {% endif %}
+
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content div[class*="no-star-rating"] { 
+    display: none !important; }
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content .dt-sc-author-rating { width: 100%; 
+    float: left; margin: 10px 0; letter-spacing: 5px; display: flex; justify-content: flex-start; 
+    color: var(--DTColor_Body);
+    color: {{section.settings.testimonial_ratings_color}}; }
+
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content.text-center .dt-sc-author-rating { 
+    justify-content: center; }
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content.text-end .dt-sc-author-rating { 
+    justify-content: flex-end; }
+
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content .dt-sc-author-rating div[class*="star-rating"] { position: relative; width: 100%; }  
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content .dt-sc-author-rating div[class*="star-rating"]:after { 
+    content: "\f005" "\f005" "\f005" "\f005" "\f005"; display: block; position: relative; font-family: FontAwesome; }
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content .dt-sc-author-rating div[class*="half-star-rating"]:after { 
+    content: "\f123" "\f006" "\f006" "\f006" "\f006"; }
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content .dt-sc-author-rating div[class*="one-star-rating"]:after { 
+    content: "\f005" "\f006" "\f006" "\f006" "\f006"; }
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content .dt-sc-author-rating div[class*="one-half-star-rating"]:after { 
+    content: "\f005" "\f123" "\f006" "\f006" "\f006"; }
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content .dt-sc-author-rating div[class*="two-star-rating"]:after { 
+    content: "\f005" "\f005" "\f006" "\f006" "\f006"; }
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content .dt-sc-author-rating div[class*="two-half-star-rating"]:after { 
+    content: "\f005" "\f005" "\f123" "\f006" "\f006"; }
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content .dt-sc-author-rating div[class*="three-star-rating"]:after { 
+    content: "\f005" "\f005" "\f005" "\f006" "\f006"; }
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content .dt-sc-author-rating div[class*="three-half-star-rating"]:after { 
+    content: "\f005" "\f005" "\f005" "\f123" "\f006"; }
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content .dt-sc-author-rating div[class*="four-star-rating"]:after { 
+    content: "\f005" "\f005" "\f005" "\f005" "\f006"; }
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content .dt-sc-author-rating div[class*="four-half-star-rating"]:after { 
+    content: "\f005" "\f005" "\f005" "\f005" "\f123"; }
+
+
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content cite { font-style: normal; 
+    display: flex; flex-wrap: wrap; 
+    align-items: center;  font-weight: bold; margin-top: 20px; width: 100%; justify-content: center; color: var(--DTColor_Body);
+    color: {{section.settings.testimonial_author_color}};
+  }
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content cite span { font-style: normal; 
+    display: flex; flex-wrap: wrap; align-items: center; font-weight: normal;  color: var(--DTColor_Body);
+    color: {{section.settings.testimonial_author_designation_color}}; }
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content cite span:before { display: block; 
+    content: "-"; position: relative; margin: 0 8px; color: var(--DTPrimaryColor); color: {{section.settings.testimonial_author_separator_color }}; }
+
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content.text-start cite { 
+    justify-content: flex-start; 
+  }
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content.text-end cite { 
+    justify-content: flex-end; 
+  }
+
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .advanced-testimonial-gallery { width: 50%; margin: auto; }
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .advanced-testimonial-gallery > button.slick-arrow { position: absolute; 
+    top: 50%; transform: translateY(-50%); margin: 0; font-size: 0; width: 40px; height: 40px; z-index: 1; }
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .advanced-testimonial-gallery > button.slick-prev { 
+    right: calc(100% + 15px); }
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .advanced-testimonial-gallery > button.slick-next { 
+    left: calc(100% + 15px); }
+
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .advanced-testimonial-gallery .slick-list { margin: 50px 0;
+padding: 0 !important; }
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .advanced-testimonial-gallery .slick-list .slick-slide {
+    transition: var(--DTBaseTransition);
+      }
+  
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .advanced-testimonial-gallery > button.slick-arrow { 
+    background: var(--DT_Button_BG_Color);  
+      background: {{ section.settings.navigation_button_color }};  
+      }
+
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .advanced-testimonial-gallery > button.slick-arrow:after {   
+    color: var(--DT_Button_Text_Color);
+      color: {{ section.settings.navigation_button_icon_color }};
+      }
+
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .advanced-testimonial-gallery > button.slick-arrow:hover { 
+    background: var(--DT_Button_BG_Hover_Color); 
+      background: {{ section.settings.navigation_button_hover_color }}; 
+      }
+
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .advanced-testimonial-gallery > button.slick-arrow:hover:after { 
+    color: var(--DT_Button_Text_Hover_Color);
+      color: {{ section.settings.navigation_button_hover_icon_color }};
+      }
+  
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .advanced-testimonial-gallery > ul.slick-dots li:only-child {
+  display: none;
+  }
+
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .advanced-testimonial-gallery > ul.slick-dots li button { 
+    background: var(--DTSecondaryColor);  
+      background: {{ section.settings.navigation_dot_color }};  
+      }  
+
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .advanced-testimonial-gallery > ul.slick-dots li.slick-active button { 
+    background: var(--DTPrimaryColor);  
+      background: {{ section.settings.navigation_dot_active_color }};  
+      }
+
+
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .advanced-testimonial-gallery > button.slick-prev::after, 
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .advanced-testimonial-gallery > button.slick-next::after { content: "" !important; display: block; background: none; width: 12px; height: 12px; transform: rotate(45deg); position: absolute; }
+
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .advanced-testimonial-gallery > button.slick-prev::after { right: 10px; 
+    border-left: 1px solid; border-bottom: 1px solid; }
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .advanced-testimonial-gallery > button.slick-next::after { left: 10px; 
+    border-right: 1px solid; border-top: 1px solid; }
+
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .advanced-testimonial-gallery > ul.slick-dots { 
+    display: flex; align-items: center; justify-content: center; position: absolute; top: 100%; width: 100%; margin: 40px 0 0;
+  }
+
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .advanced-testimonial-gallery > ul.slick-dots li { margin: 4px; }
+  #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .advanced-testimonial-gallery > ul.slick-dots li button { margin: 0;
+padding: 0; width: 15px; line-height: 15px; height: 15px; font-size: 0; border-radius: 50%; }
+  
+
+  @media (max-width: 1540px) {
+    #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content { 
+      width: {{section.settings.testimonial_content_width_lap}}%;}
+  }
+  
+  @media (max-width: 1199px) {
+    #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content { 
+      width: {{section.settings.testimonial_content_width_tab}}%;}
+    
+    #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .advanced-testimonial-gallery { width: 60%; }
+  }
+  
+  @media (max-width: 767px) {
+    #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content { 
+      width: 100%;}
+    
+    #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .advanced-testimonial-gallery { width: 50%; }
+    
+  }
+  
+  @media (max-width: 767px) {    
+    #shopify-section-{{section.id}}.home-advanced-testimonial .advanced-testimonials-section .advanced-testimonial-gallery { width: 70%; }
+    
+  }
+
+</style>
+
+<script type="text/javascript">
+  $(document).ready(function() {  
+
+    $('#shopify-section-{{section.id}} .advanced-testimonial-content').slick({
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      arrows: false,
+      fade: true,
+      fadeSpeed: 1000,
+      asNavFor: '#shopify-section-{{section.id}} .advanced-testimonial-gallery'
+      });
+
+    $('#shopify-section-{{section.id}} .advanced-testimonial-gallery').slick({
+      slidesToShow: {{ section.settings.items_per_view }},
+      slidesToScroll: 1,
+      asNavFor: '#shopify-section-{{section.id}} .advanced-testimonial-content',
+      {%- if section.settings.dots -%}
+      dots: true,
+      {%- endif -%}
+      {%- if section.settings.arrows -%}
+      arrows: true,
+      {%- endif -%}
+      centerMode: true,
+      focusOnSelect: true,
+      fadeSpeed: 1000,
+      responsive: [
+      {
+      breakpoint: 992,
+      settings: {
+      slidesToShow: 3,
+      slidesToScroll: 3,
+      dots: true,
+      }},
+      {
+      breakpoint: 577,
+      settings: {
+      slidesToShow: 1,
+      slidesToScroll: 1
+      }}
+      ]
+      });
+  });
+
+</script>
+
+{% schema %}
+{
+"name": "Advanced Testimonial",
+"class": "index-section home-advanced-testimonial",
+"max_blocks":8,
+"settings": [
+{
+"type": "checkbox",
+"id": "full",
+"label": "Show Full width"
+},
+{
+"type": "checkbox",
+"id": "spacing_both_ends",
+"label": "Enable Right & Left Spacing (Works only on Fullwidth)",
+"default": false
+},
+{
+"type": "text",
+"id": "padding",
+"label": "Style value (Padding)",
+"default":"0,0",
+"info":"Top(px),Bottom(px)"
+},
+{
+"type": "text",
+"id": "margin",
+"label": "Style value (Margin)",
+"default":"0,0",
+"info":"Top(px),Bottom(px)"
+},
+{
+"type": "checkbox",
+"id": "show_background_image",
+"label": "Enable Background image"
+},
+{
+"type": "image_picker",
+"id": "background_image",
+"label": "Background image",
+"info": "Size: 1920x1280"
+},
+{
+"type": "select",
+"id": "background_style",
+"label": "Background Style",
+"default": "default",
+"options": [
+{
+"value": "default",
+"label": "Default"
+},
+{
+"value": "parallax",
+"label": "Parallax"
+},
+{
+"value": "fixed",
+"label": "Fixed"
+}
+]
+},
+{
+"type": "checkbox",
+"id": "enable_overlay",
+"label": "Enable Background Color (Used as Background Image Overlay Color too)"
+},
+{
+"type": "color",
+"id": "background_color",
+"label":"Background color"
+},
+{
+"type": "text",
+"id": "overlay_transparency",
+"label": "Overlay Transparency (0.01 to 1)",
+"default": "0.5"
+},
+{
+"type": "text",
+"id": "section_heading",
+"label": "Main Heading",
+"default": "Testimonials"
+},  
+{
+"type": "text",
+"id": "section_sub_heading",
+"label": "Sub Heading",
+"default": "Sub Heading"
+},  
+{
+"type": "text",
+"id": "section_description",
+"label": "Description",
+"default": "Use this text to share the information which you like!."
+},  
+{
+"type": "text",
+"id": "section_button_text",
+"label": "Link text"
+},
+{
+"type": "url",
+"id": "section_button_link",
+"label": "Link URL"
+},
+{
+"type": "header",
+"content": "Section Color settings"
+},
+{
+"type": "color",
+"id": "section_heading_color",
+"label": "Heading color"
+},    
+{
+"type": "color",
+"id": "section_sub_heading_color",
+"label": "Sub heading color"
+},   
+{
+"type": "color",
+"id": "section_description_color",
+"label": "Description color"
+},  
+{
+"type": "color",
+"id": "section_button_bg_color",
+"label": "Button bg color"
+},   
+{
+"type": "color",
+"id": "section_button_text_color",
+"label": "Button text color"
+},   
+{
+"type": "color",
+"id": "section_button_hover_bg_color",
+"label": "Button hover bg color"
+},   
+{
+"type": "color",
+"id": "section_button_hover_text_color",
+"label": "Button hover text color"
+},
+{
+"type": "select",
+"id": "heading_position",
+"label": "Heading Position",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "Right"
+}
+]
+},
+{
+"type": "header",
+"content": "Testimonial Settings"
+},
+{
+"type": "select",
+"id": "text_position",
+"label": "Testimonial Text alignment",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "Right"
+}
+],
+"default": "text-start"
+},
+{
+"type": "image_picker",
+"id": "quote_icon",
+"label": "Quote Icon"      
+},
+{
+"type": "text",
+"id": "border_radius",
+"label": "Author Image Radius (in px) - Set 50% for Rounded Image",
+"default":"0px"
+},
+{
+"type": "text",
+"id": "boxed_border_radius",
+"label": "Content Border Radius - Leave empty for Theme Default Border Radius",
+"default":"0",
+"info": "Unit not Needed"
+},
+{
+"type": "checkbox",
+"id": "enable_box_shadow",
+"label": "Enable Box Shadow",
+"default": false
+},
+{
+"type": "header",
+"content": "Testimonial Content Width"
+},
+{
+"type": "range",
+"id": "testimonial_content_width",
+"label": "Testimonial Content Width",
+"min": 50,
+"max": 100,
+"step": 1,
+"default": 50,
+"unit": "%"
+},
+{
+"type": "range",
+"id": "testimonial_content_width_lap",
+"label": "Testimonial Content Width - Laptop",
+"min": 50,
+"max": 100,
+"step": 1,
+"default": 65,
+"unit": "%"
+},
+{
+"type": "range",
+"id": "testimonial_content_width_tab",
+"label": "Testimonial Content Width - Tablet",
+"min": 50,
+"max": 100,
+"step": 1,
+"default": 80,
+"unit": "%",
+"info":"By Default 100% comes for Mobile"
+},
+{
+"type": "header",
+"content": "Testimonial Color settings"
+},
+{
+"type": "color",
+"id": "testimonial_content_color",
+"label": "Content Color"
+}, 
+{
+"type": "color",
+"id": "testimonial_content_bg_color",
+"label": "Content Bg Color"
+},
+{
+"type": "color",
+"id": "testimonial_ratings_color",
+"label": "Ratings Color"
+},
+{
+"type": "color",
+"id": "testimonial_author_color",
+"label": "Author Color"
+},
+{
+"type": "color",
+"id": "testimonial_author_designation_color",
+"label": "Author Designation Color"
+},
+{
+"type": "color",
+"id": "testimonial_author_separator_color",
+"label": "Testimonial Author Separator Color"
+},
+{
+"type": "color",
+"id": "testimonial_quote_icon_color",
+"label": "Quote Icon Color"
+},
+{
+"type": "header",
+"content": "Carousel Settings"
+},
+{
+"type": "range",
+"id": "items_per_view",
+"label": "Slide per row",
+"min": 1,
+"max": 5,
+"step": 2,
+"default": 3
+},
+{
+"type": "checkbox",
+"id": "dots",
+"label": "Enable Carousel Pagination",
+"default": true
+},
+{
+"type": "color",
+"id": "navigation_button_color",
+"label": "Navigation Button Bg Color"
+}, 
+{
+"type": "color",
+"id": "navigation_button_icon_color",
+"label": "Navigation Button Icon Color"
+}, 
+{
+"type": "color",
+"id": "navigation_button_hover_color",
+"label": "Navigation Button Hover Bg Color"
+}, 
+{
+"type": "color",
+"id": "navigation_button_hover_icon_color",
+"label": "Navigation Button Hover Icon Color"
+}, 
+{
+"type": "checkbox",
+"id": "arrows",
+"label": "Enable Navigation Arrows",
+"default": true
+},
+{
+"type": "color",
+"id": "navigation_dot_color",
+"label": "Navigation Dot Color"
+}, 
+{
+"type": "color",
+"id": "navigation_dot_active_color",
+"label": "Navigation Dot Active Color"
+}
+],
+"blocks": [
+{
+"type": "content",
+"name": "Content",        
+"settings": [
+{
+"type": "richtext",
+"id": "quote",
+"label": "Text",
+"default": "<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type.</p>"
+},
+{
+"type": "image_picker",
+"id": "icon",
+"label": "Author Image"          
+},
+{
+"type": "text",
+"id": "author",
+"label": "Author",
+"default": "Author Name"
+},
+{
+"type": "text",
+"id": "job",
+"label": "Designation",
+"default": "Author Designation"
+},
+{
+"type": "select",
+"id": "star",
+"label": "rating",
+"default": "3",
+"options": [
+{
+"value": "0",
+"label": "0"
+},
+{
+"value": "0.5",
+"label": "0.5"
+},
+{
+"value": "1",
+"label": "1"
+},
+{
+"value": "1.5",
+"label": "1.5"
+},
+{
+"value": "2",
+"label": "2"
+},
+{
+"value": "2.5",
+"label": "2.5"
+},
+{
+"value": "3",
+"label": "3"
+},
+{
+"value": "3.5",
+"label": "3.5"
+},
+{
+"value": "4",
+"label": "4"
+},
+{
+"value": "4.5",
+"label": "4.5"
+},
+{
+"value": "5",
+"label": "5"
+}
+]
+}
+]
+}
+],
+"presets": [
+{
+"name": "Advanced Testimonial",
+"category": "Client sections",
+"blocks": [
+{
+"type": "content"
+},
+{
+"type": "content"
+},
+{
+"type": "content"
+},
+{
+"type": "content"
+},
+{
+"type": "content"
+}
+]
+}
+]
+}
+{% endschema %}

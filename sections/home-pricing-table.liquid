@@ -1,0 +1,1043 @@
+{% if section.blocks.size > 0 %}
+{% case section.settings.grid %}
+{% when '1' %}
+{% when '2' %}
+{%- assign column = 'two-column' -%}
+{% when '3' %}
+{%- assign column = 'three-column' -%}              
+{% when '4' %}
+{%- assign column = 'four-column' -%}  
+{% else %}
+{%- assign column = 'three-column' -%}              
+{% endcase %} 
+{% endif %}
+
+{% if section.settings.enable_overlay %}
+{% assign section_overlay = 'dt-sc-overlay' %}
+{% endif %}
+
+{% case section.settings.background_style %}
+{% when 'default' %}
+{% when 'parallax' %}
+{%- assign background_style = 'data-speed="2"' %}
+{% when 'fixed' %}
+{%- assign background_style = 'data-speed="1"' %}
+{% endcase %} 
+{% if section.settings.show_background_image %}
+{% assign lazyScript = "lazyload" %}
+{% endif %}
+
+<div class="dt-sc-section-wrapper {{lazyScript}} {{section_overlay}} {% if section.settings.background_style == 'parallax' %} parallax-initiated{% endif %}" style="{% render 'bg-color-image-padding' %}" data-style="parallax" {{background_style}} {% include 'bg_image' %}>  
+  <div class="{% render 'container-settings' %}"> 
+    <div class="row {{ section.settings.custom_class_name }}">   
+      {% render 'section-heading', class: section.id %}   
+      <div class="dt-sc-pricing-blocks-section dt-sc-column {{grid_style}} {{column}} {{section.settings.block_style}}">
+        {% if section.blocks.size > 0 %}      
+        {% for block in section.blocks %} 
+        <div class="dt-sc-pricing-block {{ section.settings.text_position}} {{block.type}}-{{block.id}}">
+          <a class="dt-sc-pricing-image" href="{{ block.settings.link }}">   
+            {% if  block.settings.icon_image != blank %}
+            {%- assign img_url = block.settings.icon_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+            <img class="dt-sc-brand-image lazyload"
+                 src="{{ 'loading.gif' | asset_url }}"
+                 data-src="{{ block.settings.icon_image | img_url: '1000x' }}"
+                 data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+                 data-aspectratio="{{ block.settings.icon_image.aspect_ratio }}"
+                 data-sizes="auto"            
+                 data-alt="{{ block.settings.title }}">
+             <noscript>
+              {{ block.settings.icon_image | img_url: '480x480', scale: 2 | img_tag: block.settings.icon_image.alt, 'dt-sc-noscript-image' }}
+            </noscript>
+            {% else %}            
+            {{ 'image' | placeholder_svg_tag: 'placeholder_svg' }}
+            {% endif %}
+          </a>
+
+          <div class="dt-sc-pricing-header-area">
+            <h4 class="dt-sc-pricing-title"> {{ block.settings.title }} </h4>
+            <p class="dt-sc-pricing-description">{{ block.settings.duration }}</p>
+            <span class="dt-sc-pricing-sub-title">{{ block.settings.desc_title }}</span>
+          </div>   
+
+          <div class="dt-sc-pricing-content-area">
+            <ul class="dt-sc-pricing-list">
+              {% if block.settings.linklist_1 != blank or block.settings.take_time_1 != blank %} 
+              <li class="{{block.type}}-{{block.id}}-list1">
+                {% if block.settings.linklist_1 != blank %}
+                <h6>{{ block.settings.linklist_1 }}</h6>
+                {% endif %}
+                {% if block.settings.take_time_1 != blank %}
+                <span>{{ block.settings.take_time_1 }}</span>
+                {% endif %}
+              </li> 
+              {% endif %}                
+              {% if block.settings.linklist_2 != blank or block.settings.take_time_2 != blank %} 
+              <li class="{{block.type}}-{{block.id}}-list2">
+                {% if block.settings.linklist_2 != blank %}
+                <h6>{{ block.settings.linklist_2 }}</h6>
+                {% endif %}
+                {% if block.settings.take_time_2 != blank %}
+                <span>{{ block.settings.take_time_2 }}</span>
+                {% endif %}
+              </li> 
+              {% endif %}                
+              {% if block.settings.linklist_3 != blank or block.settings.take_time_3 != blank %} 
+              <li class="{{block.type}}-{{block.id}}-list3">
+                {% if block.settings.linklist_3 != blank %}
+                <h6>{{ block.settings.linklist_3 }}</h6>
+                {% endif %}
+                {% if block.settings.take_time_3 != blank %}
+                <span>{{ block.settings.take_time_3 }}</span>
+                {% endif %}
+              </li> 
+              {% endif %}                
+              {% if block.settings.linklist_4 != blank or block.settings.take_time_4 != blank %} 
+              <li class="{{block.type}}-{{block.id}}-list4">
+                {% if block.settings.linklist_4 != blank %}
+                <h6>{{ block.settings.linklist_4 }}</h6>
+                {% endif %}
+                {% if block.settings.take_time_4 != blank %}
+                <span>{{ block.settings.take_time_4 }}</span>
+                {% endif %}
+              </li> 
+              {% endif %}                
+              {% if block.settings.linklist_5 != blank or block.settings.take_time_5 != blank %} 
+              <li class="{{block.type}}-{{block.id}}-list5">
+                {% if block.settings.linklist_5 != blank %}
+                <h6>{{ block.settings.linklist_5 }}</h6>
+                {% endif %}
+                {% if block.settings.take_time_5 != blank %}
+                <span>{{ block.settings.take_time_5 }}</span>
+                {% endif %}
+              </li> 
+              {% endif %}                
+              {% if block.settings.linklist_6 != blank or block.settings.take_time_6 != blank %} 
+              <li class="{{block.type}}-{{block.id}}-list6">
+                {% if block.settings.linklist_6 != blank %}
+                <h6>{{ block.settings.linklist_6 }}</h6>
+                {% endif %}
+                {% if block.settings.take_time_6 != blank %}
+                <span>{{ block.settings.take_time_6 }}</span>
+                {% endif %}
+              </li> 
+              {% endif %}                
+              {% if block.settings.linklist_7 != blank or block.settings.take_time_7 != blank %} 
+              <li class="{{block.type}}-{{block.id}}-list7">
+                {% if block.settings.linklist_7 != blank %}
+                <h6>{{ block.settings.linklist_7 }}</h6>
+                {% endif %}
+                {% if block.settings.take_time_7 != blank %}
+                <span>{{ block.settings.take_time_7 }}</span>
+                {% endif %}
+              </li> 
+              {% endif %}                
+              {% if block.settings.linklist_8 != blank or block.settings.take_time_8 != blank %} 
+              <li class="{{block.type}}-{{block.id}}-list8">
+                {% if block.settings.linklist_8 != blank %}
+                <h6>{{ block.settings.linklist_8 }}</h6>
+                {% endif %}
+                {% if block.settings.take_time_8 != blank %}
+                <span>{{ block.settings.take_time_8 }}</span>
+                {% endif %}
+              </li> 
+              {% endif %}
+            </ul>
+          </div> 
+
+          {% if block.settings.link != blank and block.settings.link_txt != blank %} 
+          <div class="dt-sc-pricing-button">
+            <a href="{{ block.settings.section.settings.link }}" class="{% if section.settings.price_table_style == 'style2' %}dt-sc-link{% else %}dt-sc-btn{% endif %}">
+              {{ block.settings.link_txt }}
+            </a>
+          </div>
+          {% endif %}
+
+        </div>        
+        {% endfor %}
+        {% endif %}
+      </div> 
+    </div>
+  </div>
+</div>
+
+<style type="text/css">
+
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-overlay:before  { color: var(--DTTertiaryColor); 
+    color: {{ section.settings.background_color }};    
+    background: currentcolor; 
+    opacity: {{ section.settings.overlay_transparency }}; }
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-heading .dt-sc-main-heading { color: var(--DTColor_Heading); color:{{ section.settings.section_heading_color }}; } 
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-heading .dt-sc-sub-heading { color: var(--DTColor_Heading); color:{{ section.settings.section_sub_heading_color }}; } 
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-heading .dt-sc-heading-description { color: var(--DTColor_Body); color:{{ section.settings.section_description_color }}; } 
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-heading .dt-sc-btn { 
+    background: var(--DT_Button_BG_Color);  background:{{ section.settings.section_button_bg_color }}; 
+      color: var(--DT_Button_Text_Color); color:{{ section.settings.section_button_text_color }}; }
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-heading .dt-sc-btn:hover { 
+    background: var(--DT_Button_BG_Hover_Color); background:{{ section.settings.section_button_hover_bg_color }}; 
+      color: var(--DT_Button_Text_Hover_Color); color:{{ section.settings.section_button_hover_text_color }};
+        }
+  
+  
+  .dt-sc-pricing-blocks-section.style-1 .dt-sc-pricing-block .dt-sc-pricing-button { 
+    border-radius: 0 0 {{ section.settings.border_radius }} {{ section.settings.border_radius }}; }  
+  .dt-sc-pricing-blocks-section.style-1 .dt-sc-pricing-block .dt-sc-pricing-content-area { padding-left: 0; padding-right: 0; }
+  .dt-sc-pricing-blocks-section.style-1 .dt-sc-pricing-block .dt-sc-pricing-image { padding: 0; }
+
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section.style-2 { 
+    
+    border-color: var(--DTTertiaryColor);
+    border-color: {{ section.settings.block_border_color }};
+    
+    border-left-width: 1px; border-left-style: solid; 
+    border-top-width: 1px; border-top-style: solid; 
+    
+    
+  }
+
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section.style-2 .dt-sc-pricing-block { 
+    
+    border-color: var(--DTTertiaryColor);
+    border-color: {{ section.settings.block_border_color }};
+    
+    border-right-width: 1px; border-right-style: solid; 
+    border-bottom-width: 1px; border-bottom-style: solid; 
+  }
+
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section.style-3 .dt-sc-pricing-block { 
+    
+    border-color: var(--DTTertiaryColor);
+    border-color: {{ section.settings.block_border_color }};
+    
+    border-width: 1px; border-style: solid;
+      
+    {% if section.settings.enable_box_shadow %} box-shadow: var(--DTboxShadow); {% endif %} 
+      border-radius: {{ section.settings.border_radius }};
+      
+      } 
+
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section.style-2 .dt-sc-pricing-block,
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section.style-3 .dt-sc-pricing-block { 
+    background: var(--DTBodyBGColor); background: {{ section.settings.block_bg }};
+  } 
+
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section[class*="style-"] .dt-sc-pricing-block { 
+    overflow: hidden; position: relative;
+    padding-bottom: 100px;
+  }
+  
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section[class*="style-"] .dt-sc-pricing-block .dt-sc-pricing-button {
+    position: absolute;
+    bottom: 0; left: 0; 
+    width: 100%;
+    
+  }
+  
+/*   #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section:not(.style-2) .dt-sc-pricing-block { display: flex; flex-wrap: wrap; 
+    flex-direction: column; align-self: flex-start;
+  } */
+  
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section[class*="style-"] .dt-sc-pricing-block .dt-sc-pricing-header-area {
+    background: var(--DTTertiaryColor); background: {{ section.settings.block_heading_bg_color }};    
+  }
+
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section[class*="style-"] .dt-sc-pricing-block .dt-sc-pricing-header-area .dt-sc-pricing-title { 
+    color: var(--DTColor_Heading); color: {{ section.settings.block_heading_color }};    
+  }
+
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section[class*="style-"] .dt-sc-pricing-block .dt-sc-pricing-header-area .dt-sc-pricing-description { 
+    color: var(--DTColor_Body); color: {{ section.settings.block_description_color }};    
+  }
+
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section[class*="style-"] .dt-sc-pricing-block .dt-sc-pricing-header-area .dt-sc-pricing-sub-title { 
+    color: var(--DTColor_Heading); color: {{ section.settings.block_sub_heading_color }};    
+  }
+
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section.style-2 { 
+    {% if section.settings.enable_box_shadow %} box-shadow: var(--DTboxShadow); {% endif %} 
+      border-radius: {{ section.settings.border_radius }}; overflow: hidden; 
+      }
+
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section.style-2 .dt-sc-pricing-block:last-child { 
+    border-radius: 0 0 {{ section.settings.border_radius }} 0;
+  }
+
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section.style-2.dt-sc-column.two-column .dt-sc-pricing-block:nth-child(2):last-child,
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section.style-2.dt-sc-column.three-column .dt-sc-pricing-block:nth-child(3):last-child,
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section.style-2.dt-sc-column.four-column .dt-sc-pricing-block:nth-child(4):last-child { 
+    border-radius: 0 {{ section.settings.border_radius }} {{ section.settings.border_radius }} 0;
+  }
+
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section.style-2.dt-sc-column.two-column .dt-sc-pricing-block:nth-child(2):not(:last-child),
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section.style-2.dt-sc-column.three-column .dt-sc-pricing-block:nth-child(3):not(:last-child),
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section.style-2.dt-sc-column.four-column .dt-sc-pricing-block:nth-child(4):not(:last-child) { 
+    border-radius: 0 {{ section.settings.border_radius }} 0 0; 
+  }
+
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section.style-2.dt-sc-column.two-column .dt-sc-pricing-block:nth-last-child(2),
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section.style-2.dt-sc-column.three-column .dt-sc-pricing-block:nth-last-child(3),
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section.style-2.dt-sc-column.four-column .dt-sc-pricing-block:nth-last-child(4) { 
+    border-radius: 0 0 0 {{ section.settings.border_radius }}; 
+  }
+
+  .dt-sc-pricing-blocks-section.style-2 { grid-gap: 0; }
+
+  .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-image { padding: 30px; display: flex; border-bottom: 1px solid; width: 100%; }
+  .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-image svg { width: 100%; height: auto; }
+
+  .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-image img,
+  .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-image svg { border-radius: {{ section.settings.image_border_radius }};  
+    {% if section.settings.enable_image_box_shadow %} box-shadow: var(--DTboxShadow); {% endif %}   
+      }
+
+  .dt-sc-pricing-blocks-section.style-1 .dt-sc-pricing-block .dt-sc-pricing-image img,
+  .dt-sc-pricing-blocks-section.style-1 .dt-sc-pricing-block .dt-sc-pricing-image svg { 
+    border-radius: {{ section.settings.image_border_radius }} {{ section.settings.image_border_radius }} 0 0;  
+  }
+
+  .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-header-area { padding: 30px; border-bottom: 1px solid; gap: 15px; display: grid; }
+  .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-title { margin: 0; }
+
+  .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-content-area,
+  .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-button { padding: 30px; }
+  
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-button { 
+    background: var(--DTTertiaryColor); background: {{section.settings.block_button_section_bg_color}};
+  }
+
+  .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-list { display: flex; flex-wrap: wrap; flex-direction: column; margin: 0; }
+  .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-list li { display: flex; flex-wrap: wrap; justify-content: space-between; }
+  .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-list li:not(:last-child) { border-bottom: 1px solid; margin-bottom: 15px; padding-bottom: 15px; }
+
+  .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-list li h6 { margin: 0; }
+  .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-list li *:only-child { display: flex; width: 100%; }
+
+  .dt-sc-pricing-blocks-section .dt-sc-pricing-block.text-center .dt-sc-pricing-list li *:only-child { justify-content: center; }
+  .dt-sc-pricing-blocks-section .dt-sc-pricing-block.text-end .dt-sc-pricing-list li *:only-child { justify-content: flex-end; }
+
+  .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-btn { display: inline-block; margin: 0; 
+    background: var(--DT_Button_BG_Color);
+    color: var(--DT_Button_Text_Color);
+    
+    background: {{section.settings.block_button_bg_color}}; 
+    color: {{section.settings.block_button_text_color}};
+  }
+
+  .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-btn:hover { 
+    background: var(--DT_Button_BG_Hover_Color);
+    color: var(--DT_Button_Text_Hover_Color)
+    
+    background: {{section.settings.block_button_hover_bg_color}}; 
+    color: {{section.settings.block_button_hover_text_color}};
+  }
+
+  .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-link { color: var(--DT_Button_BG_Color); color: {{section.settings.block_button_text_color}};}
+  .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-link:hover { color: var(--DT_Button_BG_Hover_Color); color: {{section.settings.block_button_hover_text_color}}; }
+
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section .dt-sc-pricing-image,
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-header-area {
+    border-color: var(--DTTertiaryColor);
+    border-color: {{section.settings.block_border_color}}; 
+  }
+  
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-list li:not(:last-child) {
+    border-color: var(--DTColor_Border);
+    border-color: {{section.settings.block_seperator_color}}; 
+  }
+
+  {% for block in section.blocks %} 
+
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-list li.{{block.type}}-{{block.id}}-list1 h6 {
+    color: var(--DTColor_Heading); color: {{block.settings.linklist_1_color}}; 
+  }
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-list li.{{block.type}}-{{block.id}}-list2 h6 {
+    color: var(--DTColor_Heading); color: {{block.settings.linklist_2_color}}; 
+  }
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-list li.{{block.type}}-{{block.id}}-list3 h6 {
+    color: var(--DTColor_Heading); color: {{block.settings.linklist_3_color}}; 
+  }
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-list li.{{block.type}}-{{block.id}}-list4 h6 {
+    color: var(--DTColor_Heading); color: {{block.settings.linklist_4_color}}; 
+  }
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-list li.{{block.type}}-{{block.id}}-list5 h6 {
+    color: var(--DTColor_Heading); color: {{block.settings.linklist_5_color}}; 
+  }
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-list li.{{block.type}}-{{block.id}}-list6 h6 {
+    color: var(--DTColor_Heading); color: {{block.settings.linklist_6_color}}; 
+  }
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-list li.{{block.type}}-{{block.id}}-list7 h6 {
+    color: var(--DTColor_Heading); color: {{block.settings.linklist_7_color}}; 
+  }
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-list li.{{block.type}}-{{block.id}}-list8 h6 {
+    color: var(--DTColor_Heading); color: {{block.settings.linklist_8_color}}; 
+  }
+
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-list li.{{block.type}}-{{block.id}}-list1 span {
+    color: var(--DTPrimaryColor); color: {{block.settings.take_time_1_color}}; 
+  }
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-list li.{{block.type}}-{{block.id}}-list2 span {
+    color: var(--DTPrimaryColor); color: {{block.settings.take_time_2_color}}; 
+  }
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-list li.{{block.type}}-{{block.id}}-list3 span {
+    color: var(--DTPrimaryColor); color: {{block.settings.take_time_3_color}}; 
+  }
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-list li.{{block.type}}-{{block.id}}-list4 span {
+    color: var(--DTPrimaryColor); color: {{block.settings.take_time_4_color}}; 
+  }
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-list li.{{block.type}}-{{block.id}}-list5 span {
+    color: var(--DTPrimaryColor); color: {{block.settings.take_time_5_color}}; 
+  }
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-list li.{{block.type}}-{{block.id}}-list6 span {
+    color: var(--DTPrimaryColor); color: {{block.settings.take_time_6_color}}; 
+  }
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-list li.{{block.type}}-{{block.id}}-list7 span {
+    color: var(--DTPrimaryColor); color: {{block.settings.take_time_7_color}}; 
+  }
+  #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section .dt-sc-pricing-block .dt-sc-pricing-list li.{{block.type}}-{{block.id}}-list8 span {
+    color: var(--DTPrimaryColor); color: {{block.settings.take_time_8_color}}; 
+  }
+
+
+  {% endfor %}  
+
+  @media screen and (max-width: 767px){
+    
+    #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section.style-2 { border: none; }
+    
+    #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section.style-2.dt-sc-column .dt-sc-pricing-block,
+    #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section.style-2.dt-sc-column.two-column .dt-sc-pricing-block, 
+    #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section.style-2.dt-sc-column.three-column .dt-sc-pricing-block, 
+    #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section.style-2.dt-sc-column.four-column .dt-sc-pricing-block {
+      border-radius: {{ section.settings.border_radius }} !important;       
+      border-width: 1px;
+      border-style: solid;
+      border-color: var(--DTTertiaryColor);
+      border-color: {{ section.settings.block_border_color }}; 
+    }
+    
+    #shopify-section-{{section.id}}.home-pricing-block .dt-sc-pricing-blocks-section.style-2.dt-sc-column .dt-sc-pricing-block:not(:last-child) { 
+      margin-bottom: var(--DTGutter_Width);
+    }
+    
+  }
+
+
+</style>
+
+{% schema %}
+{
+"name": "Pricing Table",
+"class": "index-section home-pricing-block",
+"max_blocks":4,
+"settings": [
+{
+"type": "checkbox",
+"id": "full",
+"label": "Show Full width"
+},
+{
+"type": "checkbox",
+"id": "spacing_both_ends",
+"label": "Enable Right & Left Spacing (Works only on Fullwidth)",
+"default": false
+},
+{
+"type": "text",
+"id": "padding",
+"label": "Style value (Padding)",
+"default":"0,0",
+"info":"Top(px),Bottom(px)"
+},
+{
+"type": "text",
+"id": "margin",
+"label": "Style value (Margin)",
+"default":"0,0",
+"info":"Top(px),Bottom(px)"
+},
+{
+"type": "checkbox",
+"id": "show_background_image",
+"label": "Enable Background image"
+},
+{
+"type": "image_picker",
+"id": "background_image",
+"label": "Background image",
+"info": "Size: 1920x1280"
+},
+{
+"type": "select",
+"id": "background_style",
+"label": "Background Style",
+"default": "default",
+"options": [
+{
+"value": "default",
+"label": "Default"
+},
+{
+"value": "parallax",
+"label": "Parallax"
+},
+{
+"value": "fixed",
+"label": "Fixed"
+}
+]
+},
+{
+"type": "checkbox",
+"id": "enable_overlay",
+"label": "Enable Background Color (Used as Background Image Overlay Color too)"
+},
+{
+"type": "color",
+"id": "background_color",
+"label":"Background color"
+},
+{
+"type": "text",
+"id": "overlay_transparency",
+"label": "Overlay Transparency (0.01 to 1)",
+"default": "0.5"
+},
+{
+"type": "text",
+"id": "section_heading",
+"label": "Main Heading",
+"default": "Pricing Table"
+},  
+{
+"type": "text",
+"id": "section_sub_heading",
+"label": "Sub Heading",
+"default": "Sub Heading"
+},  
+{
+"type": "text",
+"id": "section_description",
+"label": "Description",
+"default": "Use this text to share the information which you like!."
+},  
+{
+"type": "text",
+"id": "section_button_text",
+"label": "Link text"
+},
+{
+"type": "url",
+"id": "section_button_link",
+"label": "Link URL"
+},
+{
+"type": "header",
+"content": "Section Color settings"
+},
+{
+"type": "color",
+"id": "section_heading_color",
+"label": "Heading color"
+},    
+{
+"type": "color",
+"id": "section_sub_heading_color",
+"label": "Sub heading color"
+},   
+{
+"type": "color",
+"id": "section_description_color",
+"label": "Description color"
+},  
+{
+"type": "color",
+"id": "section_button_bg_color",
+"label": "Button bg color"
+},   
+{
+"type": "color",
+"id": "section_button_text_color",
+"label": "Button text color"
+},   
+{
+"type": "color",
+"id": "section_button_hover_bg_color",
+"label": "Button hover bg color"
+},   
+{
+"type": "color",
+"id": "section_button_hover_text_color",
+"label": "Button hover text color"
+},
+{
+"type": "select",
+"id": "heading_position",
+"label": "Heading Position",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "Right"
+}
+]
+},
+{
+"type": "header",
+"content": "Block Settings"
+},
+{
+"type": "select",
+"id": "block_style",
+"label": "Block Style",
+"options": [
+{
+"value": "style-1",
+"label": "Style 1"
+},
+{
+"value": "style-2",
+"label": "Style 2"
+},
+{
+"value": "style-3",
+"label": "Style 3"
+}
+],
+"default": "style-3"
+},
+{
+"type": "select",
+"id": "text_position",
+"label": "Block Text position",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "Right"
+}
+],
+"default": "text-center"
+},
+{
+"type": "select",
+"id": "grid",
+"label": "Item per row",
+"default": "3",
+"options": [
+{
+"value": "1",
+"label": "1"
+},
+{
+"value": "2",
+"label": "2"
+},
+{
+"value": "3",
+"label": "3"
+},
+{
+"value": "4",
+"label": "4"
+}
+]
+},
+{
+"type": "select",
+"id": "price_table_style",
+"label": "Pricing Button Style",
+"options": [
+{
+"value": "style1",
+"label": "Style 1"
+},
+{
+"value": "style2",
+"label": "Style 2"
+}
+],
+"default": "style1"
+},
+{
+"type": "text",
+"id": "border_radius",
+"label": "Overall Radius (in px)",
+"default":"0px",
+"info": "Not for Block Style 1"
+},
+{
+"type": "text",
+"id": "image_border_radius",
+"label": "Image Radius (in px) - Set 50% for Rounded Image",
+"default":"0px",
+"info": "Use square image if you set 50%"
+},
+{
+"type": "checkbox",
+"id": "enable_box_shadow",
+"label": "Enable Overall Box Shadow",
+"default": false,
+"info": "Not for Block Style 1"
+},
+{
+"type": "checkbox",
+"id": "enable_image_box_shadow",
+"label": "Enable Image Box Shadow",
+"default": false
+},
+{
+"type": "header",
+"content": "Block Color settings"
+},
+{
+"type": "color",
+"id": "block_border_color",
+"label": "Border color"
+},
+{
+"type": "color",
+"id": "block_bg",
+"label": "Background Color (Not for Style 1)"
+},
+{
+"type": "color",
+"id": "block_heading_color",
+"label": "Heading Color"
+},
+{
+"type": "color",
+"id": "block_description_color",
+"label": "Description Color"
+},  
+{
+"type": "color",
+"id": "block_sub_heading_color",
+"label": "Sub Title Color"
+},  
+{
+"type": "color",
+"id": "block_heading_bg_color",
+"label": "Caption Bg Color"
+},  
+{
+"type": "color",
+"id": "block_seperator_color",
+"label": "Seperator Color"
+}, 
+{
+"type": "color",
+"id": "block_button_section_bg_color",
+"label": "Button Section Bg color"
+}, 
+{
+"type": "color",
+"id": "block_button_bg_color",
+"label": "Button bg color"
+},   
+{
+"type": "color",
+"id": "block_button_text_color",
+"label": "Button text color"
+},   
+{
+"type": "color",
+"id": "block_button_hover_bg_color",
+"label": "Button hover bg color"
+},   
+{
+"type": "color",
+"id": "block_button_hover_text_color",
+"label": "Button hover text color"
+},
+{
+"type": "header",
+"content": "Custom class"
+},
+{
+"type": "text",
+"id": "custom_class_name",
+"label": "Add your custom class name here"
+}
+],
+"blocks": [
+{
+"type": "text",
+"name": "List Block",
+"settings": [ 
+{
+"type": "image_picker",
+"id": "icon_image",
+"label": "Icon"
+},
+{
+"type": "text",
+"id": "title",
+"label": "Tab",
+"default": "Caption"
+},
+{
+"type": "text",
+"id": "duration",
+"label": "Sub Title",
+"default": "Duration: 2hrs"
+},
+{
+"type": "text",
+"id": "desc_title",
+"label": "Description",
+"default": "$00"
+},
+{
+"type": "text",
+"id": "link_txt",
+"label": "Link text",
+"default": "Sign up today"        
+},
+{
+"type": "url",
+"id": "link",
+"label": "Link"        
+},
+{
+"type": "header",
+"content": "Content 1"
+},
+{
+"type": "text",
+"id": "linklist_1",
+"label": "Primary Text",
+"default": "Text 1"
+},
+{
+"type": "color",
+"id": "linklist_1_color",
+"label": "Primary Text Color"
+}, 
+{
+"type": "text",
+"id": "take_time_1",
+"label": "Secondary Text",
+"default": "5mins"
+},
+{
+"type": "color",
+"id": "take_time_1_color",
+"label": "Secondary Text Color"
+}, 
+{
+"type": "header",
+"content": "Content 2"
+},
+{
+"type": "text",
+"id": "linklist_2",
+"label": "Primary Text",
+"default": "Text 2"
+},
+{
+"type": "color",
+"id": "linklist_2_color",
+"label": "Primary Text Color"
+}, 
+{
+"type": "text",
+"id": "take_time_2",
+"label": "Secondary Text",
+"default": "5mins"
+},
+{
+"type": "color",
+"id": "take_time_2_color",
+"label": "Secondary Text Color"
+}, 
+{
+"type": "header",
+"content": "Content 3"
+},
+{
+"type": "text",
+"id": "linklist_3",
+"label": "Primary Text",
+"default": "Text 3"
+},
+{
+"type": "color",
+"id": "linklist_3_color",
+"label": "Primary Text Color"
+}, 
+{
+"type": "text",
+"id": "take_time_3",
+"label": "Secondary Text",
+"default": "5mins"
+},
+{
+"type": "color",
+"id": "take_time_3_color",
+"label": "Secondary Text Color"
+}, 
+{
+"type": "header",
+"content": "Content 4"
+},
+{
+"type": "text",
+"id": "linklist_4",
+"label": "Primary Text",
+"default": "Text 4"
+}, 
+{
+"type": "color",
+"id": "linklist_4_color",
+"label": "Primary Text Color"
+}, 
+{
+"type": "text",
+"id": "take_time_4",
+"label": "Secondary Text",
+"default": "5mins"
+},
+{
+"type": "color",
+"id": "take_time_4_color",
+"label": "Secondary Text Color"
+}, 
+{
+"type": "header",
+"content": "Content 5"
+},
+{
+"type": "text",
+"id": "linklist_5",
+"label": "Primary Text",
+"default": "Text 5"
+},
+{
+"type": "color",
+"id": "linklist_5_color",
+"label": "Primary Text Color"
+}, 
+{
+"type": "text",
+"id": "take_time_5",
+"label": "Secondary Text",
+"default": "5mins"
+},
+{
+"type": "color",
+"id": "take_time_5_color",
+"label": "Secondary Text Color"
+}, 
+{
+"type": "header",
+"content": "Content 6"
+},
+{
+"type": "text",
+"id": "linklist_6",
+"label": "Primary Text",
+"default": "Text 6"
+},
+{
+"type": "color",
+"id": "linklist_6_color",
+"label": "Primary Text Color"
+}, 
+{
+"type": "text",
+"id": "take_time_6",
+"label": "Secondary Text",
+"default": "5mins"
+},
+{
+"type": "color",
+"id": "take_time_6_color",
+"label": "Secondary Text Color"
+}, 
+{
+"type": "header",
+"content": "Content 7"
+},
+{
+"type": "text",
+"id": "linklist_7",
+"label": "Primary Text",
+"default": "Text 7"
+},
+{
+"type": "color",
+"id": "linklist_7_color",
+"label": "Primary Text Color"
+}, 
+{
+"type": "text",
+"id": "take_time_7",
+"label": "Secondary Text",
+"default": "5mins"
+},
+{
+"type": "color",
+"id": "take_time_7_color",
+"label": "Secondary Text Color"
+}, 
+{
+"type": "header",
+"content": "Content 8"
+},
+{
+"type": "text",
+"id": "linklist_8",
+"label": "Primary Text",
+"default": "Text 8"
+}, 
+{
+"type": "color",
+"id": "linklist_8_color",
+"label": "Primary Text Color"
+}, 
+{
+"type": "text",
+"id": "take_time_8",
+"label": "Secondary Text",
+"default": "5mins"
+},
+{
+"type": "color",
+"id": "take_time_8_color",
+"label": "Secondary Text Color"
+}
+]
+}
+],
+"presets": [
+{
+"name": "Pricing table",
+"category": "Text",
+"blocks": [
+{
+"type": "text"
+},
+{
+"type": "text"
+},
+{
+"type": "text"
+}
+]
+}
+]
+}
+{% endschema %}

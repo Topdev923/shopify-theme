@@ -1,0 +1,188 @@
+{% if section.settings.show_gdpr %}
+<div class="cookie-disclaimer {{section.settings.style}}" > 
+  <div class="cookie-content">
+    <p>{{section.settings.text}}</p>
+    <button type="button" class="accept-cookie">{{section.settings.accept}}</button>
+    <button type="button" class="decline-cookie">{{section.settings.decline}}</button>  
+  </div>
+</div>
+<style>
+  .cookie-disclaimer .cookie-content{ position: fixed; max-width: 500px; bottom: 15px; padding: 15px; z-index: 9; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; text-align: center; border-radius:var(--DTRadius); color: {{section.settings.text_color}}; background-color: {{section.settings.bg_color}}; {% if section.settings.enable_box_shadow %}  box-shadow: var(--DTboxShadow); {% endif %}  }
+  .cookie-disclaimer .cookie-content > * { margin: 5px; }
+  .cookie-disclaimer.bottom .cookie-content{ font-size:14px; bottom: 0; left: 0; right: 0; padding:10px 0; max-width: 100%; border-radius:0; }
+  .cookie-disclaimer.left .cookie-content{ left: 15px; right: auto; }
+  .cookie-disclaimer.right .cookie-content{ left: auto; right: 15px; }
+  .cookie-disclaimer .cookie-content button{ font-size:12px; padding:{{section.settings.button_padding}}; color: {{section.settings.button_text_color}}; background-color:{{section.settings.button_bg_color}}; }
+  .cookie-disclaimer .cookie-content button:hover{ color: {{section.settings.button_text_hover_color}}; background-color:{{section.settings.button_bg_hover_color}}; }
+  
+  @media screen and (max-width: 767px){
+  
+  .cookie-disclaimer .cookie-content > p { width: 100%; }
+     
+   }
+  
+</style>
+
+<script type="text/javascript">
+
+  jQuery(document).ready(function() { 
+    var cookie = false;
+    var cookieContent = $('.cookie-disclaimer');
+
+    checkCookie();
+
+    if (cookie === true) {
+      cookieContent.hide();
+    }
+
+    function setCookie(dt_gdpr_name, cookie_value, exdays) {
+      var d = new Date();
+      d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+      var expires = "expires=" + d.toGMTString();
+      document.cookie = dt_gdpr_name + "=" + cookie_value + "; " + expires;
+    }
+
+    function getCookie(dt_gdpr_name) {
+      var name = dt_gdpr_name + "=";
+      var ca = document.cookie.split(';');
+      for (var i = 0; i < ca.length; i++) {
+        var c = ca[i].trim();
+        if (c.indexOf(name) === 0) return c.substring(name.length, c.length);
+      }
+      return "";
+    }
+
+    function checkCookie() {
+      var user = getCookie("dt_gdpr_name");
+      if (user !== "") {        
+        cookie = true;
+      } else {        
+        if (user !== "" && user !== null) {
+          setCookie("cookie_value", "cookie_value", 365);
+        }
+      }
+    }
+
+    function deleteCookie() {
+      setCookie('dt_gdpr_name', '', -1);
+    }
+    $('.accept-cookie').click(function () {
+      setCookie("dt_gdpr_name", "cookie_value", 365);     
+      cookieContent.hide();
+    });
+
+    $('.decline-cookie').click(function () {        
+      deleteCookie();
+      cookieContent.hide();
+    });
+  });
+
+</script>
+{% endif %}
+{% schema %}
+{
+"name": "GDPR Cookies",
+"class": "gdpr-section",
+"settings": [
+{
+"type": "checkbox",
+"id": "show_gdpr",
+"label": "Enable GDPR cookies"
+},
+
+{
+"type": "select",
+"id": "style",
+"label":"Choose Style",
+"default": "bottom", 
+"options": [
+{
+"value": "bottom",
+"label": "Bottom"
+},
+{
+"value": "left",
+"label": "Left"
+},        
+{
+"value": "right",
+"label": "Right"
+}
+]
+},
+{
+"type": "checkbox",
+"id": "enable_box_shadow",
+"label": "Enable Box Shadow",
+"default": false
+},
+
+{
+"type": "textarea",
+"id": "text",
+"label": "Text",
+"default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+},  
+{
+"type": "text",
+"id": "accept",
+"label": "Button 1",
+"default": "Accept"
+},
+{
+"type": "text",
+"id": "decline",
+"label": "Button 2",
+"default": "Decline"
+},
+{
+"type": "header",
+"content": "Colors"            
+},
+{
+"type": "color",
+"id": "bg_color",
+"label": "Background - Color",
+"default": "#70bdc2"
+},
+{
+"type": "color",
+"id": "text_color",
+"label": "Text - Color",
+"default": "#fff"
+},
+
+{
+"type": "color",
+"id": "button_bg_color",
+"label": "Button BG Color",
+"default": "#206469"
+},
+{
+"type": "color",
+"id": "button_text_color",
+"label": "Button Text Color",
+"default": "#fff"
+},
+{
+"type": "color",
+"id": "button_text_hover_color",
+"label": "Button Hover Text Color",
+"default": "#000"
+},
+{
+"type": "color",
+"id": "button_bg_hover_color",
+"label": "Button Hover BG Color",
+"default": "#d8f3f5"
+},
+{
+"type": "text",
+"id": "button_padding",
+"label": "Button Padding",
+"default": "10px 20px 10px 20px",
+"info": "Format - Top, Right, Bottom, Left"
+}
+]
+}
+{% endschema %}

@@ -1,0 +1,1067 @@
+{% if section.blocks.size > 0 %}
+{% case section.settings.grid %}
+{% when '1' %}
+{% when '2' %}
+{%- assign column = 'two-column' -%}
+{% when '3' %}
+{%- assign column = 'three-column' -%}              
+{% when '4' %}
+{%- assign column = 'four-column' -%}              
+{% when '5' %}
+{%- assign column = 'five-column' -%}   
+{% when '6' %}
+{%- assign column = 'six-column' -%}   
+{% else %}
+{%- assign column = 'three-column' -%}              
+{% endcase %} 
+
+{% case section.settings.icon_format == 'numbered' %}
+{% when 'numbered' %}
+{%- assign icon_format = 'numbered' %}
+{% when 'alphabets' %}
+{%- assign icon_format = 'alphabets' %}
+{% when 'simple-round' %}
+{%- assign icon_format = 'simple-round' %}
+{% when 'icon' %}
+{%- assign icon_format = 'icon' %}
+{% endcase %} 
+
+{% if section.settings.enable_overlay %}
+{% assign overlay = 'dt-sc-overlay' %}
+{% endif %}
+
+{% if section.settings.hotspot_overlay %}
+{% assign hotspot_overlay = 'with-overlay' %}
+{% endif %}
+
+{% case section.settings.background_style %}
+{% when 'default' %}
+{% when 'parallax' %}
+{%- assign background_style = 'data-speed="2"' %}
+{% when 'fixed' %}
+{%- assign background_style = 'data-speed="1"' %}
+{% endcase %} 
+
+{% if section.settings.show_background_image %}
+{% assign lazyScript = "lazyload" %}
+{% endif %}
+
+<div class="dt-sc-section-wrapper {{lazyScript}}  {{overlay}} {% if section.settings.background_style == 'parallax' %} parallax-initiated{% endif %}" style="{% render 'bg-color-image-padding' %}" data-style="parallax" {{background_style}} {% include 'bg_image' %}>  
+  <div class="{% render 'container-settings' %}"> 
+    <div class="row">
+      {% render 'section-heading', class: section.id %}  
+      <div class="dt-sc-hotspot {{icon_format}} {{section.settings.hotspot_tooltip_style}} {{hotspot_overlay}}{{ section.settings.custom_class_name }}">        
+        {%- assign img_url = section.settings.spot_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+        <img class="dt-sc-hotspot-image lazyload"
+             data-src="{{ img_url }}"
+             data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+             data-aspectratio="{{ section.settings.block_image.aspect_ratio }}"
+             data-sizes="auto"            
+             alt="{{ section.settings.title }}">            
+        <noscript>
+          {{ section.settings.spot_image | img_url: '480x480', scale: 2 | img_tag: section.settings.spot_image.alt, 'dt-sc-noscript-image' }}
+        </noscript>
+
+        {% for block in section.blocks %} 
+
+        {% if block.type == 'product' %} 
+        {% if block.settings.product != blank %}
+        {% assign product = all_products[block.settings.product] %}
+        <div class="dt-sc-hotspot-item dt-sc-hotspot-item{{forloop.index}} block-type-{{block.type}}">
+          <a class="open-popup-link{{forloop.index}} dt-sc-hotspot-marker dt-sc-hotspot-marker{{forloop.index}}"  href="#dt-sc-hotspot-marker{{forloop.index}}"></a>
+          <div id="dt-sc-hotspot-marker{{forloop.index}}" class="dt-sc-hotspot-popup {{block.settings.text_position}}">
+            <div class="dt-sc-hotspot-content {{ block.settings.content_alignment}}">
+              <h4 class="dt-sc-hotspot-content-title"><a  href="{{product.url}}" title="{{ product.title}}">{{ product.title}}</a></h4>
+              <a href="{{block.settings.link}}" title="{{ block.settings.title}}">                
+                {%- assign featured_img_url = product.featured_image.src | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                <img class="lazyload"
+                     data-src="{{ featured_img_url }}"
+                     data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+                     data-aspectratio="{{ product.featured_image.aspect_ratio }}"
+                     data-sizes="auto"            
+                     alt="{{ featured_image.alt | escape }}">            
+                <noscript>
+                  {{ product.featured_image.src | img_url: '480x480', scale: 2 | img_tag: product.title, 'dt-sc-noscript-image' }}
+                </noscript>
+              </a>
+              <span>{{product.price | money }}</span>
+              {% if block.settings.link_text != blank and product.url != blank %}
+              <a class="dt-sc-btn" href="{{product.url}}">{{block.settings.link_text}}</a>
+              {% endif %}         
+            </div>
+          </div>
+          <div class="dt-sc-hotspot-icon {{section.settings.hotspot_style}}"><span class="{{ section.settings.icon }}"></span></div>
+        </div>
+        {% endif %}
+        {% endif %}
+
+        {% if block.type == 'content' %}
+        <div class="dt-sc-hotspot-item dt-sc-hotspot-item{{forloop.index}} block-type-{{block.type}}">
+          <a class="open-popup-link{{forloop.index}} dt-sc-hotspot-marker dt-sc-hotspot-marker{{forloop.index}}" href="#dt-sc-hotspot-marker{{forloop.index}} "></a>
+          {% if block.settings.title != blank or block.settings.text != blank or block.settings.link_text != blank %}
+          <div id="dt-sc-hotspot-marker{{forloop.index}}" class="dt-sc-hotspot-popup {{block.settings.text_position}}">
+            <div class="dt-sc-hotspot-content {{ block.settings.content_alignment}}">
+              {% if block.settings.title != blank %}
+              <h4 class="dt-sc-hotspot-content-title"><a href="{{block.settings.link}}" title="{{ block.settings.title}}">{{ block.settings.title}}</a></h4>
+              {% endif %}     
+              {% if block.settings.text != blank %}
+              <p>{{block.settings.text }}</p>
+              {% endif %}     
+              {% if block.settings.link_text != blank and block.settings.link != blank %}
+              <a class="dt-sc-btn" href="{{block.settings.link}}">{{block.settings.link_text}}</a>
+              {% endif %}     
+            </div>
+          </div>
+
+          {% endif %}     
+          <div class="dt-sc-hotspot-icon {{section.settings.hotspot_style}}"><span class="{{ section.settings.icon }}"></span></div>
+        </div>
+        {% endif %}         
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>  
+
+<script>
+
+  window.onload = function(){
+
+    if($(window).width() > 769) 
+    {     
+      jQuery(function($) {
+        var pop = $('.dt-sc-hotspot-popup');
+        pop.click(function(e) {
+          e.stopPropagation();
+        });
+
+        $('a.dt-sc-hotspot-marker').click(function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          $(this).next('.dt-sc-hotspot-popup').toggleClass('dt-sc-popup-open');
+          $(this).parent().siblings().children('.dt-sc-hotspot-popup').removeClass('dt-sc-popup-open');
+        });
+
+        $(document).click(function() {
+          pop.removeClass('dt-sc-popup-open');
+        });              
+      });
+    }  
+
+    if($(window).width() < 769) {     
+      $('.dt-sc-hotspot-popup').addClass('mfp-hide');
+      $('.dt-sc-hotspot-marker').each(function() {
+        $(this).magnificPopup({       
+          type: 'inline'
+        });
+      });        
+    }    
+  };
+</script>
+<style>
+  {% for block in section.blocks %}
+  .dt-sc-hotspot-item{{forloop.index}} {
+    top: {{ block.settings.top_position }}%;
+    left: {{ block.settings.left_position }}%;    
+    transform: translate(-{{ block.settings.top_position }}%, -{{ block.settings.left_position }}%); }
+  {% endfor %} 
+
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-heading .dt-sc-main-heading { color: var(--DTColor_Heading); color:{{ section.settings.section_heading_color }}; } 
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-heading .dt-sc-sub-heading { color: var(--DTColor_Heading); color:{{ section.settings.section_sub_heading_color }}; } 
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-heading .dt-sc-heading-description { color: var(--DTColor_Body); color:{{ section.settings.section_description_color }}; } 
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-heading .dt-sc-btn { 
+    background: var(--DT_Button_BG_Color); background:{{ section.settings.section_button_bg_color }}; 
+      color: var(--DT_Button_Text_Color); color:{{ section.settings.section_button_text_color }}; }
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-heading .dt-sc-btn:hover { 
+    background: var(--DT_Button_BG_Hover_Color); background:{{ section.settings.section_button_hover_bg_color }}; 
+      color: var(--DT_Button_Text_Hover_Color); color:{{ section.settings.section_button_hover_text_color }}; }
+
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-overlay:before { 
+    color: var(--DTTertiaryColor);
+      color: {{ section.settings.background_color }};    
+      background: currentcolor; 
+      opacity: {{ section.settings.overlay_transparency }}; }
+
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot.with-overlay:before { 
+
+    color: var(--DTTertiaryColor);
+      color: {{ section.settings.hotspot_overlay_color }};    
+      background: currentcolor; 
+      opacity: {{ section.settings.hotspot_overlay_transparency }}; }
+
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-popup, 
+  #shopify-section-{{section.id}}.home-hotspot-section .mfp-content .dt-sc-hotspot-popup { 
+    background: var(--DTTertiaryColor); 
+      background: {{ section.settings.hotspot_content_bg_color }};
+      {% if section.settings.enable_box_shadow %} box-shadow: var(--DTboxShadow); {% endif %} border-radius: var(--DTRadius);
+        border-radius: {{ section.settings.border_radius}}px; 
+        }
+
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-popup.on-right:before { 
+    color: var(--DTTertiaryColor);      
+      color: {{ section.settings.hotspot_content_bg_color }};
+      border-color: transparent currentcolor transparent transparent;
+      }
+
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-popup.on-left:before { 
+    color: var(--DTTertiaryColor);      
+      color: {{ section.settings.hotspot_content_bg_color }};
+      border-color: transparent transparent transparent currentcolor; }
+
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-popup.on-bottom:before {     
+    color: var(--DTTertiaryColor);      
+      color: {{ section.settings.hotspot_content_bg_color }};
+      border-color: transparent transparent currentcolor transparent;
+      }
+
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-popup.on-top:before {    
+    color: var(--DTTertiaryColor);      
+      color: {{ section.settings.hotspot_content_bg_color }};
+      border-color: currentcolor transparent transparent transparent; }
+
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-content { 
+    color: var(--DTPrimaryColor);
+      color: {{ section.settings.hotspot_content_description_color }}; }
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-content .dt-sc-hotspot-content-title a { 
+    color: var(--DTLinkColor);
+      color: {{ section.settings.hotspot_content_title_color }}; }
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-content .dt-sc-hotspot-content-title a:hover { 
+    color: var(--DTLinkHoverColor);
+      color: {{ section.settings.hotspot_content_title_hover_color }}; }
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-content a.dt-sc-btn {     
+    background: var(--DT_Button_BG_Color); 
+      color: var(--DT_Button_Text_Color); 
+        background: {{ section.settings.hotspot_content_button_bg_color }}; 
+        color: {{ section.settings.hotspot_content_button_text_color }}; 
+        }
+
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-content a.dt-sc-btn:empty { display: none; }
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-content a.dt-sc-btn:hover { 
+    background: var(--DT_Button_BG_Hover_Color); 
+      color: var(--DT_Button_Text_Hover_Color);
+
+        background: {{ section.settings.hotspot_content_button_bg_hover_color }}; 
+        color: {{ section.settings.hotspot_content_button_text_hover_color }};
+        }
+
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-item { width: {{ section.settings.hotspot_size }}px; height: {{ section.settings.hotspot_size }}px; }    
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-marker, 
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-icon span { width: {{ section.settings.hotspot_size }}px; 
+    height: {{ section.settings.hotspot_size }}px; line-height: {{ section.settings.hotspot_size }}px; font-size: {{ section.settings.hotspot_icon_text_size }}px; }
+
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-popup-open + .dt-sc-hotspot-icon span, 
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-icon:hover span {     
+    background: var(--DT_Button_BG_Hover_Color); 
+      color: var(--DT_Button_Text_Hover_Color);    
+        background: {{ section.settings.dots_hoverbg_color_1 }}; 
+        color: {{ section.settings.dots_hovercolor_1 }};
+        }
+
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-icon span {        
+    background: var(--DT_Button_BG_Color); 
+      color: var(--DT_Button_Text_Color);    
+        background-color: {{ section.settings.dots_bg_color_1 }}; 
+        color: {{ section.settings.dots_color_1 }}; 
+        }
+
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-item .dt-sc-hotspot-icon span:after { width: {{ section.settings.hotspot_size | plus: 4 }}px; 
+    height: {{ section.settings.hotspot_size | plus: 4 }}px; 
+    border: {{ section.settings.hotspot_outer_size }}px solid; 
+    border: {{ section.settings.hotspot_outer_size }}px solid; 
+    color: var(--DTPrimaryColor);  
+      color: {{ section.settings.hotspot_outer_color }};
+
+      margin: -{{ section.settings.hotspot_size | plus: 4 | divided_by: 2 }}px auto auto -{{ section.settings.hotspot_size | plus: 4 | divided_by: 2 }}px; 
+      }
+
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-item .dt-sc-hotspot-icon.style-2 span:after { width: {{ section.settings.hotspot_size | plus: 8 }}px;
+    border: {{ section.settings.hotspot_outer_size }}px dashed var(--DTPrimaryColor); height: {{ section.settings.hotspot_size | plus: 8 }}px;
+      border: {{ section.settings.hotspot_outer_size }}px dashed {{ section.settings.hotspot_outer_color }}; height: {{ section.settings.hotspot_size | plus: 8 }}px;
+      margin: -{{ section.settings.hotspot_size | plus: 8 | divided_by: 2 }}px auto auto -{{ section.settings.hotspot_size | plus: 8 | divided_by: 2 }}px; 
+      }
+
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-item .dt-sc-hotspot-icon.style-3 span { 
+    box-shadow: 0 0 0 {{ section.settings.hotspot_outer_size }}px var(--DTPrimaryColor);
+      box-shadow: 0 0 0 {{ section.settings.hotspot_outer_size }}px {{ section.settings.hotspot_outer_color }}; 
+      }
+
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot.style-3 .dt-sc-hotspot-item:hover .dt-sc-hotspot-icon span { 
+
+    background: var(--DT_Button_BG_Hover_Color); 
+      color: var(--DT_Button_Text_Hover_Color); 
+
+        background: {{ section.settings.dots_hoverbg_color_1 }}; 
+        color: {{ section.settings.dots_hovercolor_1 }}; 
+        }
+
+  #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-popup { width: {{ section.settings.hotspot_content_size }}px; }
+
+  @media (max-width: 1540px) {	
+
+    #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-popup { width: {{ section.settings.hotspot_content_size_laptop }}px; padding: 1.5em; }  	
+    #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-popup .dt-sc-hotspot-content-title { font-size: var(--DTFontSize_H5); }	
+
+  }	
+
+
+  @media (max-width: 1199px) {	
+
+    #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-popup { width: {{ section.settings.hotspot_content_size_tablet }}px; padding: 1.25em; }	
+    #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-popup .dt-sc-hotspot-content-title { font-size: var(--DTFontSize_H6); }	
+
+  }
+
+
+  @media (max-width: 767px) {
+    #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-item { 
+      width: calc(.75 * {{ section.settings.hotspot_size }}px); height: calc(.75 * {{ section.settings.hotspot_size }}px); 
+    } 
+    #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-marker, 
+    #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-icon span { width: 100%; height: 100%; 
+      font-size: calc(.75* {{ section.settings.hotspot_icon_text_size }}px); }
+
+    #shopify-section-{{section.id}}.home-hotspot-section .dt-sc-hotspot-item .dt-sc-hotspot-icon span:after { 
+      width: calc(.65* {{ section.settings.hotspot_size | plus: 4 }}px); height: calc(.65* {{ section.settings.hotspot_size | plus: 4 }}px); 
+      margin: calc(.65* -{{ section.settings.hotspot_size | plus: 4 | divided_by: 2 }}px) auto auto calc(.65* -{{ section.settings.hotspot_size | plus: 4 | divided_by: 2 }}px); 
+    }
+
+    .mfp-content .dt-sc-hotspot-popup { opacity: 1; visibility: visible; width: 50%; }
+    .mfp-content .dt-sc-hotspot-popup[class*="on-"] { left: 0; right: 0; top: auto; bottom: auto; transform: none; margin: 0 auto; 
+    background: var(--DTTertiaryColor); 
+    background: {{ section.settings.hotspot_content_bg_color }};
+      {% if section.settings.enable_box_shadow %} box-shadow: var(--DTboxShadow); {% endif %} border-radius: var(--DTRadius);
+        border-radius: {{ section.settings.border_radius}}px; 
+        
+        }
+
+  } 
+
+  @media (max-width: 576px) {
+
+    .mfp-content .dt-sc-hotspot-popup { width: {{ section.settings.hotspot_content_size_mobile }}px; padding: 1.75em; }
+
+    .dt-sc-hotspot-content-title { font-size: var(--DTFontSize_H5); }
+
+  }
+
+  /* Hotspot */
+
+  .dt-sc-hotspot { position: relative; max-width: 100%; margin: auto; float: left; margin-bottom: 50px; }
+
+  .dt-sc-hotspot-heading { position: absolute; height: 100%; width: 100%; left: 0; top: 0; display: flex; flex-direction: column; align-items: flex-start; padding: 30px;
+    flex-wrap: wrap; }
+  .dt-sc-hotspot-heading *, .dt-sc-hotspot-heading *:not(:only-child) { margin: 0; }
+  .dt-sc-hotspot-heading *:not(:last-child) { margin: 0 0 20px 0; }
+
+  .dt-sc-hotspot-heading.text-center { align-items: center; align-content: flex-start; }
+  .dt-sc-hotspot-heading.text-end { align-items: flex-end; align-content: flex-start; }
+  .dt-sc-hotspot-heading.top-left { align-items: flex-end; }
+
+  .dt-sc-hotspot-heading.top-center, .dt-sc-hotspot-heading.center, .dt-sc-hotspot-heading.bottom-center { align-items: center; }
+  .dt-sc-hotspot-heading.center { justify-content: center; }
+
+  .dt-sc-hotspot-heading.top-right, .dt-sc-hotspot-heading.center-right, .dt-sc-hotspot-heading.bottom-right { align-items: flex-end; }
+
+  .dt-sc-hotspot.with-overlay:before { content: ""; display: block; width: 100%; height: 100%; position: absolute; }
+
+  .dt-sc-hotspot img.dt-sc-hotspot-image { float: left; width: 100%; }
+
+  .dt-sc-hotspot-item { position: absolute; }
+  .dt-sc-hotspot-item .dt-sc-hotspot-marker { top: auto; left: auto; }
+
+  .dt-sc-hotspot.numbered, .dt-sc-hotspot.alphabets { counter-reset: dt-sc-hotspot-counter; }
+  .dt-sc-hotspot.numbered .dt-sc-hotspot-item, .dt-sc-hotspot.alphabets .dt-sc-hotspot-item { counter-increment: dt-sc-hotspot-counter; }
+  .dt-sc-hotspot.numbered .dt-sc-hotspot-item .dt-sc-hotspot-icon span, 
+  .dt-sc-hotspot.alphabets .dt-sc-hotspot-item .dt-sc-hotspot-icon span { font-family: inherit; transform: none; font-weight: 700; }
+
+  .dt-sc-hotspot.numbered .dt-sc-hotspot-item .dt-sc-hotspot-icon span:before { content: counter(dt-sc-hotspot-counter, decimal); }    
+  .dt-sc-hotspot.alphabets .dt-sc-hotspot-item .dt-sc-hotspot-icon span:before { content: counter(dt-sc-hotspot-counter, upper-alpha); }
+
+  .dt-sc-hotspot-popup { position: absolute; padding: 2em; transition: var(--DTBaseTransition); opacity: 0; visibility: hidden; z-index: 2; }
+
+  .dt-sc-hotspot-popup:before { content: ""; position: absolute; width: 0; height: 0; border-style: solid; }
+
+  .dt-sc-hotspot-popup.on-right { left: 48px; top: 50%; transform: translateY(-50%); }
+  .dt-sc-hotspot-popup.on-right:before { left: -10px; border-width: 10px 10px 10px 0; top: 50%; transform: translateY(-50%); }
+  .dt-sc-hotspot-popup.on-right.dt-sc-popup-open { left: 58px; }
+
+  .dt-sc-hotspot-popup.on-left { right: 48px; top: 50%; transform: translateY(-50%); }
+  .dt-sc-hotspot-popup.on-left:before { right: -10px; border-width: 10px 0 10px 10px; top: 50%; transform: translateY(-50%); }
+  .dt-sc-hotspot-popup.on-left.dt-sc-popup-open { right: 58px; }
+
+  .dt-sc-hotspot-popup.on-bottom { top: 48px; left: 50%; transform: translateX(-50%); }
+  .dt-sc-hotspot-popup.on-bottom:before { top: -10px; border-width: 0 10px 10px 10px; left: 50%; transform: translateX(-50%); }
+  .dt-sc-hotspot-popup.on-bottom.dt-sc-popup-open { top: 58px; }
+
+  .dt-sc-hotspot-popup.on-top { bottom: 48px; left: 50%; transform: translateX(-50%); }
+  .dt-sc-hotspot-popup.on-top:before { bottom: -10px; border-width: 10px 10px 0 10px; left: 50%; transform: translateX(-50%); }
+  .dt-sc-hotspot-popup.on-top.dt-sc-popup-open { bottom: 58px; }
+
+  .dt-sc-hotspot-content * { display: inline-block; }
+  .dt-sc-hotspot-content *, .dt-sc-hotspot-content *:not(:only-child) { margin: 0; }
+  .dt-sc-hotspot-content *:not(:last-child) { margin: 0 0 15px 0; }    
+  .dt-sc-hotspot-content *:not(.dt-sc-btn) { width: 100%; }
+
+  .dt-sc-hotspot-popup.dt-sc-popup-open { opacity: 1; visibility: visible; }
+
+  .dt-sc-hotspot-marker, .dt-sc-hotspot-icon span { position: absolute; z-index: 1; display: flex; align-items: center; justify-content: center; }
+  .dt-sc-hotspot-icon { height: 100%; }
+  .dt-sc-hotspot-icon span { left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; border-radius: 50%; transition: var(--DTBaseTransition); }
+
+  .dt-sc-hotspot.simple-round .dt-sc-hotspot-icon span:before { display: none; }
+
+  .dt-sc-popup-open + .dt-sc-hotspot-icon span[class*="fa-plus"], 
+  .dt-sc-hotspot-icon:hover span[class*="fa-plus"] { transform: rotate(45deg); }
+
+  .dt-sc-hotspot-item .dt-sc-hotspot-icon span:after { display: block; position: absolute; top: 50%; left: 50%; border-radius: 50%; opacity: 0;transform-origin: 50% 50%; 
+    -webkit-animation: pulsate-animation 3s ease-out infinite; animation: pulsate-animation 3s ease-out infinite; content: ""; transition: var(--DTBaseTransition);
+      }
+
+  .dt-sc-hotspot-item .dt-sc-hotspot-icon.style-2 span:after { opacity: 1; -webkit-animation: rotate-animation 10s ease-out infinite; 
+    animation: rotate-animation 10s ease-out infinite; }
+
+  .dt-sc-hotspot-item .dt-sc-hotspot-icon.style-3 span:after,
+  .dt-sc-hotspot-item .dt-sc-hotspot-icon.style-4 span:after { display: none; }
+
+  .dt-sc-hotspot-item:hover .dt-sc-hotspot-icon span:after, .dt-sc-popup-open + .dt-sc-hotspot-icon span:after,
+  .dt-sc-hotspot-item:hover .dt-sc-hotspot-icon.style-2 span:after, .dt-sc-popup-open + .dt-sc-hotspot-icon.style-2 span:after { 
+    animation-play-state: paused; -webkit-animation-play-state: paused; }
+
+  /* Animation */
+
+  @keyframes pulsate-animation {
+    0% { transform: scale(1); opacity: 0.8; }
+    45% { transform: scale(1.75); opacity: 0; border-width: {{ section.settings.hotspot_outer_size | times: 5 }}; }
+  }
+
+  @keyframes rotate-animation {
+    from { transform: rotate(0); }
+    to { transform: rotate(360deg); }
+  }
+
+  .dt-sc-hotspot.style-2 .dt-sc-hotspot-item .dt-sc-hotspot-popup.on-right { left: 58px; }
+  .dt-sc-hotspot.style-2 .dt-sc-hotspot-item .dt-sc-hotspot-popup.on-left { right: 58px; }
+  .dt-sc-hotspot.style-2 .dt-sc-hotspot-item .dt-sc-hotspot-popup.on-bottom { top: 58px; }
+  .dt-sc-hotspot.style-2 .dt-sc-hotspot-item .dt-sc-hotspot-popup.on-top { bottom: 58px; }
+
+  .dt-sc-hotspot.style-2 .dt-sc-hotspot-item .dt-sc-hotspot-popup { opacity: 1; visibility: visible; }
+
+  .dt-sc-hotspot.style-3 .dt-sc-hotspot-item .dt-sc-hotspot-popup.on-right { left: 48px; }
+  .dt-sc-hotspot.style-3 .dt-sc-hotspot-item .dt-sc-hotspot-popup.on-left { right: 48px; }
+  .dt-sc-hotspot.style-3 .dt-sc-hotspot-item .dt-sc-hotspot-popup.on-bottom { top: 48px; }
+  .dt-sc-hotspot.style-3 .dt-sc-hotspot-item .dt-sc-hotspot-popup.on-top { bottom: 48px; }    
+
+  .dt-sc-hotspot.style-3 .dt-sc-hotspot-item:hover .dt-sc-hotspot-popup.on-right { left: 58px; }
+  .dt-sc-hotspot.style-3 .dt-sc-hotspot-item:hover .dt-sc-hotspot-popup.on-left { right: 58px; }
+  .dt-sc-hotspot.style-3 .dt-sc-hotspot-item:hover .dt-sc-hotspot-popup.on-bottom { top: 58px; }
+  .dt-sc-hotspot.style-3 .dt-sc-hotspot-item:hover .dt-sc-hotspot-popup.on-top { bottom: 58px; }
+
+  .dt-sc-hotspot.style-3 .dt-sc-hotspot-item:hover .dt-sc-hotspot-popup { opacity: 1; visibility: visible; }
+  .dt-sc-hotspot.style-3.icon .dt-sc-hotspot-item:hover .dt-sc-hotspot-icon span[class*="fa-plus"] { transform: rotate(45deg); }
+
+  .dt-sc-hotspot.style-2 .dt-sc-hotspot-item .dt-sc-hotspot-marker, .dt-sc-hotspot.style-2 .dt-sc-hotspot-icon, 
+  .dt-sc-hotspot.style-3 .dt-sc-hotspot-item .dt-sc-hotspot-marker, .dt-sc-hotspot.style-3 .dt-sc-hotspot-icon { pointer-events: none; }
+
+
+</style> 
+{% endif %}
+
+{% schema %}
+{
+"name": "Hotspots",
+"class": "index-section home-hotspot-section",
+"settings": [
+{
+"type": "checkbox",
+"id": "full",
+"label": "Show Full width"
+},
+{
+"type": "checkbox",
+"id": "spacing_both_ends",
+"label": "Enable Right & Left Spacing (Works only on Fullwidth)",
+"default": false
+},
+{
+"type": "text",
+"id": "padding",
+"label": "Style value (Padding)",
+"default":"0,0",
+"info":"Top(px),Bottom(px)"
+},
+{
+"type": "text",
+"id": "margin",
+"label": "Style value (Margin)",
+"default":"0,0",
+"info":"Top(px),Bottom(px)"
+},
+{
+"type": "checkbox",
+"id": "show_background_image",
+"label": "Enable Background image"
+},
+{
+"type": "image_picker",
+"id": "background_image",
+"label": "Background image",
+"info": "Size: 1920x1280"
+},
+{
+"type": "select",
+"id": "background_style",
+"label": "Background Style",
+"default": "default",
+"options": [
+{
+"value": "default",
+"label": "Default"
+},
+{
+"value": "parallax",
+"label": "Parallax"
+},
+{
+"value": "fixed",
+"label": "Fixed"
+}
+]
+},
+{
+"type": "checkbox",
+"id": "enable_overlay",
+"label": "Enable Background Color (Used as Background Image Overlay Color too)"
+},
+{
+"type": "color",
+"id": "background_color",
+"label":"Background color"
+},
+{
+"type": "text",
+"id": "overlay_transparency",
+"label": "Overlay Transparency (0.01 to 1)",
+"default": "0.5"
+},
+{
+"type": "text",
+"id": "section_heading",
+"label": "Main Heading",
+"default": "Hotspot - Style1 (Tooltip On Click)"
+},  
+{
+"type": "text",
+"id": "section_sub_heading",
+"label": "Sub Heading",
+"default": "Sub Heading"
+},  
+{
+"type": "text",
+"id": "section_description",
+"label": "Description",
+"default": "Use this text to share the information which you like!."
+},  
+{
+"type": "text",
+"id": "section_button_text",
+"label": "Link text"
+},
+{
+"type": "url",
+"id": "section_button_link",
+"label": "Link URL"
+},
+{
+"type": "header",
+"content": "Section Color settings"
+},
+{
+"type": "color",
+"id": "section_heading_color",
+"label": "Heading color"
+},    
+{
+"type": "color",
+"id": "section_sub_heading_color",
+"label": "Sub heading color"
+},   
+{
+"type": "color",
+"id": "section_description_color",
+"label": "Description color"
+},  
+{
+"type": "color",
+"id": "section_button_bg_color",
+"label": "Button bg color"
+},   
+{
+"type": "color",
+"id": "section_button_text_color",
+"label": "Button text color"
+},   
+{
+"type": "color",
+"id": "section_button_hover_bg_color",
+"label": "Button hover bg color"
+},   
+{
+"type": "color",
+"id": "section_button_hover_text_color",
+"label": "Button hover text color"
+},
+{
+"type": "select",
+"id": "heading_position",
+"label": "Heading Position",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "right"
+}
+]
+},
+{
+"type": "header",
+"content": "Hotspot settings",
+"info": "Add the Blocks from the top of this section"
+},
+{
+"type": "image_picker",
+"id": "spot_image",
+"label": "Hotspot image",
+"info": "Size: 1920x1280"
+},
+{
+"type": "checkbox",
+"id": "hotspot_overlay",
+"label": "Enable Hotspot Overlay"
+},
+{
+"type": "color",
+"id": "hotspot_overlay_color",
+"label":"Hotspot Overlay color"
+},
+{
+"type": "text",
+"id": "hotspot_overlay_transparency",
+"label": "Overlay Transparency (0.01 to 1)",
+"default": "0.5"
+},
+{
+"type": "select",
+"id": "hotspot_tooltip_style",
+"label": "Hotspot Tooltip Style",
+"options": [
+{
+"value": "style-1",
+"label": "Style 1 (Displayed on Icon Click)"
+},
+{
+"value": "style-2",
+"label": "Style 2 (Displayed by Default)"
+},
+{
+"value": "style-3",
+"label": "Style 3 (Displayed on Icon Hover)"
+}
+]
+},
+{
+"type": "select",
+"id": "hotspot_style",
+"label": "Hotspot Outer Style",
+"options": [
+{
+"value": "style-1",
+"label": "Ripple"
+},
+{
+"value": "style-2",
+"label": "Spin"
+},
+{
+"value": "style-3",
+"label": "Fixed Border"
+},
+{
+"value": "style-4",
+"label": "Blank"
+}
+]
+},
+{
+"type" : "color",
+"id" : "dots_color_1",
+"label" : "Hotspot Icon/Text Color"
+},
+{
+"type" : "color",
+"id" : "dots_bg_color_1",
+"label" : "Hotspot Icon/Text Background color"
+},
+{
+"type" : "color",
+"id" : "dots_hovercolor_1",
+"label" : "Hotspot Icon/Text Hover Color"
+},
+{
+"type" : "color",
+"id" : "dots_hoverbg_color_1",
+"label" : "Hotspot Icon/Text Hover Background color"
+},
+{
+"type" : "color",
+"id" : "hotspot_outer_color",
+"label" : "Hotspot Outer color"
+},
+{
+"type": "radio",
+"id": "icon_format",
+"label": "Hotspot format",
+"options": [
+{
+"value": "numbered",
+"label": "Numbered"
+},
+{
+"value": "alphabets",
+"label": "Alphabet"
+},
+{
+"value": "simple-round",
+"label": "Simple"
+},
+{
+"value": "icon",
+"label": "Icon"
+}        
+],
+"default": "numbered"
+},
+{
+"type": "text",
+"id": "icon",
+"label": "Icon class (Select Icon Option above for viewing the icon)",
+"default":"fa fa-plus"
+},
+{
+"type": "checkbox",
+"id": "enable_box_shadow",
+"label": "Enable Box Shadow",
+"default": false
+},
+{
+"type": "text",
+"id": "border_radius",
+"label": "Hotspot Border Radius(Leave empty for Theme Default Border Radius)",
+"default":"0",
+"info": "Units not needed"
+},
+{
+"type": "header",
+"content": "Hotspot Font Size Settings"
+},
+{	
+"type": "range",	
+"id": "hotspot_icon_text_size",	
+"label": "Hotspot Icon/Text Size",	
+"min": 12,	
+"max": 24,	
+"step": 1,	
+"default": 16,	
+"unit": "px"	
+},	
+{	
+"type": "range",	
+"id": "hotspot_size",	
+"label": "Hotspot Icon/Text Circle Size",	
+"min": 25,	
+"max": 50,	
+"step": 1,	
+"default": 36,	
+"unit": "px"	
+},	
+{	
+"type": "range",	
+"id": "hotspot_outer_size",	
+"label": "Hotspot Icon/Text Outer Circle Size",	
+"min": 1,	
+"max": 20,	
+"step": 1,	
+"default": 2,	
+"unit": "px"	
+},		
+{
+"type": "header",
+"content": "Hotspot Content Size Settings"
+},
+{	
+"type": "range",	
+"id": "hotspot_content_size",	
+"label": "Hotspot Content Size",	
+"min": 200,	
+"max": 400,	
+"step": 5,	
+"default": 300,	
+"unit": "px"	
+},
+{	
+"type": "range",	
+"id": "hotspot_content_size_laptop",	
+"label": "Hotspot Content Size - Laptop (Small Screen)",	
+"min": 200,	
+"max": 400,	
+"step": 5,	
+"default": 300,	
+"unit": "px"	
+},	
+{	
+"type": "range",	
+"id": "hotspot_content_size_tablet",	
+"label": "Hotspot Content Size - Tablet",	
+"min": 200,	
+"max": 400,	
+"step": 5,	
+"default": 275,	
+"unit": "px"	
+},
+{	
+"type": "range",	
+"id": "hotspot_content_size_mobile",	
+"label": "Hotspot Content Size - Mobile",	
+"min": 200,	
+"max": 400,	
+"step": 5,	
+"default": 250,	
+"unit": "px"	
+},
+{
+"type": "header",
+"content": "Hotspot Content Color Settings"
+},
+{
+"type" : "color",
+"id" : "hotspot_content_bg_color",
+"label" : "Hotspot Content Bg color"
+},
+{
+"type" : "color",
+"id" : "hotspot_content_title_color",
+"label" : "Hotspot Content Title color"
+},
+{
+"type" : "color",
+"id" : "hotspot_content_title_hover_color",
+"label" : "Hotspot Content Title Hover color"
+},
+{
+"type" : "color",
+"id" : "hotspot_content_description_color",
+"label" : "Hotspot Content Description color"
+},
+{
+"type" : "color",
+"id" : "hotspot_content_button_bg_color",
+"label" : "Hotspot Content Button Bg color"
+},
+{
+"type" : "color",
+"id" : "hotspot_content_button_text_color",
+"label" : "Hotspot Content Button text color"
+},
+{
+"type" : "color",
+"id" : "hotspot_content_button_bg_hover_color",
+"label" : "Hotspot Content Button hover Bg color"
+},
+{
+"type" : "color",
+"id" : "hotspot_content_button_text_hover_color",
+"label" : "Hotspot Content Button hover text color"
+},
+{
+"type": "header",
+"content": "Custom class"
+},
+{
+"type": "text",
+"id": "custom_class_name",
+"label": "Add your custom class name here"
+}
+],
+"blocks" : [
+{
+"type": "product",
+"name": "Product",
+"settings":[
+{
+"type" : "product",
+"id" : "product",
+"label" : "Select Product"
+},
+{
+"type" : "text",
+"id" : "top_position",
+"label" : "Top Position (in %)",
+"default" : "50"
+},
+{
+"type" : "text",
+"id" : "left_position",
+"label" : "Left Position (in %)",
+"default" : "50"
+},
+{
+"type": "text",
+"id": "link_text",
+"label": "Button label",
+"default":"Shop Now"
+},
+{
+"type": "select",
+"id": "text_position",
+"label": "Tooltip Position",
+"default": "on-right",
+"options": [
+{
+"value": "on-top",
+"label": "Top"
+},
+{
+"value": "on-right",
+"label": "Right"
+},
+{
+"value": "on-left",
+"label": "Left"
+},
+{
+"value": "on-bottom",
+"label": "Bottom"
+}
+]
+},
+{
+"type": "select",
+"id": "content_alignment",
+"label": "Tooltip Content alignment",
+"default": "text-start",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "right"
+}
+]
+}
+]
+},
+{
+"type": "content",
+"name": "Content",
+"settings":[
+{
+"type" : "text",
+"id" : "title",
+"label" : "Title",
+"default" : "Title"
+},
+{		
+"type" : "textarea",
+"id" : "text",
+"label" : "Text"
+},
+{
+"type": "text",
+"id": "link_text",
+"label": "Button label",
+"default":"Shop Now"
+},
+{		
+"type" : "url",
+"id" : "link",
+"label" : "Link"
+},
+{
+"type" : "text",
+"id" : "top_position",
+"label" : "Top Position (in %)",
+"default" : "50"
+},
+{
+"type" : "text",
+"id" : "left_position",
+"label" : "Left Position (in %)",
+"default" : "50"
+},
+{
+"type": "select",
+"id": "text_position",
+"label": "Content Position",
+"default": "on-right",
+"options": [
+{
+"value": "on-top",
+"label": "Top"
+},
+{
+"value": "on-right",
+"label": "Right"
+},
+{
+"value": "on-left",
+"label": "Left"
+},
+{
+"value": "on-bottom",
+"label": "Bottom"
+}
+]
+},
+{
+"type": "select",
+"id": "content_alignment",
+"label": "Content alignment",
+"default": "text-start",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "right"
+}
+]
+}
+]
+}
+],
+"presets": [
+{
+"name": "Hotspots",
+"category": "Advanced"
+}
+]
+}
+{% endschema %}

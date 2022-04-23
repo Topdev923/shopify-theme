@@ -1,0 +1,104 @@
+{% case section.settings.grid %}
+{% when '1' %}
+{% when '2' %}
+{%- assign column = 'two-column' -%}
+{% when '3' %}
+{%- assign column = 'three-column' -%}              
+{% when '4' %}
+{%- assign column = 'four-column' -%}              
+{% when '5' %}
+{%- assign column = 'five-column' -%}   
+{% when '6' %}
+{%- assign column = 'six-column' -%}   
+{% else %}
+{%- assign column = 'three-column' -%}              
+{% endcase %} 
+<div class="container">
+  <div class="dt-sc-column {{column}} list-collection-products">  
+    {% if section.settings.use_custom_list_collection %}
+    {% for link in linklists[section.settings.list-collections].links %}
+    {% assign collection = link.object %}
+    {% unless collection.handle == 'frontpage' %}    
+    {% assign featured = collection.handle %}
+    {% include 'collection-grid-item' %}
+    {% endunless %}
+    {% endfor %}  
+    {% else %}
+    {% for collection in collections %}
+    {% unless collection.handle == 'frontpage' %}    
+    {% assign featured = collection.handle %}
+    {% include 'collection-grid-item' %}
+    {% endunless %}
+    {% endfor %}  
+    {% endif %}  
+  </div>
+</div>
+
+<style>
+  .collection-detail .dt-sc-btn{
+    display: inline-block;  
+  }
+</style>
+{% schema %}
+{
+"name": "Options",
+"settings": [
+    {
+    "type": "checkbox",
+    "id": "use_custom_list_collection",
+    "label": "Use custom list collection"
+    },
+    {
+    "type": "link_list",
+    "id": "list-collections",
+    "label": "Pick custom  linkedlist"
+    },
+    {
+    "type": "text",
+    "id": "collection_btn_text",
+    "label": "Btn text",
+    "default": "Shop Now"
+    },
+ {
+    "type": "checkbox",
+    "id": "show_item_count",
+    "label": "Show prouct count"
+    },
+ {
+    "type": "checkbox",
+    "id": "show_excerpt",
+    "label": "Show excerpt"
+    },
+  {
+  "type": "select",
+  "id": "grid",
+  "label":"Products per row",        
+  "default": "4",
+  "options": [
+  {
+  "value": "2",
+  "label":"2"
+  },
+  {
+  "value": "3",
+  "label":"3"
+  },
+  {
+  "value": "4",
+  "label": "4"
+  },
+  {
+  "value": "5",
+  "label": "5"
+  }
+  ]
+  }
+]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

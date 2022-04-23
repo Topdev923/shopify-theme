@@ -1,0 +1,431 @@
+<div class="dt-sc-section-wrapper" style="{% render 'bg-color-image-padding' %}">  
+  <div class="{% render 'container-settings' %}"> 
+    <div class="row {{ section.settings.custom_class_name }}">
+      <div class="dt-sc-divider">         
+        <{{ section.settings.heading_typography }} class="dt-sc-divider-title {{ section.settings.divider_style }} {{ section.settings.divider_alignment }}">
+          {% unless section.settings.divider_style == 'partial-separator' %}{{section.settings.section_heading}}{% endunless %}
+          {% unless section.settings.divider_style != 'shadow' %}<span></span>{% endunless %}
+          {% if section.settings.divider_style == 'partial-separator' %}<span>{{section.settings.section_heading}}</span>{% endif %}
+
+          </{{ section.settings.heading_typography }}>        
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+
+    #shopify-section-{{section.id}}.home-divider .dt-sc-divider .dt-sc-divider-title { 
+      color: var(--DTColor_Heading); color: {{ section.settings.section_heading_color }}; margin-top: 0; margin-bottom: 0; }
+
+
+    .dt-sc-divider { width: 100%; }
+
+    .dt-sc-divider .dt-sc-divider-title.text-start,
+    .dt-sc-divider .dt-sc-divider-title.text-start:after { margin-right: auto; }
+    .dt-sc-divider .dt-sc-divider-title.text-center,
+    .dt-sc-divider .dt-sc-divider-title.text-center:after { margin-left: auto; margin-right: auto; }
+    .dt-sc-divider .dt-sc-divider-title.text-end,
+    .dt-sc-divider .dt-sc-divider-title.text-end:after { margin-left: auto; }
+
+    .dt-sc-divider .dt-sc-divider-title { position: relative; width: 100%; }
+    .dt-sc-divider .dt-sc-divider-title:after { content:""; display: block; position: relative; }
+
+    #shopify-section-{{section.id}}.home-divider .dt-sc-divider .dt-sc-divider-title:after { border-bottom-width: {{ section.settings.divider_height }}px;
+      border-bottom-color: var(--DTColor_Border); border-bottom-color: {{ section.settings.divider_color }}; width: {{ section.settings.divider_bottom_width }}%; 
+        bottom: {{ section.settings.divider_bottom_alignment }}px;
+        }
+
+    /*     #shopify-section-{{section.id}}.home-divider .dt-sc-divider .partial-separator.dt-sc-divider-title span { width: 75%; } */
+
+    .dt-sc-divider .dt-sc-divider-title.solid:after { border-bottom-style: solid; }
+    .dt-sc-divider .dt-sc-divider-title.dashed:after { border-bottom-style: dashed; }
+    .dt-sc-divider .dt-sc-divider-title.dotted:after { border-bottom-style: dotted; }
+    .dt-sc-divider .dt-sc-divider-title.double:after { border-bottom-style: double; }
+
+    #shopify-section-{{section.id}}.home-divider .dt-sc-divider .dt-sc-divider-title.double:after { border-bottom-width: {{ section.settings.divider_height }}px; }
+
+    .dt-sc-divider .dt-sc-divider-title.shadow { border-color: transparent; }
+    .dt-sc-divider .dt-sc-divider-title.shadow span { overflow: hidden; height: 15px; position: absolute; bottom: -22px; left: 0; }
+
+    #shopify-section-{{section.id}}.home-divider .dt-sc-divider .dt-sc-divider-title.shadow span { width: {{ section.settings.divider_bottom_width }}%; }
+
+    .dt-sc-divider .dt-sc-divider-title.text-center.shadow span { right: 0; margin: auto; }
+    .dt-sc-divider .dt-sc-divider-title.text-end.shadow span { right: 0; left: auto; }
+
+    .dt-sc-divider .dt-sc-divider-title.shadow span:after { content: ''; display: block; margin: -25px auto 0; width: 100%; height: 25px; border-radius: 125px / 12px; }
+
+    #shopify-section-{{section.id}}.home-divider .dt-sc-divider .dt-sc-divider-title.shadow span:after {
+
+      color: var(--DTSecondaryColor); color: {{ section.settings.divider_color }};
+        box-shadow: 0 0 12px currentcolor;
+        }
+
+    .dt-sc-divider .dt-sc-divider-title.shadow:after { display: none; }
+
+    .dt-sc-divider .gradient { border-color: transparent; }
+    .dt-sc-divider .gradient.dt-sc-divider-title { position: relative; border: none; padding-bottom: 15px; }
+    .dt-sc-divider .gradient.dt-sc-divider-title:after { display: none; }
+    .dt-sc-divider .gradient.dt-sc-divider-title:before { content: ""; position: absolute; top: 100%; height: 2px; left: 0; }
+
+    #shopify-section-{{section.id}}.home-divider .dt-sc-divider .gradient.dt-sc-divider-title:before { 
+      width: {{ section.settings.divider_bottom_width }}%;
+
+      background-image: linear-gradient(to right, transparent, {{ settings.secondary_color  | color_lighten: 10 }}, transparent);
+      background-image: linear-gradient(to right, transparent, {{ section.settings.divider_color | color_lighten: 10 }}, transparent);
+    }
+
+    .dt-sc-divider .gradient.dt-sc-divider-title.text-center:before { right: 0; margin: auto; }
+    .dt-sc-divider .gradient.dt-sc-divider-title.text-end:before { left: auto; right: 0; }
+
+    .dt-sc-divider .bottom-arrow.dt-sc-divider-title { position: relative; z-index: 1; margin: 0; } 
+
+    .dt-sc-divider .bottom-arrow.dt-sc-divider-title:before { content: ""; position: absolute; z-index: 1; left: 0; right: 0; margin: auto; transform: rotate(45deg); 
+      background-color: var(--DTBodyBGColor); }
+
+    #shopify-section-{{section.id}}.home-divider .dt-sc-divider .bottom-arrow.dt-sc-divider-title:before {
+      width: {{ section.settings.divider_height | times: 5 }}px; height: {{ section.settings.divider_height | times: 5 }}px; 
+      bottom: {{ section.settings.divider_arrow_alignment }}px; 
+
+      color: {{ settings.secondary_color }}; color: {{ section.settings.divider_color }};
+
+      border-bottom: {{ section.settings.divider_height }}px solid currentcolor; 
+      border-right: {{ section.settings.divider_height }}px solid currentcolor;
+    }
+
+    .dt-sc-divider .bottom-arrow.dt-sc-divider-title:after,
+    .dt-sc-divider .center-dot.dt-sc-divider-title:after { border-bottom-style: solid; }
+    .dt-sc-divider .bottom-arrow.text-start.dt-sc-divider-title:before,
+    .dt-sc-divider .center-dot.text-start.dt-sc-divider-title:before { left: 20px; right: auto; }
+    .dt-sc-divider .bottom-arrow.text-end.dt-sc-divider-title:before,
+    .dt-sc-divider .center-dot.text-end.dt-sc-divider-title:before { right:20px; left: auto; }
+
+    .dt-sc-divider .center-dot:before { content: ""; position: absolute; z-index: 1; left: 0; right: 0; margin: auto; border-radius: 50%; }
+
+    #shopify-section-{{section.id}}.home-divider .dt-sc-divider .center-dot:before {
+      bottom: {{ section.settings.divider_arrow_alignment }}px; width: {{ section.settings.divider_height | times: 3 }}px; height: {{ section.settings.divider_height | times: 3 }}px; 
+
+      color: {{ settings.secondary_color }}; color: {{ section.settings.divider_color }};
+      background-color: currentcolor; 
+      border: {{ section.settings.divider_height }}px solid currentcolor;
+
+      box-shadow: inset 0 0 0 {{ section.settings.divider_height | times: 2 }}px  var(--DTBodyBGColor), 0 0 0 {{ section.settings.divider_height }}px  var(--DTBodyBGColor);
+        }
+
+    .dt-sc-divider .running-lines { border-color: transparent; justify-content: space-between; }
+
+    .dt-sc-divider .running-lines:after { content: ""; position: absolute; left: 0; z-index: 1; border: none; }
+
+    #shopify-section-{{section.id}}.home-divider .dt-sc-divider .running-lines:after { width: {{ section.settings.divider_bottom_width }}%; 
+      height: {{ section.settings.divider_height }}px;
+
+      color: {{ settings.secondary_color }}; color: {{ section.settings.divider_color }};
+
+      background: linear-gradient(90deg, 
+        currentcolor 0%, currentcolor 5%, transparent 5%, transparent 10%, 
+        currentcolor 10%, currentcolor 15%, transparent 15%, transparent 20%, 
+        currentcolor 20%, currentcolor 25%, transparent 25%, transparent 30%, 
+        currentcolor 30%, currentcolor 35%, transparent 35%, transparent 40%, 
+        currentcolor 40%, currentcolor 45%, transparent 45%, transparent 50%, 
+        currentcolor 50%, currentcolor 55%, transparent 55%, transparent 60%, 
+        currentcolor 60%, currentcolor 65%, transparent 65%, transparent 70%, 
+        currentcolor 70%, currentcolor 75%, transparent 75%, transparent 80%, 
+        currentcolor 80%, currentcolor 85%, transparent 85%, transparent 90%, 
+        currentcolor 90%, currentcolor 95%, transparent 95%, transparent 100%);
+
+      background-size: {{ section.settings.divider_bottom_width | times: 5 }}px; background-position: center; 
+      animation: bar {{ section.settings.divider_bottom_width | times: 5 }}s linear infinite; 
+      -webkit-animation: bar {{ section.settings.divider_bottom_width | times: 1 }}s linear infinite;      
+    }
+
+
+    @-webkit-keyframes bar {
+      0% { background-position: 0%; }
+      100% { background-position: 200%; }
+    }
+
+    @keyframes bar {
+      0% { background-position: 0%; }
+      100% { background-position: 200%; }
+    }
+
+    .dt-sc-divider .text-center.running-lines:after { right: 0; margin: auto; }
+    .dt-sc-divider .text-end.running-lines:after { right: 0; left: auto; }
+
+    /*     #shopify-section-{{section.id}}.home-divider .dt-sc-divider .partial-separator.dt-sc-divider-title:after { display: none; } */
+
+    .dt-sc-divider .partial-separator { display: flex; padding: 0 {{ section.settings.divider_bottom_width }}px; }
+
+    .dt-sc-divider .partial-separator span { position: relative; align-items: center; display: flex; border: none; padding: 0 20px; }
+
+    .dt-sc-divider .partial-separator span:before, 
+    .dt-sc-divider .partial-separator span:after { content:""; display: block; border-bottom-style: solid; position: absolute; 
+      bottom: auto; flex: 1; width: {{ section.settings.divider_bottom_width }}px; }
+
+    .dt-sc-divider .partial-separator span:before { left: calc(-1 * {{ section.settings.divider_bottom_width}}px); }
+    .dt-sc-divider .partial-separator span:after { right: calc(-1 * {{ section.settings.divider_bottom_width}}px); }
+
+    #shopify-section-{{section.id}}.home-divider .dt-sc-divider .partial-separator span:before, 
+    #shopify-section-{{section.id}}.home-divider .dt-sc-divider .partial-separator span:after {
+      border-bottom-width: {{ section.settings.divider_height }}px; 
+      border-bottom-color: {{ settings.secondary_color }};
+      border-bottom-color: {{ section.settings.divider_color }};
+      bottom: auto;
+    }
+
+    #shopify-section-{{section.id}}.home-divider .dt-sc-divider .partial-separator:after { display: none; }
+
+    .dt-sc-divider .partial-separator.text-start span { padding-left: 0; }
+    .dt-sc-divider .partial-separator.text-start span:before { display: none; }
+
+    .dt-sc-divider .partial-separator.text-end span { padding-right: 0; }
+    .dt-sc-divider .partial-separator.text-end span:after { display: none; }
+
+    /*     #shopify-section-{{section.id}}.home-divider .dt-sc-divider .partial-separator span { padding: 0 20px; } */
+
+    /*     .dt-sc-divider .partial-separator.dt-sc-divider-title { align-items: center; display: flex; border: none; margin-top: 0; margin-bottom: 0; }
+
+    #shopify-section-{{section.id}}.home-divider .dt-sc-divider .partial-separator.dt-sc-divider-title { width: {{ section.settings.divider_bottom_width }}%; }
+
+    #shopify-section-{{section.id}}.home-divider .dt-sc-divider .partial-separator.dt-sc-divider-title span {
+    padding: 0 {{ section.settings.divider_bottom_width | divided_by: 2 }}px;
+    }
+
+    .dt-sc-divider .partial-separator span:before, .dt-sc-divider .partial-separator span:after { content:""; display: block; border-bottom-style: solid; position: relative; 
+    bottom: auto; flex: 1; }
+
+
+
+    .dt-sc-divider .partial-separator.text-start span { padding-left: 0; }
+    #shopify-section-{{section.id}}.home-divider .dt-sc-divider .partial-separator.text-start span:after { width: {{ section.settings.divider_bottom_width | divided_by: 2 }}%; }
+    .dt-sc-divider .partial-separator.text-start span:before { display: none; }
+
+    .dt-sc-divider .partial-separator.text-end span { padding-right: 0; }
+    #shopify-section-{{section.id}}.home-divider .dt-sc-divider .partial-separator.text-end span:before { width: {{ section.settings.divider_bottom_width | divided_by: 2 }}%; }
+    .dt-sc-divider .partial-separator.text-end span:after { display: none; } */
+
+    .dt-sc-divider .text-center { margin: 0 auto; }
+    .dt-sc-divider .text-end { margin-left: auto; }
+
+
+    @media screen and (max-width: 767px){
+      
+      
+     .dt-sc-divider .partial-separator { padding: 0 calc(.5* {{ section.settings.divider_bottom_width }}px); }
+      
+      .dt-sc-divider .partial-separator span:before, 
+    .dt-sc-divider .partial-separator span:after { width: calc(.5* {{ section.settings.divider_bottom_width }}px); }
+      
+      .dt-sc-divider .partial-separator span:before { left: calc(-1 * calc(.5* {{ section.settings.divider_bottom_width }}px)); }
+    .dt-sc-divider .partial-separator span:after { right: calc(-1 * calc(.5* {{ section.settings.divider_bottom_width }}px)); }
+
+    }
+
+  </style>
+
+
+  {% schema %}
+  {
+  "name": "Divider",
+  "class": "index-section home-divider",
+  "settings": [
+  {
+  "type": "checkbox",
+  "id": "full",
+  "label": "Show Full width"
+  },
+  {
+  "type": "checkbox",
+  "id": "spacing_both_ends",
+  "label": "Enable Right & Left Spacing (Works only on Fullwidth)",
+  "default": false
+  },
+  {
+  "type": "text",
+  "id": "padding",
+  "label": "Style value (Padding)",
+  "default":"0,0",
+  "info":"Top(px),Bottom(px)"
+  },
+  {
+  "type": "text",
+  "id": "margin",
+  "label": "Style value (Margin)",
+  "default":"0,0",
+  "info":"Top(px),Bottom(px)"
+  },
+  {
+  "type": "select",
+  "id": "divider_style",
+  "default":"solid",
+  "label": "Divider Style",
+  "options": [
+  {
+  "value": "solid",
+  "label": "Default"
+  },
+  {
+  "value": "dotted",
+  "label": "Dotted Border"
+  },
+  {
+  "value": "dashed",
+  "label": "Dashed Border"
+  },
+  {
+  "value": "double",
+  "label": "Double Border"
+  },
+  {
+  "value": "shadow",
+  "label": "Shadow (height option won't work for this style)"
+  },
+  {
+  "value": "gradient",
+  "label": "Gradient (height option won't work for this style)"
+  },
+  {
+  "value": "bottom-arrow",
+  "label": "Bottom arrow"
+  },
+  {
+  "value": "center-dot",
+  "label": "Center dot"
+  },
+  {
+  "value": "running-lines",
+  "label": "Running lines"
+  },
+  {
+  "value": "partial-separator",
+  "label": "Partial Separator"
+  }
+  ]
+  },  
+  {
+  "type": "select",
+  "id": "divider_alignment",
+  "label": "Divider Alignment",
+  "options": [
+  {
+  "value": "text-center",
+  "label": "Center"
+  },
+  {
+  "value": "text-start",
+  "label": "Left"
+  },
+  {
+  "value": "text-end",
+  "label": "Right"
+  }
+  ]
+  },
+  {
+  "type": "text",
+  "id": "section_heading",
+  "label": "Divider Text",
+  "default": "Heading"
+  },  
+  {
+  "type": "select",
+  "id": "heading_typography",
+  "label": "Heading Typography",
+  "options": [
+  {
+  "value": "h1",
+  "label": "H1 (only one h1 per page)"
+  },
+  {
+  "value": "h2",
+  "label": "H2"
+  },
+  {
+  "value": "h3",
+  "label": "H3"
+  },
+  {
+  "value": "h4",
+  "label": "H4"
+  },
+  {
+  "value": "h5",
+  "label": "H5"
+  },
+  {
+  "value": "h6",
+  "label": "H6"
+  }
+  ],
+  "default": "h2"
+  },  
+  {
+  "type": "range",
+  "id": "divider_bottom_width",
+  "label": "Divider width (in %)",
+  "min": 5,
+  "max": 100,
+  "step": 1,
+  "default": 20,
+  "info": "If you have selected 'Partial Separator' divider style, then the width will be as pixel(px), instead of percentage(%)"
+  },
+  {
+  "type": "range",
+  "id": "divider_height",
+  "label": "Divider Height (in px)",
+  "min": 1,
+  "max": 10,
+  "step": 1,
+  "default": 3
+  },
+  {
+  "type": "range",
+  "id": "divider_arrow_alignment",
+  "label": "Divider Arrow/Dot Alignment (For 'Bottom Arrow' & 'Center Dot' Styles)",
+  "min": -50,
+  "max": 0,
+  "step": 1,
+  "default": -17
+  },
+  {
+  "type": "range",
+  "id": "divider_bottom_alignment",
+  "label": "Divider Bottom Alignment (Not for 'Partial Separator' Style)",
+  "min": -50,
+  "max": 0,
+  "step": 1,
+  "default": -10
+  },
+  {
+  "type": "header",
+  "content": "Section Color settings"
+  },
+  {
+  "type": "color",
+  "id": "section_heading_color",
+  "label": "Heading color (Only for With Text Divider Style)"
+  },
+  {
+  "type": "color",
+  "id": "divider_color",
+  "label": "Divider Color"
+  },
+  {
+  "type": "header",
+  "content": "Custom class"
+  },
+  {
+  "type": "text",
+  "id": "custom_class_name",
+  "label": "Add your custom class name here"
+  }
+  ],
+
+  "presets": [
+  {
+  "name": "Divider",
+  "category": "Text"
+  }
+  ]
+  }
+  {% endschema %}  

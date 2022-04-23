@@ -1,0 +1,12 @@
+<div class="{{ footer_column_alignment}}">
+  {% if block.settings.title != blank  and section.settings.show_footer_title %}        
+  <h6 class="footer__title ">{{ block.settings.title }}</h6>
+  {% endif %}
+
+  <div class="footer-text">
+    {{ block.settings.text }}
+  </div>
+  {% if section.settings.social_placement == 'with_custom_text'  and section.settings.show_social %}   
+  {% include 'social-links' %}
+  {% endif %}
+</div>

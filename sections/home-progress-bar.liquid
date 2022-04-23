@@ -1,0 +1,239 @@
+{% case section.settings.grid %}
+{% when '1' %}
+{% when '2' %}
+{%- assign column = 'two-column' -%}
+{% when '3' %}
+{%- assign column = 'three-column' -%}              
+{% when '4' %}
+{%- assign column = 'four-column' -%}              
+{% when '5' %}
+{%- assign column = 'five-column' -%}   
+{% when '6' %}
+{%- assign column = 'six-column' -%}   
+{% else %}
+{%- assign column = 'three-column' -%}              
+{% endcase %} 
+{% if section.settings.block_banner_style == 'grid' %}
+{% assign grid_style = 'grid-style' %}
+{% elsif section.settings.block_banner_style == 'list' %}
+{% assign list_style = 'list-style' %}
+{% elsif section.settings.block_banner_style == 'overlay' %}
+{% assign overlay_style = 'overlay-style' %}
+{% endif %}
+
+{% if section.settings.enable_overlay %}
+{% assign section_overlay = 'dt-sc-overlay' %}
+{% endif %}
+
+{% case section.settings.background_style %}
+{% when 'default' %}
+{% when 'parallax' %}
+{%- assign background_style = 'data-speed="2"' %}
+{% when 'fixed' %}
+{%- assign background_style = 'data-speed="1"' %}
+{% endcase %}
+{% if section.settings.show_background_image %}
+{% assign lazyScript = "lazyload" %}
+{% endif %}
+
+<div class="dt-sc-section-wrapper {{lazyScript }} {{section_overlay}} {% if section.settings.background_style == 'parallax' %} parallax-initiated{% endif %}" style="{% render 'bg-color-image-padding' %}" data-style="parallax" {{background_style}} {% include 'bg_image' %}>  
+  <div class="{% render 'container-settings' %}"> 
+    <div class="row">
+    {% render 'section-heading', class: section.id %}     
+    <div class="dt-sc-grid-banner-section dt-sc-column {% if section.settings.equal_height %}dt-sc-equal-height{% endif %} {% unless section.settings.block_banner_style == 'list' %}{{column}}{% endunless %}">    
+     
+    </div>  
+  </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Progress Bar",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full",
+      "label": "Show Full width"
+    },
+    {
+      "type": "checkbox",
+      "id": "spacing_both_ends",
+      "label": "Enable Right & Left Spacing (Works only on Fullwidth)",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "padding",
+      "label": "Style value (Padding)",
+      "default": "0,0",
+      "info": "Top(px),Bottom(px)"
+    },
+    {
+      "type": "text",
+      "id": "margin",
+      "label": "Style value (Margin)",
+      "default": "0,0",
+      "info": "Top(px),Bottom(px)"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image",
+      "info": "Size: 1920x1280"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_background_image",
+      "label": "Enable Background image"
+    },
+    {
+      "type": "select",
+      "id": "background_style",
+      "label": "Background Style",
+      "default": "default",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "parallax",
+          "label": "Parallax"
+        },
+        {
+          "value": "fixed",
+          "label": "Fixed"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_overlay",
+      "label": "Enable Background Color (Used as Background Image Overlay Color too)"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "text",
+      "id": "overlay_transparency",
+      "label": "Overlay Transparency (0.01 to 1)",
+      "default": "0.5"
+    },
+    {
+      "type": "text",
+      "id": "section_heading",
+      "label": "Main Heading",
+      "default": "Grid Banner"
+    },
+    {
+      "type": "text",
+      "id": "section_sub_heading",
+      "label": "Sub Heading",
+      "default": "Sub Heading"
+    },
+    {
+      "type": "text",
+      "id": "section_description",
+      "label": "Description",
+      "default": "Use this text to share the information which you like!."
+    },
+    {
+      "type": "text",
+      "id": "section_button_text",
+      "label": "Link text"
+    },
+    {
+      "type": "url",
+      "id": "section_button_link",
+      "label": "Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Section Color settings"
+    },
+    {
+      "type": "color",
+      "id": "section_heading_color",
+      "label": "Heading color",
+      "default": "#000"
+    },
+    {
+      "type": "color",
+      "id": "section_sub_heading_color",
+      "label": "Sub heading color",
+      "default": "#000"
+    },
+    {
+      "type": "color",
+      "id": "section_description_color",
+      "label": "Description color",
+      "default": "#000"
+    },
+    {
+      "type": "color",
+      "id": "section_button_bg_color",
+      "label": "Button bg color",
+      "default": "#000"
+    },
+    {
+      "type": "color",
+      "id": "section_button_text_color",
+      "label": "Button text color",
+      "default": "#000"
+    },
+    {
+      "type": "color",
+      "id": "section_button_hover_bg_color",
+      "label": "Button hover bg color",
+      "default": "#000"
+    },
+    {
+      "type": "color",
+      "id": "section_button_hover_text_color",
+      "label": "Button hover text color",
+      "default": "#000"
+    },
+    {
+      "type": "text",
+      "id": "column_gap",
+      "label": "Column Gap - Leave empty for Default Gap (in px)",
+      "default": "30px"
+    },
+    {
+      "type": "checkbox",
+      "id": "equal_height",
+      "label": "Enable Equal Height (Only for Grid Style)",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "heading_position",
+      "label": "Heading Position",
+      "options": [
+        {
+          "value": "text-center",
+          "label": "Center"
+        },
+        {
+          "value": "text-start",
+          "label": "Left"
+        },
+        {
+          "value": "text-end",
+          "label": "right"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

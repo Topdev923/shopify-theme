@@ -1,0 +1,416 @@
+{% if section.settings.enable %}
+{% case section.settings.grid %}
+{% when '1' %}
+{% when '2' %}
+{%- assign column = 'two-column' -%}
+{% when '3' %}
+{%- assign column = 'three-column' -%}              
+{% when '4' %}
+{%- assign column = 'four-column' -%}              
+{% else %}
+{%- assign column = 'three-column' -%}              
+{% endcase %} 
+
+{% if section.settings.enable_overlay %}
+{% assign section_overlay = 'dt-sc-overlay' %}
+{% endif %}
+
+{% case section.settings.background_style %}
+{% when 'default' %}
+{% when 'parallax' %}
+{%- assign background_style = 'data-speed="2"' %}
+{% when 'fixed' %}
+{%- assign background_style = 'data-speed="1"' %}
+{% endcase %}
+{% if section.settings.show_background_image %}
+{% assign lazyScript = "lazyload" %}
+{% endif %}
+<div class="dt-sc-section-wrapper {{lazyScript}} {{section_overlay}} {% if section.settings.background_style == 'parallax' %} parallax-initiated{% endif %}" style="{% render 'bg-color-image-padding' %}" data-style="parallax" {{background_style}} {% include 'bg_image' %}>  
+  <div class="{% render 'container-settings' %}"> 
+    <div class="row">
+      {% render 'section-heading', class: section.id %}   
+      <div class="dt-sc-image-with-icons-section">
+        {% if section.settings.image != blank %}       
+        {%- assign img_url = section.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+              <img class="lazyload"
+		 		   src="{{ 'loading.gif' | asset_url }}"
+                   data-src="{{ section.settings.image | img_url: '1400x' }}"
+                   data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+                   data-aspectratio="{{ section.settings.image.aspect_ratio }}"
+                   data-sizes="auto"            
+                   alt="{{ section.settings.image.alt | escape }}">            
+              <noscript>
+               {{ section.settings.image | img_url: '480x480', scale: 2 | img_tag: section.settings.image.alt, 'dt-sc-noscript-image' }}
+              </noscript>
+        
+        {% endif %}
+        <div class="dt-sc-icon-blocks-section dt-sc-column {{column}}">
+          {% if section.blocks.size > 0 %}    
+          {% for block in section.blocks %}    
+          <div class="dt-sc-icon-block">
+            {% if block.settings.font_icon != blank  %} 
+            <div class="dt-sc-icon-image"><i class="{{block.settings.font_icon}}"></i> </div>
+            {% endif %}
+            <div class="dt-sc-icon-content">
+              {% if block.settings.title != blank  %} 
+              <h4 class="dt-sc-main-title">{{block.settings.title}}</h4>
+              {% endif %}
+              {% if block.settings.text != blank  %} 
+              <p class="dt-sc-description">{{block.settings.text}}</p>
+              {% endif %}
+            </div>             
+          </div>                 
+           {% endfor %}
+            {% endif %} 
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style type="text/css">
+  
+  #shopify-section-{{section.id}}.inner-page-image-with-icon-section .dt-sc-overlay:before { 
+    color: var(--DTPrimaryColor);
+      color: {{ section.settings.background_color }};    
+      background: currentcolor; 
+      opacity: {{ section.settings.overlay_transparency }}; }
+  
+  #shopify-section-{{section.id}}.inner-page-image-with-icon-section .dt-sc-heading .dt-sc-main-heading { 
+    color:{{ section.settings.section_heading_color }}; } 
+  #shopify-section-{{section.id}}.inner-page-image-with-icon-section .dt-sc-heading .dt-sc-sub-heading { 
+    color:{{ section.settings.section_sub_heading_color }}; } 
+  #shopify-section-{{section.id}}.inner-page-image-with-icon-section .dt-sc-heading .dt-sc-heading-description { 
+    color:{{ section.settings.section_description_color }}; } 
+  #shopify-section-{{section.id}}.inner-page-image-with-icon-section .dt-sc-heading .dt-sc-btn { 
+    background:{{ section.settings.section_button_bg_color }}; color:{{ section.settings.section_button_text_color }}; }
+  #shopify-section-{{section.id}}.inner-page-image-with-icon-section .dt-sc-heading .dt-sc-btn:hover { 
+    background:{{ section.settings.section_button_hover_bg_color }}; color:{{ section.settings.section_button_hover_text_color }}; }
+  
+  #shopify-section-{{section.id}}.inner-page-image-with-icon-section .dt-sc-image-with-icons-section {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    grid-gap: 0;
+    align-self: normal;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    min-width: 0;
+    word-wrap: break-word;
+    background-clip: border-box;
+    padding: 0;
+    gap: 0;
+    overflow: hidden;
+  }
+
+  #shopify-section-{{section.id}}.inner-page-image-with-icon-section .dt-sc-image-with-icons-section .dt-sc-icon-blocks-section { margin-top: 30px; }
+
+  #shopify-section-{{section.id}}.inner-page-image-with-icon-section .dt-sc-image-with-icons-section .dt-sc-icon-blocks-section .dt-sc-icon-block {
+    display: flex;
+    flex-wrap: wrap;
+    height: 100%;
+    align-content: center;
+    align-items: flex-start;
+  }
+
+  #shopify-section-{{section.id}}.inner-page-image-with-icon-section .dt-sc-image-with-icons-section .dt-sc-icon-blocks-section .dt-sc-icon-block .dt-sc-icon-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+      transition: var(--DTBaseTransition);
+  }  
+
+  #shopify-section-{{section.id}}.inner-page-image-with-icon-section .dt-sc-image-with-icons-section .dt-sc-icon-blocks-section .dt-sc-icon-block .dt-sc-icon-image img,
+  #shopify-section-{{section.id}}.inner-page-image-with-icon-section .dt-sc-image-with-icons-section .dt-sc-icon-blocks-section .dt-sc-icon-block .dt-sc-icon-image i {
+    font-size: 30px;
+    transition: var(--DTBaseTransition);
+  }
+
+  #shopify-section-{{section.id}}.inner-page-image-with-icon-section .dt-sc-image-with-icons-section .dt-sc-icon-blocks-section .dt-sc-icon-block .dt-sc-icon-content {
+    width: 100%;
+    padding-right: 0;
+  }
+
+  #shopify-section-{{section.id}}.inner-page-image-with-icon-section .dt-sc-image-with-icons-section .dt-sc-icon-blocks-section .dt-sc-icon-block .dt-sc-icon-image + .dt-sc-icon-content { width: calc(100% - 60px); padding-left: 20px; }
+  
+  #shopify-section-{{section.id}}.inner-page-image-with-icon-section .dt-sc-image-with-icons-section .dt-sc-icon-blocks-section .dt-sc-icon-block .dt-sc-icon-content .dt-sc-main-title { padding: 0; margin: 0 0 10px; }
+  
+  #shopify-section-{{section.id}}.inner-page-image-with-icon-section .dt-sc-image-with-icons-section .dt-sc-icon-blocks-section .dt-sc-icon-block .dt-sc-icon-content .dt-sc-main-title {
+    color: var(--DTColor_Heading); color:{{ section.settings.block_heading_color }};}  
+  #shopify-section-{{section.id}}.inner-page-image-with-icon-section .dt-sc-image-with-icons-section .dt-sc-icon-blocks-section .dt-sc-icon-block .dt-sc-icon-content .dt-sc-description  {
+    color: var(--DTColor_Body); color:{{ section.settings.block_description_color }};}
+  #shopify-section-{{section.id}}.inner-page-image-with-icon-section .dt-sc-image-with-icons-section .dt-sc-icon-blocks-section .dt-sc-icon-block .dt-sc-icon-image {
+    background: var(--DTTertiaryColor); background-color:{{ section.settings.block_icon_bg_color }}; }
+  #shopify-section-{{section.id}}.inner-page-image-with-icon-section .dt-sc-image-with-icons-section .dt-sc-icon-blocks-section .dt-sc-icon-block:hover .dt-sc-icon-image { 
+    background: var(--DTPrimaryColor); background-color: {{ section.settings.block_icon_bg_hover_color }};}
+  #shopify-section-{{section.id}}.inner-page-image-with-icon-section .dt-sc-image-with-icons-section .dt-sc-icon-blocks-section .dt-sc-icon-block .dt-sc-icon-image i {
+    color: var(--DTPrimaryColor); color:{{ section.settings.block_icon_color }}; }
+  #shopify-section-{{section.id}}.inner-page-image-with-icon-section .dt-sc-image-with-icons-section .dt-sc-icon-blocks-section .dt-sc-icon-block:hover .dt-sc-icon-image i { 
+    color: var(--DTTertiaryColor); color: {{ section.settings.block_icon_hover_color }}; }
+</style>
+{% endif %}
+
+{% schema %}
+{
+"name": "Image with icon section",
+"class": "inner-page-image-with-icon-section",
+"settings": [
+{
+"type": "checkbox",
+"id": "enable",
+"label": "Show this section",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "full",
+"label": "Show Full width"
+},
+{
+"type": "checkbox",
+"id": "spacing_both_ends",
+"label": "Enable Right & Left Spacing (Works only on Fullwidth)",
+"default": false
+},
+{
+"type": "text",
+"id": "padding",
+"label": "Style value (Padding)",
+"default":"0,0",
+"info":"Top(px),Bottom(px)"
+},
+{
+"type": "text",
+"id": "margin",
+"label": "Style value (Margin)",
+"default":"0,0",
+"info":"Top(px),Bottom(px)"
+},
+{
+"type": "image_picker",
+"id": "background_image",
+"label": "Background image",
+"info": "Size: 1920x1280"
+},
+{
+"type": "checkbox",
+"id": "show_background_image",
+"label": "Enable Background image"
+},
+{
+"type": "select",
+"id": "background_style",
+"label": "Background Style",
+"default": "default",
+"options": [
+{
+"value": "default",
+"label": "Default"
+},
+{
+"value": "parallax",
+"label": "Parallax"
+},
+{
+"value": "fixed",
+"label": "Fixed"
+}
+]
+},
+{
+"type": "checkbox",
+"id": "enable_overlay",
+"label": "Enable Background Color (Used as Background Image Overlay Color too)"
+},
+{
+"type": "color",
+"id": "background_color",
+"label":"Background color"
+},
+{
+"type": "text",
+"id": "overlay_transparency",
+"label": "Overlay Transparency (0.01 to 1)",
+"default": "0.5"
+},
+{
+"type": "text",
+"id": "section_heading",
+"label": "Main Heading",
+"default": "Image with icon section"
+},  
+{
+"type": "text",
+"id": "section_sub_heading",
+"label": "Sub Heading",
+"default": "Sub Heading"
+},  
+{
+"type": "text",
+"id": "section_description",
+"label": "Description",
+"default": "Use this text to share the information which you like!."
+},  
+{
+"type": "text",
+"id": "section_button_text",
+"label": "Link text"
+},
+{
+"type": "url",
+"id": "section_button_link",
+"label": "Link URL"
+},
+{
+"type": "header",
+"content": "Section Color settings"
+},
+{
+"type": "color",
+"id": "section_heading_color",
+"label": "Heading color"
+},    
+{
+"type": "color",
+"id": "section_sub_heading_color",
+"label": "Sub heading color"
+},   
+{
+"type": "color",
+"id": "section_description_color",
+"label": "Description color"
+},  
+{
+"type": "color",
+"id": "section_button_bg_color",
+"label": "Button bg color"
+},   
+{
+"type": "color",
+"id": "section_button_text_color",
+"label": "Button text color"
+},   
+{
+"type": "color",
+"id": "section_button_hover_bg_color",
+"label": "Button hover bg color"
+},   
+{
+"type": "color",
+"id": "section_button_hover_text_color",
+"label": "Button hover text color"
+},
+{
+"type": "select",
+"id": "heading_position",
+"label": "Heading Position",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "Right"
+}
+]
+},
+{
+"type": "header",
+"content": "Block Settings"
+},
+{
+"type": "select",
+"id": "grid",
+"label": "Item per row",
+"default": "3",
+"options": [
+{
+"value": "2",
+"label": "2"
+},
+{
+"value": "3",
+"label": "3"
+},
+{
+"value": "4",
+"label": "4"
+}
+]
+},
+{
+"type": "image_picker",
+"id": "image",
+"label": "Image"          
+},
+{
+"type": "header",
+"content": "Block Color settings"
+},
+{
+"type": "color",
+"id": "block_heading_color",
+"label": "Heading Color"
+},
+{
+"type": "color",
+"id": "block_description_color",
+"label": "Description Color"
+},
+{
+"type": "color",
+"id": "block_icon_bg_color",
+"label": "Icon Background Color"
+},
+{
+"type": "color",
+"id": "block_icon_color",
+"label": "Icon Color"
+},
+{
+"type": "color",
+"id": "block_icon_bg_hover_color",
+"label": "Icon hover Bg color"
+},
+{
+"type": "color",
+"id": "block_icon_hover_color",
+"label": "Icon hover color"
+}
+],
+"blocks": [
+{
+"type": "content",
+"name": "Content",        
+"settings": [
+{
+"type": "text",
+"id": "font_icon",
+"label": "Icon class",
+"default": "fa fa-lightbulb-o"
+},
+{
+"type": "text",
+"id": "title",
+"label": "Heading",
+"default": "Heading"
+},
+{
+"type": "textarea",
+"id": "text",
+"label": "Description",
+"default": "Sed vestibulum nulla elementum auctor tincidunt. Aliquam sit amet cursus mauris. Sed vitae mattis ipsum. Vestibulum enim nulla, sollicitudin ac hendrerit nec, tempor quis nisl"
+}
+]
+}
+]
+}
+{% endschema %}

@@ -1,0 +1,634 @@
+<div class="container">
+  <div class="row"> 
+    <div class="{{ settings.blog_page_sidebar }} {% unless settings.blog_page_sidebar == "full-width" -%}has-sidebar{% endunless %}">
+      <div class="blog-template-content">
+        {% if section.settings.blog_results_per_page != blank %}
+        {% assign blog_per_page = section.settings.blog_results_per_page %}
+        {% else %}
+        {% assign blog_per_page = 12 %}
+        {% endif %}
+
+        {% case section.settings.grid %}
+        {% when '1' %}
+        {% when '2' %}
+        {%- assign column = 'two-column' -%}
+        {% when '3' %}
+        {%- assign column = 'three-column' -%}              
+        {% when '4' %}
+        {%- assign column = 'four-column' -%}              
+        {% when '5' %}
+        {%- assign column = 'five-column' -%}   
+        {% when '6' %}
+        {%- assign column = 'six-column' -%}   
+        {% else %}
+        {%- assign column = 'three-column' -%}              
+        {% endcase %} 
+
+        {% if section.settings.block_banner_style == 'grid-style' %}
+        {% assign item_style = 'grid-style' %}
+        {% elsif section.settings.block_banner_style == 'list-style' %}
+        {% assign verticalStyle = section.settings.vertical_position %}
+        {% assign item_style = 'list-style' %}
+        {% elsif section.settings.block_banner_style == 'overlay-style' %}
+        {% assign verticalStyle = section.settings.vertical_position %}
+        {% assign item_style = 'overlay-style' %}
+        {% endif %}
+
+        {% if section.settings.enable_overlay %}
+        {% assign section_overlay = 'dt-sc-overlay' %}
+        {% endif %}
+
+        {% assign listWidth = section.settings.content_width | split: '/' %}
+        {%- assign leftColumn = listWidth[0] -%}
+        {%- assign rightColumn = listWidth[1] -%}  
+
+
+        {% assign listWidth = section.settings.lap_content_width | split: '/' %}
+        {% assign lap_leftColumn = listWidth[0] %}
+        {% assign lap_rightColumn = listWidth[1] %}
+
+
+
+        {% if section.settings.overlay_style == 'use_overlay' %}
+        {% assign overlay_class = 'with-overlay-normal' %}    
+        {% elsif section.settings.overlay_style == 'use_gradient_overlay' %}
+        {% assign overlay_class = 'with-overlay-gradient' %}
+        {% endif %}
+
+        {% paginate blog.articles by blog_per_page %}
+        {% unless blog.articles_count == 0 %}    
+        <div class="dt-sc-blog-section {% if section.settings.split_blog_layout %} style-2 {% endif %} dt-sc-column {{ column }}">        
+          {% for article in blog.articles %}
+          <div class="dt-sc-blog-item  {{section.settings.text_position}} {{item_style}} {{section.settings.vertical_position}}"
+               {% if section.settings.block_banner_style == 'overlay-style' %}style="min-height:{{ section.settings.overlay_style_height}}px"{% endif %}>
+            <div class="dt-sc-blog-image {{ overlay_class}}">
+              {% if article.image %}                  
+              <div class="article__grid-image-wrapper">   
+                <a href="{{article.url}}">
+                  {%- assign img_url = article.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                  <img class="lazyload article__grid-image"
+                       data-src="{{ img_url }}"
+                       data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+                       data-aspectratio="{{ article.image.aspect_ratio }}"
+                       data-sizes="auto"            
+                       alt="{{article.title }}">            
+                  <noscript>
+                    {{ article.image | img_url: '480x480', scale: 2 | img_tag: article.title, 'dt-sc-noscript-image' }}
+                  </noscript>
+                </a>
+              </div>                  
+              {% endif %}
+            </div>
+            <div class="dt-sc-blog-content">
+              <div class="dt-sc-blog-meta {% if section.settings.enable_blog_icons %}with-meta-icons{% endif %}">
+                {% if section.settings.blog_show_author %}
+                <p class="dt-sc-blog-author">
+                  {% if section.settings.enable_blog_icons %}<span class="fa fa-user"></span>
+                  {% else %}
+                  {% render 'icon-author' %}  
+                  {% endif %}
+                  <span>{{ 'blogs.article.by_author' | t: author: article.author }}</span></p>
+                {% endif %}
+                {% if section.settings.blog_show_date %}
+                <p class="dt-sc-blog-date">                    
+                  {% if section.settings.enable_blog_icons %}
+                  <span class="fa fa-calendar"></span>
+                  {% else %}
+                  {% render 'icon-date' %} 
+                  {% endif %}
+                  {{ article.published_at | time_tag: format: 'date' }}
+                </p>
+                {% endif %}    
+                {% if section.settings.blog_comments %}
+                {% if blog.comments_enabled? and article.comments_count > 0 %}
+                <p class="dt-sc-blog-comment">
+                  {% render 'icon-comment' %}{{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}
+                  {% endif %}
+                  {% endif %}
+                  {% if section.settings.blog_show_tag %}
+                  {% if article.tags.size > 0 %}
+                <p class="dt-sc-blog-tags">                    
+                  {% if section.settings.enable_blog_icons %}
+                  <span class="fa fa-tags"></span>
+                  {% else %}
+                  {% render 'icon-tag' %}
+                  {% endif %}
+                  {% for tag in article.tags %}                  
+                  <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="article__grid-tag">{{ tag }}</a>                  
+                  {% endfor %}
+                </p>
+                {% endif %}
+                {% endif %}
+              </div>
+              <h5 class="dt-sc-blog-title"><a href="{{article.url}}"> {{ article.title }}</a></h5>
+              {% if section.settings.blog_show_description %}
+              <div class="dt-sc-blog-description">
+                {% if article.excerpt.size > 0 %}
+                {{ article.excerpt }}
+                {% else %}
+                {{ article.content | strip_html | truncate: 150 }}
+                {% endif %}
+              </div>
+              {% endif %}
+              {% if section.settings.blog_show_button %}
+              <a href="{{ article.url }}" class="dt-sc-btn"> {{ 'blogs.article.read_more' | t }}</a> 
+              {% endif %}
+            </div>
+          </div> 
+          {% endfor %}
+        </div>     
+        {% endunless %}
+        {% if paginate.pages > 1 %}
+        {% render 'blog-pagination' %}
+        {% endif %}
+        {% endpaginate %}
+      </div>          
+      {%- unless settings.blog_page_sidebar == "full-width" -%}  
+      <div class="text-center sidebar_btn"><a class="dt-sc-btn toggleIcon"> <i class="fa fa-caret-right" aria-hidden="true"></i> </a></div>
+      <div class="sidebar" id="sidebar-sticky">
+        {% render 'blog-sidebar' %}      
+      </div>
+      {%- endunless -%}
+    </div>
+  </div>
+</div>
+          
+<style> 
+  
+  .dt-sc-blog-section .dt-sc-blog-item .dt-sc-blog-image[class*="with-overlay-normal"]:before {     
+    color: var(--DTTertiaryColor);
+      color: {{ section.settings.overlay_color }};
+    background: currentcolor;  }
+  .dt-sc-blog-section .dt-sc-blog-item .dt-sc-blog-image[class*="with-overlay-gradient"]:before {
+    
+    background-image: linear-gradient({{ section.settings.rotation_degree}}deg, {{ settings.tertiary_color | color_modify: 'alpha', 0 }}, 
+      {{ settings.tertiary_color }});
+    background-image: linear-gradient({{ section.settings.rotation_degree}}deg, {{ section.settings.overlay_color | color_modify: 'alpha', 0 }}, 
+      {{ section.settings.overlay_color }}); 
+  }
+
+  .dt-sc-blog-section .dt-sc-blog-item:hover .dt-sc-blog-image[class*="with-overlay-normal"]:before,
+  .dt-sc-blog-section .dt-sc-blog-item:hover .dt-sc-blog-image[class*="with-overlay-gradient"]:before { opacity: {{ section.settings.overlay_opacity }}; }
+
+  .dt-sc-blog-section .dt-sc-blog-item .dt-sc-blog-meta.with-meta-icons p[class*="dt-sc-blog-"] svg,
+  .dt-sc-blog-section .dt-sc-blog-item .dt-sc-blog-item.with-meta-icons .dt-sc-blog-content .dt-sc-blog-meta p[class*="dt-sc-blog-"] svg { display: none; }
+
+  .dt-sc-blog-section .dt-sc-blog-item { {% if section.settings.enable_box_shadow %} box-shadow: var(--DTboxShadow); {% endif %}  }
+  
+  
+  {% if section.settings.enable_box_shadow %} 
+  	.dt-sc-blog-section .dt-sc-blog-item.list-style { box-shadow: none; overflow: visible; }
+  	.dt-sc-blog-section .dt-sc-blog-item.list-style .dt-sc-blog-content { box-shadow: var(--DTboxShadow); }  
+  {% endif %}
+  
+  {% if section.settings.split_blog_layout %} 
+  
+  	.dt-sc-blog-section.style-2 .dt-sc-blog-item.grid-style .dt-sc-blog-content { margin-top: {{ section.settings.split_gap}}px; }
+  
+    {% if section.settings.enable_box_shadow %} 
+    	.dt-sc-blog-section .dt-sc-blog-item.grid-style { box-shadow: none; overflow: visible; }
+    	.dt-sc-blog-section .dt-sc-blog-item.grid-style > * { box-shadow: var(--DTboxShadow); border-radius: var(--DT_Blog_Border_Radius); }  
+    {% endif %}
+  
+  {% endif %}
+  
+  {% unless section.settings.split_blog_layout %} 
+  
+    {% if section.settings.enable_box_shadow %} 
+    	.dt-sc-blog-section .dt-sc-blog-item.list-style { box-shadow: var(--DTboxShadow); overflow: hidden; }
+    	.dt-sc-blog-section .dt-sc-blog-item.list-style .dt-sc-blog-content { box-shadow: none; }  
+    {% endif %}
+  
+  {% endunless %}
+  
+  .dt-sc-blog-section.style-2 .dt-sc-blog-item { background: none; border-radius: 0; }  
+  .dt-sc-blog-section.style-2 .dt-sc-blog-item .dt-sc-blog-content { background: var(--DT_Blog_BG_Color); border-radius: var(--DT_Blog_Border_Radius); }
+
+  .dt-sc-blog-section.style-2 .dt-sc-blog-item .dt-sc-blog-image img { border-radius: var(--DT_Blog_Border_Radius); }
+
+  .dt-sc-blog-section.style-2 .dt-sc-blog-item.list-style { flex-wrap: wrap; }
+  
+  .dt-sc-blog-section.style-2 .dt-sc-blog-item.overlay-style { padding: 20px; }
+  
+  
+  @media (min-width: 1541px) {
+    
+    .dt-sc-blog-section .dt-sc-blog-item.list-style > .dt-sc-blog-image { width: {{leftColumn}}%; }
+    .dt-sc-blog-section .dt-sc-blog-item.list-style > .dt-sc-blog-content { width: {{rightColumn}}%; }
+    
+    .dt-sc-blog-section.style-2 .dt-sc-blog-item.list-style > .dt-sc-blog-image {
+      width: calc({{leftColumn}}% - (calc({{section.settings.split_gap}}px)/2));
+    }
+
+    .dt-sc-blog-section.style-2 .dt-sc-blog-item.list-style > .dt-sc-blog-content {
+      width: calc({{rightColumn}}% - (calc({{section.settings.split_gap}}px)/2));
+    }
+
+  }
+
+  @media (max-width: 1540px) {
+    
+    .dt-sc-blog-section .dt-sc-blog-item.list-style > .dt-sc-blog-image { width: {{lap_leftColumn}}%; }
+    .dt-sc-blog-section .dt-sc-blog-item.list-style > .dt-sc-blog-content { width: {{lap_rightColumn}}% }
+
+    .dt-sc-blog-section.style-2 .dt-sc-blog-item.list-style > .dt-sc-blog-image { 
+      width: calc({{lap_leftColumn}}% - (calc({{section.settings.split_gap}}px)/2));
+    }
+    .dt-sc-blog-section.style-2 .dt-sc-blog-item.list-style > .dt-sc-blog-content { 
+      width: calc({{lap_rightColumn}}% - (calc({{section.settings.split_gap}}px)/2));
+    }
+
+  }
+ 
+
+  @media (max-width: 767px) {
+
+    .dt-sc-blog-section .dt-sc-blog-item.list-style { flex-wrap: wrap; }
+
+    .dt-sc-blog-section.style-2 .dt-sc-blog-item.list-style > .dt-sc-blog-image  { 
+      margin-bottom: {{ section.settings.split_gap}}px;
+    }
+    
+    .dt-sc-blog-section .dt-sc-blog-item.list-style > .dt-sc-blog-image,
+    .dt-sc-blog-section .dt-sc-blog-item.list-style > .dt-sc-blog-content,
+    .dt-sc-blog-section.style-2 .dt-sc-blog-item.list-style > .dt-sc-blog-image,
+    .dt-sc-blog-section.style-2 .dt-sc-blog-item.list-style > .dt-sc-blog-content { 
+      width: 100%;
+    }
+
+  }
+  
+  
+</style>
+
+{% schema %}
+  {
+    "name": "Blog posts",
+	"class": "index-section home-blog-section",
+    "settings": [
+{
+"type": "header",
+"content": "Blog Settings",
+"info": "Color Options added in Customizer"
+},
+{
+"type": "range",
+"id": "blog_results_per_page",
+"min": 1,
+"max": 16,
+"step": 1,
+"label": "Number of Posts per Page",
+"default": 6
+},
+{
+"type": "checkbox",
+"id": "blog_show_author",
+"label": "Enable author name",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "blog_show_date",
+"label": "Enable date",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "blog_comments",
+"label": "Enable Comments",
+"default": false
+},
+{
+"type": "checkbox",
+"id": "blog_show_tag",
+"label": "Enable tag",
+"default": false
+},
+{
+"type": "checkbox",
+"id": "blog_show_button",
+"label": "Enable Blog Button",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "blog_show_description",
+"label": "Enable Blog Description",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "enable_blog_icons",
+"label": "Enable Font Awesome Icons for Meta Elements",
+"default": false
+},
+{
+"type": "select",
+"id": "block_banner_style",
+"label": "Banner Style",
+"options": [
+{
+"value": "grid-style",
+"label": "Grid"
+},
+{
+"value": "list-style",
+"label": "List"
+},
+{
+"value": "overlay-style",
+"label": "Overlay"
+}
+]
+},
+{
+"type": "select",
+"id": "grid",
+"label": "Item per row (Select '1' for List Style)",
+"default": "2",
+"options": [
+{
+"value": "1",
+"label": "1"
+},
+{
+"value": "2",
+"label": "2"
+},
+{
+"value": "3",
+"label": "3"
+},
+{
+"value": "4",
+"label": "4"
+},
+{
+"value": "5",
+"label": "5"
+},
+{
+"value": "6",
+"label": "6"
+}
+]
+},
+{
+"type": "select",
+"id": "text_position",
+"label": "Blog Text alignment",
+"options": [
+{
+"value": "text-center",
+"label": "Center"
+},
+{
+"value": "text-start",
+"label": "Left"
+},
+{
+"value": "text-end",
+"label": "Right"
+}
+]
+},
+{
+"type": "text",
+"id": "column_gap",
+"label": "Column Gap (unit's not needed) - Only If Carousel Enabled",
+"default":"30"
+},
+{
+"type": "checkbox",
+"id": "enable_box_shadow",
+"label": "Enable Box Shadow",
+"default": false
+},
+{
+"type": "header",
+"content": "List Style Settings"
+},
+{
+"type": "text",
+"id": "content_width",
+"label": "Content Width - Desktop (Only for List Style)",
+"default":"50/50"
+},
+{
+"type": "text",
+"id": "lap_content_width",
+"label": "Content Width - Laptop (Small Screen)",
+"default":"40/60"
+},
+{
+"type": "select",
+"id": "vertical_position",
+"label": "Vertical position (Only for List Style)",
+"options": [
+{
+"value": "vertical-top",
+"label": "Top"
+},
+{
+"value": "vertical-center",
+"label": "Center"
+},
+{
+"value": "vertical-bottom",
+"label": "Bottom"
+}
+],
+"default": "vertical-top"
+},
+{
+"type": "header",
+"content": "Overlay Style Settings"
+},
+{
+"type": "text",
+"id": "overlay_style_height",
+"label": "Minimum Height (Only for Overlay Style)",
+"default":"400"
+},
+{
+"type": "header",
+"content": "Image Overlay Settings"
+},
+{
+"type": "select",
+"id": "overlay_style",
+"label": "Image Hover Style",
+"options": [
+{
+"value": "use_overlay",
+"label": "Normal Overlay"
+},
+{
+"value": "use_gradient_overlay",
+"label": "Gradient Overlay"
+}
+]
+},
+{
+"type": "color",
+"id": "overlay_color",
+"label": "Overlay color"
+},
+{
+"type": "text",
+"id": "overlay_opacity",
+"label": "Overlay Opacity (0.01 to 1)",
+"default": "0.5"
+},
+{
+"type": "text",
+"id": "rotation_degree",
+"label": "Gradient Position (0 to 360) - Only for Gradient Overlay",
+"default": "180"
+},
+{
+"type": "header",
+"content": "Split Blog Settings"
+},
+{
+"type": "checkbox",
+"id": "split_blog_layout",
+"label": "Split Blog Layout (Not for Overlay Style)",
+"default": false
+},
+{
+"type": "text",
+"id": "split_gap",
+"label": "Split Gap - Leave empty for Default Gap (unit's not needed)",
+"default":"30"
+}
+],
+"blocks":[  
+{
+"type": "articles",
+"limit": 1,
+"name": "Recent articles",
+"settings": [
+{
+"type": "text",
+"id": "title",
+"label": "Title",
+"default": "Recent articles"
+},
+{
+"type": "range",
+"id": "limit",
+"min": 1,
+"max": 10,
+"step": 1,
+"label": "Limit",
+"default": 2
+}
+]
+},
+{
+"type": "tags",
+"limit": 1,
+"name": "Tags",
+"settings": [
+{
+"type": "text",
+"id": "title",
+"label": "Title",
+"default": "Tags"
+},
+{
+"type": "range",
+"id": "limit",
+"min": 1,
+"max": 20,
+"step": 1,
+"label": "Limit",
+"default": 5
+}
+]
+},
+{
+"type": "carousel",
+"name": "Product Carousel",
+"limit": 5,
+"settings": [
+{
+"type": "text",
+"id": "title",
+"label": "Heading"
+},
+{
+"type": "collection",
+"id": "collection",
+"label": "Collection"
+},
+{
+"type": "range",
+"id": "limit",
+"min": 1,
+"max": 5,
+"step": 1,
+"label": "Limit",
+"default": 5
+}
+]
+},
+{
+"type": "collection",
+"name": "Product List",
+"limit": 5,
+"settings": [
+{
+"type": "text",
+"id": "title",
+"label": "Heading"
+},
+{
+"type": "collection",
+"id": "collection",
+"label": "Collection"
+},
+{
+"type": "range",
+"id": "limit",
+"min": 1,
+"max": 5,
+"step": 1,
+"label": "Limit",
+"default": 2
+}
+]
+},
+{
+"type": "image",
+"limit": 1,
+"name": "Image",
+"settings": [
+{
+"type": "text",
+"id": "title",
+"label": "Title",
+"default": "Heading"
+},
+{
+"type": "image_picker",
+"id": "image",
+"label": "Image"              
+},
+{
+"type": "text",
+"id": "link_text",
+"label": "Link Text",
+"default": "Shop Now"              
+},
+{
+"type": "url",
+"id": "link",
+"label": "Link"              
+}
+]
+}         
+]
+}
+{% endschema %}

@@ -1,0 +1,156 @@
+<!-- Image with text -->
+{%- if block.settings.image_1 != blank  -%}
+{%- assign tertiarySize = tertiarySize | plus: 1 -%}
+<li class="dt-sc-menu-image-with-text top-level-link">
+  <div class="dt-sc-mega_menu text-center">
+    {%- capture dt_megaImage -%}
+    {%- unless block.settings.image_1 == blank -%}    
+    {%- assign mega_img_1_url = block.settings.image_1 | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+    <img class="lazyload"
+         src="{{ 'loading.gif' | asset_url }}"
+         data-src="{{ block.settings.image_1 | img_url: 'master' }}"
+         data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+         data-aspectratio="{{ block.settings.image_1.aspect_ratio }}"
+         data-sizes="auto"            
+         alt="{{ block.settings.image_1.alt | escape }}">            
+    <noscript>
+      {{ block.settings.image_1 | img_url: '480x480', scale: 2 | img_tag: block.settings.image_1.alt, 'dt-sc-noscript-image' }}
+    </noscript>
+    {%- endunless -%}
+    {%- endcapture -%}
+    {%- unless block.settings.link_1 == blank -%}
+    <a href="{{ block.settings.link_1 }}"  class="dt-sc-mega_menu-link">{{ dt_megaImage }}</a>
+    {%- else -%}
+    {{ dt_megaImage }}
+    {%- endunless -%}
+    <div class="dt-sc-details">
+      {%- unless block.settings.title_1 == blank -%}
+      <h6 class="dt-sc-mega_menu-title"><a href="{% if block.settings.link_1 != blank %}{{ block.settings.link_1 }}{% else %}#{% endif %}" class="dt-sc-mega_menu-title-link">{{ block.settings.title_1 }}</a></h6>
+      {%- endunless -%}
+      {%- unless block.settings.button_1 == blank -%}
+      <a {% if block.settings.link_1 != blank %} href="{{ block.settings.link_1 }}"{% endif %} class="dt-sc-btn">{{ block.settings.button_1 }}</a>
+      {%- endunless -%}
+    </div>
+  </div>
+</li>
+{%- endif -%}
+<!-- Image with text  End-->
+<!-- Image with text -->
+{%- if block.settings.image_2 != blank  -%}
+{%- assign tertiarySize = tertiarySize | plus: 2 -%}
+<li class="dt-sc-menu-image-with-text top-level-link">
+  <div class="dt-sc-mega_menu text-center">
+    {%- capture dt_megaImage -%}
+    {%- unless block.settings.image_2 == blank -%}
+   {%- assign mega_img_2_url = block.settings.image_2 | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+    <img class="lazyload"
+         src="{{ 'loading.gif' | asset_url }}"
+         data-src="{{ block.settings.image_2 | img_url: 'master' }}"
+         data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+         data-aspectratio="{{ block.settings.image_2.aspect_ratio }}"
+         data-sizes="auto"            
+         alt="{{ block.settings.image_1.alt | escape }}">            
+    <noscript>
+      {{ block.settings.image_2 | img_url: '480x480', scale: 2 | img_tag: block.settings.image_2.alt, 'dt-sc-noscript-image' }}
+    </noscript>
+    {%- endunless -%}
+    {%- endcapture -%}
+    {%- unless block.settings.link_2 == blank -%}
+    <a href="{{ block.settings.link_2 }}"  class="dt-sc-mega_menu-link">{{ dt_megaImage }}</a>
+    {%- else -%}
+    {{ dt_megaImage }}
+    {%- endunless -%}
+    <div class="dt-sc-details">
+      {%- unless block.settings.title_2 == blank -%}
+      <h6 class="dt-sc-mega_menu-title"><a href="{% if block.settings.link_2 != blank %}{{ block.settings.link_2 }}{% else %}#{% endif %}" class="dt-sc-mega_menu-title-link">{{ block.settings.title_2 }}</a></h6>
+      {%- endunless -%}
+      {%- unless block.settings.button_2 == blank -%}
+      <a {% if block.settings.link_2 != blank %} href="{{ block.settings.link_2 }}"{% endif %} class="dt-sc-btn">{{ block.settings.button_2 }}</a>
+      {%- endunless -%}
+    </div>
+  </div>
+</li>
+{%- endif -%}
+<!-- Image with text  End-->
+<!-- Image with text -->
+{%- if block.settings.image_3 != blank  -%}
+{%- assign tertiarySize = tertiarySize | plus: 3 -%}
+<li class="dt-sc-menu-image-with-text top-level-link">
+  <div class="dt-sc-mega_menu text-center">
+    {%- capture dt_megaImage -%}
+    {%- unless block.settings.image_3 == blank -%}
+ 
+    <img class="lazyload"
+         src="{{ 'loading.gif' | asset_url }}"
+         data-src="{{ block.settings.image_3 | img_url: 'master' }}"
+         data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+         data-aspectratio="{{ block.settings.image_3.aspect_ratio }}"
+         data-sizes="auto"            
+         alt="{{ block.settings.image_1.alt | escape }}">            
+    <noscript>
+      {{ block.settings.image_3 | img_url: '480x480', scale: 2 | img_tag: block.settings.image_3.alt, 'dt-sc-noscript-image' }}
+    </noscript>
+    {%- endunless -%}
+    {%- endcapture -%}
+    {%- unless block.settings.link_3 == blank -%}
+    <a href="{{ block.settings.link_3 }}"  class="dt-sc-mega_menu-link">{{ dt_megaImage }}</a>
+    {%- else -%}
+    {{ dt_megaImage }}
+    {%- endunless -%}
+    <div class="dt-sc-details">
+      {%- unless block.settings.title_3 == blank -%}
+      <h6 class="dt-sc-mega_menu-title"><a href="{% if block.settings.link_3 != blank %}{{ block.settings.link_3 }}{% else %}#{% endif %}" class="dt-sc-mega_menu-title-link">{{ block.settings.title_3 }}</a></h6>
+      {%- endunless -%}
+      {%- unless block.settings.button_3 == blank -%}
+      <a {% if block.settings.link_3 != blank %} href="{{ block.settings.link_3 }}"{% endif %} class="dt-sc-btn">{{ block.settings.button_3 }}</a>
+      {%- endunless -%}
+    </div>
+  </div>
+</li>
+{%- endif -%}
+<!-- Image with text  End-->
+<!-- Image with text -->
+{%- if block.settings.image_4 != blank -%}
+{%- assign tertiarySize = tertiarySize | plus: 4 -%}
+<li class="dt-sc-menu-image-with-text top-level-link">
+  <div class="dt-sc-mega_menu text-center">
+    {%- capture dt_megaImage -%}
+    {%- unless block.settings.image_4 == blank -%}      
+    <img class="lazyload"
+         src="{{ 'loading.gif' | asset_url }}"
+         data-src="{{ block.settings.image_4 | img_url: 'master' }}"
+         data-widths="[180, 360, 470, 600, 770, 970, 1060, 1280, 1512, 1728, 2048]"
+         data-aspectratio="{{ block.settings.image_4.aspect_ratio }}"
+         data-sizes="auto"            
+         alt="{{ block.settings.image_4.alt | escape }}">            
+    <noscript>
+      {{ block.settings.image_4 | img_url: '480x480', scale: 2 | img_tag: block.settings.image_4.alt, 'dt-sc-noscript-image' }}
+    </noscript>
+    {%- endunless -%}
+    {%- endcapture -%}
+    {%- unless block.settings.link_4 == blank -%}
+    <a href="{{ block.settings.link_4 }}"  class="dt-sc-mega_menu-link">{{ dt_megaImage }}</a>
+    {%- else -%}
+    {{ dt_megaImage }}
+    {%- endunless -%}
+
+    <div class="dt-sc-details">
+      {%- unless block.settings.title_4 == blank -%}
+      <h6 class="dt-sc-mega_menu-title">
+        <a href="{% if block.settings.link_4 != blank %}{{ block.settings.link_4 }}{% else %}#{% endif %}" class="dt-sc-mega_menu-title-link">
+          {{ block.settings.title_4 }}
+        </a>
+      </h6>
+      {%- endunless -%}
+
+      {%- unless block.settings.button_4 == blank -%}
+      <a {% if block.settings.link_4 != blank %} href="{{ block.settings.link_4 }}"{% endif %} class="dt-sc-btn">
+        {{ block.settings.button_4 }}
+      </a>
+      {%- endunless -%}
+    </div>
+
+  </div>
+</li>
+{%- endif -%}
+<!-- Image with text  End-->

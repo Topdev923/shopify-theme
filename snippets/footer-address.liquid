@@ -1,0 +1,37 @@
+<div class="{{ footer_column_alignment}}">
+{% if block.settings.title != blank  and section.settings.show_footer_title %}        
+<h6 class="footer__title ">{{ block.settings.title}}</h6> 
+{% endif %}
+
+{% if block.settings.footer_address != blank or  block.settings.footer_contact_no != blank or  block.settings.office_hours != blank  or block.settings.footer_contact_link != blank and block.settings.footer_contact_id != blank %}
+<ul class="contact-info">
+  {% if block.settings.footer_address != blank %}
+  <li class="address">         
+    <address> <i class="fa fa-home"></i>{{ block.settings.footer_address }}</address>
+  </li>
+  {% endif %}  
+  {% if block.settings.footer_contact_no != blank %}
+  <li class="contact-phone">    
+    <i class="fa fa-phone"></i>{{ block.settings.footer_contact_no }}    
+  </li>
+  {% endif %}
+
+  {% if block.settings.office_hours != blank %}
+  <li class="office-hours">
+    <i class="fa fa-clock-o"></i>{{ block.settings.office_hours }}
+  </li>
+  {% endif %}
+
+  {% if block.settings.footer_contact_id != blank %}
+  <li class="office-mail">
+    <a href="mailto:{{ block.settings.footer_contact_id}}">
+      <i class="fa fa-envelope"></i>{{ block.settings.footer_contact_id }}</a>     
+  </li>
+  {% endif %}
+</ul>
+{% endif %}       
+
+{% if section.settings.social_placement == 'with_address'  and section.settings.show_social %}   
+{% include 'social-links' %}
+{% endif %}
+</div>

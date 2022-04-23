@@ -1,0 +1,128 @@
+{%- assign featured_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media -%}
+{% assign max_img_height = 700 %}
+{% capture image_size %}{{ max_img_height }}x{{ max_img_height }}{% endcapture %}
+<div class="swiper-container main-swiper-container {% if section.settings.gallery_type == 'thumbnails_vertical' %}swiper-gallery-vert-slider{% elsif section.settings.gallery_type == 'thumbnails_horizontal'%}swiper-gallery-inline-slider{%endif%}"
+     id="{% if section.settings.gallery_type == 'thumbnails_vertical' %}swiper-gallery-vert-{{ section.id }}{% elsif section.settings.gallery_type == 'thumbnails_horizontal'%}swiper-gallery-{{ section.id }}{%endif%}">
+  <div class="swiper-wrapper">
+    {% for media in product.media  %}
+
+
+    {% capture media_id %}FeaturedMedia-{{ section.id }}-{{ media.id }}{% endcapture %}
+    {% capture media_class %}product-featured-media{% endcapture %}
+    {% capture media_wrapper_id %}{{ media_id }}-wrapper{% endcapture %}
+
+    <div class="swiper-slide {% if media.media_type == "image"%} zoom-img-wrap {% endif %}" id="{{ media.id }}">
+
+      <div id="{{ media_wrapper_id }}"
+           class="dt-sc-product-single-wrapper {% if media.media_type == "image"%} zoom-img-wrap {% endif %}"
+           {% if media.media_type == 'video' or media.media_type == 'external_video' %} data-product-media-type-video data-enable-video-looping="{{ section.settings.enable_video_looping }}"{% endif %}
+           {% if media.media_type == 'external_video' %} data-video-id="{{ media.external_id }}"{% endif %}
+           data-product-single-media-wrapper
+           data-media-id="{{ section.id }}-{{ media.id }}"
+           tabindex="-1">
+        {% case media.media_type %}
+        {% when 'external_video' %}
+        <div class="product-item-img dt-sc-product-single_media" style="padding-top: {{ 1 | divided_by: media.aspect_ratio | times: 100 }}%;">
+          {{ media | external_video_tag }}
+        </div>
+        {% when 'video' %}
+
+        {%- comment -%}
+        Load different image sizes depending on the breakpoint for background image overlay
+        {%- endcomment -%}
+        {% style %}
+        @media screen and (max-width: 320px) {
+        .dt-sc-product-single_media-{{ media.id }} .plyr__poster {
+        background-image: url({{ media.preview_image | img_url: '360x'}}) !important;
+        }
+        }
+
+        @media screen and (min-width: 320px) and (max-width: 780px) {
+        .dt-sc-product-single_media-{{ media.id }} .plyr__poster {
+        background-image: url({{ media.preview_image | img_url: '900x'}}) !important;
+        }
+        }
+
+        @media screen and (min-width: 780px) and (max-width: 1080px) {
+        .dt-sc-product-single_media-{{ media.id }} .plyr__poster {
+        background-image: url({{ media.preview_image | img_url: '1080x'}}) !important;
+        }
+        }
+
+        @media screen and (min-width: 1080px) {
+        .dt-sc-product-single_media-{{ media.id }} .plyr__poster {
+        background-image: url({{ media.preview_image | img_url: '2048x'}}) !important;
+        }
+        }
+        {% endstyle %}
+
+        <div class="product-item-img dt-sc-product-single_media dt-sc-product-single_media--video dt-sc-product-single_media--{{ media.id }}" style="padding-top: {{ 1 | divided_by: media.aspect_ratio | times: 100 }}%;">
+          {{ media | video_tag: class: 'media-video', image_size: image_size }}
+        </div>       
+        {% else %}
+        {% assign product_img_width = media.preview_image.width %}
+        {% assign product_img_height = media.preview_image.height %}
+        {% assign product_img_ratio = media.preview_image.aspect_ratio %}
+        {% if max_img_height < product_img_height %}
+        {% assign max_img_width = max_img_height | times: product_img_ratio | append:"px"%}
+        {% else %}
+        {% assign max_img_width = product_img_height | times: product_img_ratio | append:"px"%}
+        {% endif %}   
+          {%- assign img_url = media | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}        
+        <img class="product-item-img zoom-img lazyload{% unless featured_media == media %} lazypreload{% endunless %}"  data-srczoom="{{ media.preview_image.src | img_url: "2000x" }}"
+          src="{{ 'loading.gif' | asset_url }}"
+          data-src="{{ img_url }}"
+          data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+          data-aspectratio="{{ media.preview_image.aspect_ratio }}"
+          data-sizes="auto"        
+          alt="{{ media.alt | escape }}" title="{{product.title}}" />
+        {% if section.settings.enable_zoom %}
+        <a tabindex="-1" class="zoom-img-container zoom-img-position" data-image-loading-animation href="javascript:void(0);">
+        </a>
+        {% endif %}
+        {% endcase %}
+      </div>
+    </div>
+    {% else %}
+    {{ "product-5" | placeholder_svg_tag: 'product-item-img thumbnail_slider_svg' }}
+    {% endfor %}
+    <noscript>
+      <div class="dt-sc-no-image" style="background-image: url('{{ img_url }}'); background-position: center;"></div>
+    </noscript>
+  </div>
+  <div class="swiper-pagination-{{section.id}}"></div>
+</div>
+{% unless section.settings.gallery_type == 'thumbnails_hide' %} 
+{% if product.media.size > 0 %}
+{% if section.settings.gallery_type == 'thumbnails_vertical' %}
+<div class="swiper-vert-thumbnails-main-container swiper-thumbnails-main-container">
+  <div class="swiper-container swiper-thumbnails-vert" id="swiper-gallery-thumbs-vert-{{ section.id }}">
+    {% elsif section.settings.gallery_type == 'thumbnails_horizontal'%}
+    <div class="swiper-horiz-thumbnails-main-container swiper-thumbnails-main-container">
+      <div class="swiper-container swiper-thumbnails-inline" id="swiper-gallery-thumbs-{{ section.id }}">
+        {% endif %}
+        <div class="swiper-wrapper">
+          {% for media in product.media %}
+          <div class="swiper-slide" tabindex="0">
+            <img class="swiper-thumb-item lazyload"   src="{{ 'loading.gif' | asset_url }}"    data-src="{{ media | img_url: 'medium' }}" alt="{{ media.alt | escape }}" title="{{ product.title | escape }}" />
+            {% if media.media_type == "video" or media.media_type == "external_video"%}
+            <span class="icon-wrapper">
+              <svg  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                   viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
+                <g transform="translate(0,-952.36218)">
+                  <path class="st0" d="M19.8,968.6c-9,0-16.3,7.3-16.3,16.3v34.9c0,9,7.3,16.3,16.3,16.3h60.4c9,0,16.3-7.3,16.3-16.3v-34.9
+                                       c0-9-7.3-16.3-16.3-16.3H19.8z M40.7,987.2l25.6,15.1l-25.6,15.1V987.2z"/>
+                </g>
+              </svg>
+            </span>           
+            {% endif %}
+          </div>
+          {% endfor %}   
+        </div>        
+      </div>
+    </div>
+    {% endif %}
+    {% endunless %}  
+    
+    
+    
